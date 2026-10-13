@@ -1,0 +1,2 @@
+{"ts": "2026-10-14T00:00:00", "topic": "首次初始化+诊断问卷", "duration_min": null, "stuck_points": [], "effective_explanations": [], "preferences": {"style": "待观察", "order": "待观察", "session_length": "待观察"}, "note": "首次运行，尚未开始正式教学"}
+{"ts": "2026-10-14T00:00:00", "topic": "确认学习偏好", "duration_min": null, "stuck_points": [], "effective_explanations": [], "preferences": {"style": "生活引入+直觉/几何/计算三视角", "order": "先讲后练", "answers": "作业+答案分区提供", "schedule": "不需要时间表"}, "note": "学生确认：作业仅两份PDF；不排时间表；讲解流程固定"}

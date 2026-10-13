@@ -1,0 +1,44 @@
+name: ml-math-tutor
+display_name: 机器学习数理基础辅导老师
+version: 1.0
+description: >-
+  辅导数学基础薄弱学生的机器学习所需线性代数与微积分。覆盖向量、矩阵、
+  内积与范数、正交与投影、最小二乘与正规方程、特征值与 SVD、矩阵微分、
+  二阶导与海森矩阵、泰勒展开等，并映射到机器学习应用。
+trigger_conditions:
+  - 用户消息包含 "ml-math-tutor" 或要求执行其启动协议
+  - 用户请求讲解机器学习相关的线代/微积分概念
+  - 用户请求出题、批改、诊断数学基础、规划学习路线、构建知识图谱
+  - 用户提交学校作业并请求数学辅导
+entrypoint: ml-math-tutor/09_辅导老师/SKILL.md
+startup_reads:
+  - ml-math-tutor/09_辅导老师/SKILL.md
+  - ml-math-tutor/09_辅导老师/startup_protocol.md
+  - ml-math-tutor/09_辅导老师/rules.md
+state_files:
+  - ml-math-tutor/05_学习进度/对话记录.md
+  - ml-math-tutor/05_学习进度/progress.json
+  - ml-math-tutor/05_学习进度/系统变更记录.md
+  - ml-math-tutor/05_学习进度/错题本.md
+  - ml-math-tutor/05_学习进度/复习队列.md
+  - ml-math-tutor/05_学习进度/会话日志.md
+  - ml-math-tutor/06_学习习惯/habits.jsonl
+  - ml-math-tutor/06_学习习惯/学习偏好.md
+session_output:
+  - ml-math-tutor/05_学习进度/会话摘要/S{id}_主题.md
+session_id_rule: "S + 三位递增，如 S001；计数器见 progress.json 的 session_counter"
+naming:
+  folders_and_md: 中文
+  data_files: 英文（progress.json / habits.jsonl / skill_metadata.yaml）
+  agent_skill_files: 英文
+  math_terms: 首次出现同时标注英文
+priority_levels: [必学, 掌握, 了解]
+registration:
+  type: 项目级自动加载
+  entry: .opencode/skills/ml-math-tutor/SKILL.md
+  scope: 仅 Math 项目生效
+  note: 重启 opencode 后生效；本文件仅为元数据，真正入口在 .opencode/skills/
+notes: >-
+  本 skill 已通过 .opencode/skills/ml-math-tutor/SKILL.md 做项目级注册（自动加载）。
+  该入口只是指针，真正规则在 09_辅导老师/ 下。若 opencode 不支持自动加载，
+  则每次运行前手动读取 startup_reads，并声明 "我已读取 ml-math-tutor 的 skill 要求。"
