@@ -1,14 +1,14 @@
 {
   "student": {
     "name": "JackGu",
-    "math_background": "薄弱",
+    "math_background": "自评薄弱；诊断实测基础较好（10 题 9 对）：线代直觉扎实、单变量求导会、Python 有基础、ML 零基础",
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "诊断阶段（阶段 A 待确认）",
+  "current_stage": "阶段 A：第 01 课（向量、内积）已讲，待进入 A3 范数 / A4 距离与余弦相似度",
   "concepts": [
-    { "id": "vector", "name": "向量", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "inner_product", "name": "内积", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
+    { "id": "vector", "name": "向量", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
+    { "id": "inner_product", "name": "内积", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
     { "id": "norm", "name": "范数", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
     { "id": "distance_cosine", "name": "距离与余弦相似度", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
     { "id": "matrix_mult", "name": "矩阵与矩阵乘法", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
@@ -41,14 +41,17 @@
     { "id": "newton", "name": "牛顿法", "priority": "了解", "status": "未开始", "mastery": 0, "next_review": null },
     { "id": "ridge", "name": "岭回归/L2正则", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null }
   ],
-  "wrong_questions": [],
-  "review_queue": [],
-  "sessions_count": 1,
-  "session_counter": 1,
-  "current_session_id": "S001",
-  "session_index": [
-    { "id": "S001", "date": "2026-10-14", "topic": "系统搭建", "status": "进行中", "summary": "会话摘要/S001_系统搭建.md" }
+  "wrong_questions": [
+    { "id": "diag_q8", "session": "S002", "date": "2026-10-15", "concept": "chain_rule", "desc": "混淆位移的一阶导=速度 与 速度变化率=加速度", "status": "待复习" }
   ],
-  "last_session": "2026-10-14",
-  "notes": "首次运行：已创建仓库结构、skill 文件、作业索引，输出诊断问卷待作答。命名改中文；新增 R14/R15/R16 记录机制。"
+  "review_queue": [],
+  "sessions_count": 2,
+  "session_counter": 2,
+  "current_session_id": "S002",
+  "session_index": [
+    { "id": "S001", "date": "2026-10-14", "topic": "系统搭建", "status": "已结束", "summary": "会话摘要/S001_系统搭建.md" },
+    { "id": "S002", "date": "2026-10-15", "topic": "系统变更（板书/LaTeX/笔记本/目录重构）+ 第01课 向量与内积", "status": "进行中", "summary": null }
+  ],
+  "last_session": "2026-10-15",
+  "notes": "S002：诊断完成(10题9对)。开讲第01课。新增板书(R19)/LaTeX(R20)/笔记本(R21)(已确认)。目录重构为顶层 系统/ 与 学习内容/(已确认)。"
 }

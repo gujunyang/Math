@@ -1,0 +1,68 @@
+name: ml-math-tutor
+display_name: 机器学习数理基础辅导老师
+version: 1.5
+layout:
+  top_level:
+    - 系统/        # 管理与系统类：09_辅导老师, 05_学习进度, 06_学习习惯, 08_模板
+    - 学习内容/    # 学习内容类：01_学习计划, 02_知识图谱, 03_概念笔记, 04_习题, 07_学校作业, 10_板书, 11_笔记本
+  note: 子目录保留原编号（历史沿用），可后续统一重编号
+description: >-
+  辅导学生的机器学习所需线性代数与微积分（自评基础薄弱，实际以诊断为准）。覆盖向量、矩阵、
+  内积与范数、正交与投影、最小二乘与正规方程、特征值与 SVD、矩阵微分、
+  二阶导与海森矩阵、泰勒展开等，并映射到机器学习应用。
+trigger_conditions:
+  - 用户消息包含 "ml-math-tutor" 或要求执行其启动协议
+  - 用户请求讲解机器学习相关的线代/微积分概念
+  - 用户请求出题、批改、诊断数学基础、规划学习路线、构建知识图谱
+  - 用户提交学校作业并请求数学辅导
+entrypoint: ml-math-tutor/系统/09_辅导老师/SKILL.md
+startup_reads:
+  - ml-math-tutor/系统/09_辅导老师/SKILL.md
+  - ml-math-tutor/系统/09_辅导老师/startup_protocol.md
+  - ml-math-tutor/系统/09_辅导老师/rules.md
+state_files:
+  - ml-math-tutor/系统/05_学习进度/对话记录.md
+  - ml-math-tutor/系统/05_学习进度/progress.json
+  - ml-math-tutor/系统/05_学习进度/系统变更记录.md
+  - ml-math-tutor/系统/05_学习进度/错题本.md
+  - ml-math-tutor/系统/05_学习进度/复习队列.md
+  - ml-math-tutor/系统/05_学习进度/会话日志.md
+  - ml-math-tutor/系统/06_学习习惯/habits.jsonl
+  - ml-math-tutor/系统/06_学习习惯/学习偏好.md
+  - ml-math-tutor/学习内容/11_笔记本/待问清单.md
+  - ml-math-tutor/学习内容/11_笔记本/随手记.md
+notebook:
+  dir: ml-math-tutor/学习内容/11_笔记本/
+  files: [00_索引.md, 随手记.md, 待问清单.md]
+  rule: R21（学生实时记录；老师不改写原文）
+session_output:
+  - ml-math-tutor/系统/05_学习进度/会话摘要/S{id}_主题.md
+board_output:
+  - ml-math-tutor/学习内容/10_板书/S{id}_第NN课_{主题}.md
+  - ml-math-tutor/学习内容/10_板书/00_索引.md
+  rule: R19（每节课产出板书，持续归档）
+session_id_rule: "S + 三位递增，如 S001；计数器见 progress.json 的 session_counter"
+naming:
+  folders_and_md: 中文
+  data_files: 英文（progress.json / habits.jsonl / skill_metadata.yaml）
+  agent_skill_files: 英文
+  math_terms: 首次出现同时标注英文
+  math_formulas: LaTeX，行内 $...$，独立 $$...$$（对话与板书一致）
+priority_levels: [必学, 掌握, 了解]
+checks:
+  self_check: python3 系统/工具/自检.py   # R22：系统类改动后必须跑，全绿才算完成
+  protected_files:
+    - 系统/09_辅导老师/*
+    - 系统/05_学习进度/progress.json
+    - 系统/05_学习进度/系统变更记录.md
+    - 学习内容/01_学习计划/概念登记表.md
+  rollback: 用 git；大改动前先 commit，可 git restore / git revert
+registration:
+  type: 项目级自动加载
+  entry: .opencode/skills/ml-math-tutor/SKILL.md
+  scope: 仅 Math 项目生效
+  note: 重启 opencode 后生效；本文件仅为元数据，真正入口在 .opencode/skills/
+notes: >-
+  本 skill 已通过 .opencode/skills/ml-math-tutor/SKILL.md 做项目级注册（自动加载）。
+  该入口只是指针，真正规则在 系统/09_辅导老师/ 下。若 opencode 不支持自动加载，
+  则每次运行前手动读取 startup_reads，并声明 "我已读取 ml-math-tutor 的 skill 要求。"
