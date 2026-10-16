@@ -1,6 +1,6 @@
 name: ml-math-tutor
 display_name: 机器学习数理基础辅导老师
-version: 1.5
+version: 1.6
 layout:
   top_level:
     - 系统/        # 管理与系统类：09_辅导老师, 05_学习进度, 06_学习习惯, 08_模板
@@ -40,7 +40,12 @@ session_output:
 board_output:
   - ml-math-tutor/学习内容/10_板书/S{id}_第NN课_{主题}.md
   - ml-math-tutor/学习内容/10_板书/00_索引.md
+  - ml-math-tutor/学习内容/10_板书/图片/       # R23 几何示意图（PNG）
   rule: R19（每节课产出板书，持续归档）
+figures:
+  dir: ml-math-tutor/学习内容/10_板书/图片/
+  generator: ml-math-tutor/系统/工具/生成几何图.py
+  rule: R23（几何优先，几何部分必配图）
 session_id_rule: "S + 三位递增，如 S001；计数器见 progress.json 的 session_counter"
 naming:
   folders_and_md: 中文
@@ -48,6 +53,7 @@ naming:
   agent_skill_files: 英文
   math_terms: 首次出现同时标注英文
   math_formulas: LaTeX，行内 $...$，独立 $$...$$（对话与板书一致）
+  teaching_order: 直觉 → 几何(配图) → 计算/公式（几何优先，见 R2/R23）
 priority_levels: [必学, 掌握, 了解]
 checks:
   self_check: python3 系统/工具/自检.py   # R22：系统类改动后必须跑，全绿才算完成

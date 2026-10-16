@@ -5,15 +5,15 @@
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "阶段 A：第 01 课（向量、内积）已讲，待进入 A3 范数 / A4 距离与余弦相似度",
+  "current_stage": "阶段 A：第 05 课（线性无关与张成）已讲，待进入 A8 正交与投影",
   "concepts": [
     { "id": "vector", "name": "向量", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
     { "id": "inner_product", "name": "内积", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "norm", "name": "范数", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "distance_cosine", "name": "距离与余弦相似度", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "matrix_mult", "name": "矩阵与矩阵乘法", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "transpose_inv", "name": "转置与逆", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "linear_independence", "name": "线性无关与张成", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
+    { "id": "norm", "name": "范数", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
+    { "id": "distance_cosine", "name": "距离与余弦相似度", "priority": "掌握", "status": "学习中", "mastery": 0, "next_review": null },
+    { "id": "matrix_mult", "name": "矩阵与矩阵乘法", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
+    { "id": "transpose_inv", "name": "转置与逆", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
+    { "id": "linear_independence", "name": "线性无关与张成", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
     { "id": "orthogonal_projection", "name": "正交与投影", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
     { "id": "linear_model", "name": "线性模型 y=Xw", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
     { "id": "residual", "name": "残差", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
@@ -46,11 +46,12 @@
   ],
   "review_queue": [],
   "sessions_count": 2,
-  "session_counter": 2,
-  "current_session_id": "S002",
+  "session_counter": 3,
+  "current_session_id": "S003",
   "session_index": [
     { "id": "S001", "date": "2026-10-14", "topic": "系统搭建", "status": "已结束", "summary": "会话摘要/S001_系统搭建.md" },
-    { "id": "S002", "date": "2026-10-15", "topic": "诊断+第01课 向量与内积+系统机制(板书/LaTeX/笔记本/目录重构/护栏)", "status": "已结束", "summary": "会话摘要/S002_系统建设与第01课.md" }
+    { "id": "S002", "date": "2026-10-15", "topic": "诊断+第01课 向量与内积+系统机制(板书/LaTeX/笔记本/目录重构/护栏)", "status": "已结束", "summary": "会话摘要/S002_系统建设与第01课.md" },
+    { "id": "S003", "date": "2026-10-16", "topic": "待定（拟：第02课 范数 + 距离/余弦相似度）", "status": "进行中", "summary": null }
   ],
   "last_session": "2026-10-15",
   "notes": "S002：诊断完成(10题9对)。开讲第01课。新增板书(R19)/LaTeX(R20)/笔记本(R21)(已确认)。目录重构为顶层 系统/ 与 学习内容/(已确认)。"

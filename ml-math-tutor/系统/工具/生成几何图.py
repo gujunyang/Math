@@ -1,0 +1,427 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""生成 ml-math-tutor 板书用的几何示意图（matplotlib，输出 PNG）。
+
+用法（在 ml-math-tutor 目录内）：
+    python3 系统/工具/生成几何图.py
+
+输出目录：学习内容/10_板书/图片/
+说明：几何示意优先，配色统一（蓝=主向量，红=次向量，灰=辅助线）。
+"""
+import os
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
+
+plt.rcParams["font.sans-serif"] = ["Arial Unicode MS", "Hiragino Sans GB", "Songti SC"]
+plt.rcParams["axes.unicode_minus"] = False
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OUT = os.path.join(ROOT, "学习内容", "10_板书", "图片")
+os.makedirs(OUT, exist_ok=True)
+
+BLUE = "#1f77b4"
+RED = "#d62728"
+GRAY = "#9aa0a6"
+GREEN = "#2ca02c"
+
+
+def arrow(ax, x, y, color=BLUE, lw=2.0, label=None, ls="-", zorder=5):
+    ax.annotate(
+        "",
+        xy=(x, y),
+        xytext=(0, 0),
+        arrowprops=dict(arrowstyle="-|>", color=color, lw=lw, linestyle=ls,
+                        shrinkA=0, shrinkB=0),
+        zorder=zorder,
+    )
+    if label:
+        ax.text(x * 1.03, y * 1.03, label, color=color, fontsize=13, zorder=6)
+
+
+def save(fig, name):
+    path = os.path.join(OUT, name)
+    fig.savefig(path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print("生成", os.path.relpath(path, ROOT))
+
+
+# --- 图 1：向量与分量 -------------------------------------------------------
+def fig_vector():
+    fig, ax = plt.subplots(figsize=(5, 5))
+    arrow(ax, 3, 4, BLUE, label=r"$\mathbf{a}=(3,4)$")
+    ax.plot([3, 3], [0, 4], ls="--", color=GRAY, lw=1)
+    ax.plot([0, 3], [4, 4], ls="--", color=GRAY, lw=1)
+    ax.plot([0, 3], [0, 0], color=GRAY, lw=1)
+    ax.plot([0, 0], [0, 4], color=GRAY, lw=1)
+    ax.text(1.5, -0.45, r"$x_1=3$", ha="center", color=GRAY, fontsize=12)
+    ax.text(-0.5, 2.0, r"$x_2=4$", va="center", color=GRAY, fontsize=12)
+    ax.scatter([3], [4], color=BLUE, s=25, zorder=6)
+    ax.set_title("向量的几何：一支从原点出发的箭")
+    ax.set_axisbelow(True)
+    ax.grid(True, alpha=0.3)
+    ax.set_xlim(-1, 5)
+    ax.set_ylim(-1, 5)
+    ax.set_aspect("equal")
+    save(fig, "fig_vector_components.png")
+
+
+# --- 图 2：内积的几何意义（投影） ------------------------------------------
+def fig_inner():
+    fig, ax = plt.subplots(figsize=(5.4, 5))
+    a = np.array([4.0, 1.0])
+    b = np.array([1.5, 2.5])
+    arrow(ax, *a, BLUE, label=r"$\mathbf{a}$")
+    arrow(ax, *b, RED, label=r"$\mathbf{b}$")
+    # 投影：b 在 a 方向上的投影点
+    t = np.dot(b, a) / np.dot(a, a)
+    proj = t * a
+    ax.plot([b[0], proj[0]], [b[1], proj[1]], ls="--", color=GRAY, lw=1.2)
+    ax.annotate("", xy=proj, xytext=(0, 0),
+                arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.2))
+    ax.text(proj[0] * 0.5 + 0.1, proj[1] * 0.5 - 0.35,
+            r"$\|\mathbf{b}\|\cos\theta$", color=GREEN, fontsize=12)
+    # 直角标记
+    u = a / np.linalg.norm(a)
+    n = b - proj
+    n = n / np.linalg.norm(n)
+    s = 0.25
+    p1 = proj + s * n
+    p2 = proj + s * (n - u)
+    p3 = proj - s * u
+    ax.plot([p1[0], p2[0], p3[0]], [p1[1], p2[1], p3[1]], color=GRAY, lw=1)
+    ax.text(1.15, 0.15, r"$\theta$", color="k", fontsize=13)
+    ax.set_title(r"内积 = $\mathbf{a}\cdot\mathbf{b}=\|\mathbf{a}\|\,\|\mathbf{b}\|\cos\theta$")
+    ax.set_axisbelow(True)
+    ax.grid(True, alpha=0.3)
+    ax.set_xlim(-0.5, 5)
+    ax.set_ylim(-0.5, 4)
+    ax.set_aspect("equal")
+    save(fig, "fig_inner_product_projection.png")
+
+
+# --- 图 3：三种范数的单位球 -------------------------------------------------
+def fig_norms():
+    fig, axes = plt.subplots(1, 3, figsize=(11, 3.7))
+    th = np.linspace(0, 2 * np.pi, 400)
+    # L2：圆
+    axes[0].plot(np.cos(th), np.sin(th), color=BLUE, lw=2.2)
+    axes[0].set_title(r"L2 范数：$\|\mathbf{x}\|_2=1$（圆）")
+    # L1：菱形
+    d = np.array([[1, 0], [0, 1], [-1, 0], [0, -1], [1, 0]], float)
+    axes[1].plot(d[:, 0], d[:, 1], color=RED, lw=2.2)
+    axes[1].set_title(r"L1 范数：$\|\mathbf{x}\|_1=1$（菱形）")
+    # Linf：正方形
+    sq = np.array([[1, 1], [-1, 1], [-1, -1], [1, -1], [1, 1]], float)
+    axes[2].plot(sq[:, 0], sq[:, 1], color=GREEN, lw=2.2)
+    axes[2].set_title(r"L∞ 范数：$\|\mathbf{x}\|_\infty=1$（正方形）")
+    for ax in axes:
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.grid(True, alpha=0.3)
+        ax.set_xlim(-1.6, 1.6)
+        ax.set_ylim(-1.6, 1.6)
+        ax.set_aspect("equal")
+        ax.set_xticks([-1, 0, 1])
+        ax.set_yticks([-1, 0, 1])
+    fig.suptitle("“到原点距离为 1”的点集：不同范数，形状不同", y=1.04)
+    save(fig, "fig_norm_unit_balls.png")
+
+
+# --- 图 4：距离 = 差向量的长度 ---------------------------------------------
+def fig_distance():
+    fig, ax = plt.subplots(figsize=(5.4, 5))
+    A = np.array([1.0, 1.0])
+    B = np.array([4.0, 5.0])
+    ax.scatter(*A, color=BLUE, s=40, zorder=6)
+    ax.scatter(*B, color=RED, s=40, zorder=6)
+    ax.text(A[0] - 0.5, A[1] - 0.4, r"$\mathbf{a}$", color=BLUE, fontsize=13)
+    ax.text(B[0] + 0.1, B[1] + 0.1, r"$\mathbf{b}$", color=RED, fontsize=13)
+    arrow(ax, *A, color=BLUE, lw=1.6)
+    arrow(ax, *B, color=RED, lw=1.6)
+    # 差向量 a-b，平移到 b 处显示
+    ax.annotate("", xy=A, xytext=B,
+                arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.4))
+    mid = (A + B) / 2
+    ax.text(mid[0] - 0.3, mid[1] + 0.15, r"$\mathbf{a}-\mathbf{b}$", color=GREEN,
+            fontsize=12)
+    ax.text(2.2, 0.55, r"$d=\|\mathbf{a}-\mathbf{b}\|=5$", color=GREEN, fontsize=12)
+    ax.set_title("距离 = “差向量”的长度")
+    ax.set_axisbelow(True)
+    ax.grid(True, alpha=0.3)
+    ax.set_xlim(0, 5.5)
+    ax.set_ylim(0, 6)
+    ax.set_aspect("equal")
+    save(fig, "fig_distance.png")
+
+
+# --- 图 5：余弦相似度只看方向 ----------------------------------------------
+def fig_cosine():
+    fig, ax = plt.subplots(figsize=(5.6, 5))
+    a = np.array([3.0, 0.0])
+    b1 = np.array([1.0, 1.0])
+    b2 = np.array([2.0, 2.0])  # 与 b1 同方向，长度翻倍
+    arrow(ax, *a, BLUE, label=r"$\mathbf{a}=(1,0)$ 方向")
+    arrow(ax, *b1, RED, label=r"$\mathbf{b}$")
+    arrow(ax, *b2, RED, lw=1.4, ls="--")
+    ax.text(2.1, 2.1, r"$\mathbf{b}'=2\mathbf{b}$", color=RED, fontsize=11)
+    ax.text(1.5, 0.35, r"$\theta=45^\circ$", color="k", fontsize=12)
+    ax.set_title(r"方向相同、长度不同 $\Rightarrow$ 余弦相似度相同（$0.707$）")
+    ax.set_axisbelow(True)
+    ax.grid(True, alpha=0.3)
+    ax.set_xlim(-0.4, 4)
+    ax.set_ylim(-0.4, 3.2)
+    ax.set_aspect("equal")
+    save(fig, "fig_cosine_similarity.png")
+
+
+# --- 图 6：矩阵 = 线性变换（网格变形） -------------------------------------
+def fig_matrix():
+    M = np.array([[1.0, 0.7], [0.0, 1.2]])
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.6))
+    panels = [
+        (axes[0], np.eye(2), "原网格（单位方格）", GRAY),
+        (axes[1], M, r"变换后：$\mathbf{x}\mapsto \mathbf{M}\mathbf{x}$", BLUE),
+    ]
+    for ax, mat, title, color in panels:
+        for t in np.linspace(-3, 3, 13):
+            seg = np.array([[t, -3], [t, 3]]) @ mat.T
+            ax.plot(seg[:, 0], seg[:, 1], color=color, lw=0.7, alpha=0.7)
+            seg2 = np.array([[-3, t], [3, t]]) @ mat.T
+            ax.plot(seg2[:, 0], seg2[:, 1], color=color, lw=0.7, alpha=0.7)
+        e1 = mat @ np.array([1, 0])
+        e2 = mat @ np.array([0, 1])
+        ax.annotate("", xy=e1, xytext=(0, 0),
+                    arrowprops=dict(arrowstyle="-|>", color=RED, lw=2.4))
+        ax.annotate("", xy=e2, xytext=(0, 0),
+                    arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.4))
+        ax.set_title(title)
+        ax.set_aspect("equal")
+        ax.grid(True, alpha=0.2)
+        ax.set_xlim(-3.5, 3.5)
+        ax.set_ylim(-3.5, 4.5)
+    axes[0].text(1.05, 0.2, r"$e_1$", color=RED, fontsize=12)
+    axes[0].text(0.15, 1.1, r"$e_2$", color=GREEN, fontsize=12)
+    axes[1].text(M[0, 0] + 0.05, M[1, 0], r"$e_1'$", color=RED, fontsize=12)
+    axes[1].text(M[0, 1] + 0.05, M[1, 1], r"$e_2'$", color=GREEN, fontsize=12)
+    fig.suptitle("矩阵就是一个线性变换：把整个网格（连同基向量）一起搬走", y=1.02)
+    save(fig, "fig_matrix_transform.png")
+
+
+# --- 图 7：转置 = 沿主对角线翻折 -------------------------------------------
+def fig_transpose():
+    from matplotlib.patches import Rectangle
+
+    A = [[1, 2, 3], [4, 5, 6]]
+    fig, axes = plt.subplots(1, 3, figsize=(12, 3.6))
+
+    def draw(ax, grid, rows, cols, title, highlight=None):
+        for i in range(rows):
+            for j in range(cols):
+                face = "#dbeafe"
+                if highlight and (i, j) == highlight:
+                    face = "#fde68a"
+                ax.add_patch(Rectangle((j, rows - 1 - i), 1, 1, facecolor=face,
+                                       edgecolor="k", lw=1))
+                ax.text(j + 0.5, rows - 1 - i + 0.5, str(grid[i][j]),
+                        ha="center", va="center", fontsize=13)
+        ax.set_xlim(-0.3, cols + 0.3)
+        ax.set_ylim(-0.3, rows + 0.3)
+        ax.set_aspect("equal")
+        ax.set_title(title, fontsize=12)
+        ax.axis("off")
+
+    draw(axes[0], A, 2, 3, r"$\mathbf{A}$：$2\times3$", highlight=(0, 1))
+    draw(axes[1], [[A[j][i] for j in range(2)] for i in range(3)], 3, 2,
+         r"$\mathbf{A}^{\top}$：$3\times2$", highlight=(1, 0))
+    axes[0].text(1.5, -0.75, "把 (第1行,第2列) 的 2", ha="center", color="#b45309", fontsize=10)
+    axes[1].text(1.0, -0.75, "挪到 (第2行,第1列)", ha="center", color="#b45309", fontsize=10)
+    axes[2].axis("off")
+    axes[2].text(0.5, 0.6, "转置 =", ha="center", fontsize=14)
+    axes[2].text(0.5, 0.38, "行↔列 互换", ha="center", fontsize=14, color=BLUE)
+    axes[2].text(0.5, 0.16, "（沿主对角线翻折）", ha="center", fontsize=11, color=GRAY)
+    axes[2].set_xlim(0, 1)
+    axes[2].set_ylim(0, 1)
+    fig.suptitle("转置（transpose）：下标 $a_{ij}\\to a_{ji}$", y=1.05)
+    save(fig, "fig_transpose.png")
+
+
+# --- 图 8：逆 = 把变换撤销 -------------------------------------------------
+def fig_inverse():
+    A = np.array([[1.5, 0.6], [0.0, 1.2]])
+    Ainv = np.linalg.inv(A)
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.3))
+    panels = [
+        (axes[0], np.eye(2), "① 原网格"),
+        (axes[1], A, r"② 施加 $\mathbf{A}$：网格被拉伸+搓斜"),
+        (axes[2], Ainv @ A, r"③ 再施加 $\mathbf{A}^{-1}$：回到原样"),
+    ]
+    for ax, mat, title in panels:
+        for t in np.linspace(-2, 2, 9):
+            seg = np.array([[t, -2], [t, 2]]) @ mat.T
+            ax.plot(seg[:, 0], seg[:, 1], color=GRAY, lw=0.6, alpha=0.6)
+            seg2 = np.array([[-2, t], [2, t]]) @ mat.T
+            ax.plot(seg2[:, 0], seg2[:, 1], color=GRAY, lw=0.6, alpha=0.6)
+        e1 = mat @ np.array([1, 0])
+        e2 = mat @ np.array([0, 1])
+        ax.annotate("", xy=e1, xytext=(0, 0),
+                    arrowprops=dict(arrowstyle="-|>", color=RED, lw=2.3))
+        ax.annotate("", xy=e2, xytext=(0, 0),
+                    arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.3))
+        ax.set_title(title, fontsize=11)
+        ax.set_aspect("equal")
+        ax.grid(True, alpha=0.15)
+        ax.set_xlim(-3, 3)
+        ax.set_ylim(-3, 3)
+    fig.suptitle("逆矩阵 = “撤销”这台机器", y=1.02)
+    save(fig, "fig_inverse.png")
+
+
+# --- 图 9：可逆 vs 不可逆（行列式 = 面积伸缩） -----------------------------
+def fig_determinant():
+    unit = np.array([[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]], float)
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.3))
+    cases = [
+        (axes[0], np.eye(2), "原单位正方形\n面积 = 1"),
+        (axes[1], np.array([[1.2, 0.7], [0.4, 1.3]]), "可逆：变成平行四边形\n面积 = |det| ≈ 1.28"),
+        (axes[2], np.array([[1.0, 2.0], [0.5, 1.0]]), "不可逆：压扁成一条线\n面积 = 0（det = 0）"),
+    ]
+    for ax, mat, title in cases:
+        poly = unit @ mat.T
+        ax.fill(poly[:, 0], poly[:, 1], color="#dbeafe", alpha=0.8, edgecolor=BLUE, lw=2)
+        e1 = mat @ np.array([1, 0])
+        e2 = mat @ np.array([0, 1])
+        ax.annotate("", xy=e1, xytext=(0, 0),
+                    arrowprops=dict(arrowstyle="-|>", color=RED, lw=2.2))
+        ax.annotate("", xy=e2, xytext=(0, 0),
+                    arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.2))
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.set_title(title, fontsize=11)
+        ax.set_aspect("equal")
+        ax.grid(True, alpha=0.2)
+        ax.set_xlim(-0.5, 3.5)
+        ax.set_ylim(-0.5, 3.5)
+    fig.suptitle("行列式 |det| = 单位正方形被放大/压扁后的面积", y=1.03)
+    save(fig, "fig_determinant_invertibility.png")
+
+
+# --- 图 10：张成（span）-----------------------------------------------------
+def fig_span():
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.3))
+    # 面板1：一个向量 -> 张成一条直线
+    v = np.array([1.0, 0.5])
+    tt = np.linspace(-3, 3, 2)
+    axes[0].plot(v[0] * tt, v[1] * tt, ls="--", color=GRAY, lw=1.2)
+    for c in [-1.5, -0.5, 1.5, 2.5]:
+        axes[0].annotate("", xy=c * v, xytext=(0, 0),
+                         arrowprops=dict(arrowstyle="-|>", color=BLUE, lw=1.0, alpha=0.5))
+    arrow(axes[0], *v, BLUE, lw=2.6, label=r"$\mathbf{v}$")
+    axes[0].set_title("1 个向量 → 张成一条直线")
+
+    # 面板2：两个不共线向量 -> 张成整个平面
+    v1 = np.array([1.0, 0.0])
+    v2 = np.array([0.4, 1.0])
+    axes[1].set_facecolor("#eef4ff")
+    for c1 in np.linspace(-3, 3, 13):
+        for c2 in np.linspace(-3, 3, 13):
+            p = c1 * v1 + c2 * v2
+            axes[1].plot(p[0], p[1], ".", color="#9db8e8", ms=3)
+    arrow(axes[1], *v1, RED, lw=2.6, label=r"$\mathbf{v}_1$")
+    arrow(axes[1], *v2, GREEN, lw=2.6, label=r"$\mathbf{v}_2$")
+    axes[1].set_title("2 个不共线向量 → 张成整个平面")
+
+    # 面板3：两个共线向量 -> 仍是一条直线
+    w1 = np.array([1.0, 0.5])
+    w2 = np.array([2.0, 1.0])
+    tt2 = np.linspace(-3, 3, 2)
+    axes[2].plot(w1[0] * tt2, w1[1] * tt2, ls="--", color=GRAY, lw=1.2)
+    arrow(axes[2], *w1, BLUE, lw=2.6, label=r"$\mathbf{w}_1$")
+    arrow(axes[2], *w2, RED, lw=2.2, ls="--", label=r"$\mathbf{w}_2$")
+    axes[2].set_title("2 个共线向量 → 还是一条直线")
+
+    for ax in axes:
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.set_xlim(-3, 3)
+        ax.set_ylim(-2.2, 3)
+        ax.set_aspect("equal")
+        ax.grid(True, alpha=0.2)
+    fig.suptitle("张成（span）= 能由这些向量组合出来的所有点", y=1.03)
+    save(fig, "fig_span.png")
+
+
+# --- 图 11：线性无关 vs 线性相关 -------------------------------------------
+def fig_independence():
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.6))
+    # 无关：两向量不共线
+    v1 = np.array([1.2, 0.2])
+    v2 = np.array([0.3, 1.2])
+    arrow(axes[0], *v1, RED, lw=2.6, label=r"$\mathbf{v}_1$")
+    arrow(axes[0], *v2, GREEN, lw=2.6, label=r"$\mathbf{v}_2$")
+    axes[0].set_title("线性无关：谁也变不出另一个\n→ 张成整个平面（冗余为 0）")
+    # 相关：共线
+    w1 = np.array([1.0, 0.5])
+    w2 = np.array([2.0, 1.0])
+    arrow(axes[1], *w1, BLUE, lw=2.6, label=r"$\mathbf{w}_1$")
+    arrow(axes[1], *w2, RED, lw=2.2, ls="--", label=r"$\mathbf{w}_2=2\mathbf{w}_1$")
+    axes[1].set_title("线性相关：一个可由另一个得到\n→ 只能张成一条线（有冗余）")
+    for ax in axes:
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.set_xlim(-0.6, 2.6)
+        ax.set_ylim(-0.6, 2.6)
+        ax.set_aspect("equal")
+        ax.grid(True, alpha=0.2)
+    fig.suptitle("线性无关 = “没有多余的方向”", y=1.02)
+    save(fig, "fig_independence.png")
+
+
+# --- 图 12：det = 两列张成的平行四边形面积（列相关则面积 0） ----------------
+def fig_det_columns():
+    fig, axes = plt.subplots(1, 2, figsize=(10.4, 4.6))
+
+    def panel(ax, v1, v2, title, note, color):
+        poly = np.array([[0, 0], v1, v1 + v2, v2, [0, 0]], float)
+        ax.fill(poly[:, 0], poly[:, 1], color="#dbeafe", alpha=0.85,
+                edgecolor=color, lw=2)
+        arrow(ax, *v1, RED, lw=2.6, label=r"$\mathbf{v}_1$")
+        arrow(ax, *v2, GREEN, lw=2.6, label=r"$\mathbf{v}_2$")
+        ax.set_title(title, fontsize=11)
+        ax.text(0.05, 0.03, note, transform=ax.transAxes, fontsize=12, color=color)
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.grid(True, alpha=0.2)
+        ax.set_xlim(-0.4, 2.2)
+        ax.set_ylim(-0.4, 2.2)
+        ax.set_aspect("equal")
+
+    v1 = np.array([1.2, 0.3])
+    v2 = np.array([0.4, 1.1])
+    panel(axes[0], v1, v2, "列不共线：平行四边形有面积\n(列线性无关)",
+          r"$|\det|=|v_1\times v_2|=1.2\ne0$", BLUE)
+    w1 = np.array([1.0, 0.5])
+    w2 = np.array([0.6, 0.3])
+    panel(axes[1], w1, w2, "列共线：被压扁成线段\n(列线性相关)",
+          r"$|\det|=0$", RED)
+    fig.suptitle(r"$\det$ 就是两列张成的平行四边形（带符号）面积", y=1.03)
+    save(fig, "fig_det_columns.png")
+
+
+if __name__ == "__main__":
+    fig_vector()
+    fig_inner()
+    fig_norms()
+    fig_distance()
+    fig_cosine()
+    fig_matrix()
+    fig_transpose()
+    fig_inverse()
+    fig_determinant()
+    fig_span()
+    fig_independence()
+    fig_det_columns()
+    print("全部完成 ->", os.path.relpath(OUT, ROOT))
