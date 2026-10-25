@@ -5,7 +5,7 @@
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "AISC5000 期中冲刺（2026-10-29）",
+  "current_stage": "AISC5000 期中冲刺 Day 1（S005 / L01 诊断）",
   "concepts": [
     {
       "id": "vector",
@@ -448,9 +448,9 @@
       "note": "非概念条目；不记录复习次数/掌握度"
     }
   ],
-  "sessions_count": 3,
-  "session_counter": 4,
-  "current_session_id": "S004",
+  "sessions_count": 4,
+  "session_counter": 5,
+  "current_session_id": "S005",
   "session_index": [
     {
       "id": "S001",
@@ -476,19 +476,26 @@
     {
       "id": "S004",
       "date": "2026-10-26",
-      "topic": "第06课 正交与投影（阶段 A 收尾）",
+      "topic": "第06课 正交与投影（阶段 A 收尾）+ AISC5000期中冲刺计划/验收修复",
+      "status": "已结束",
+      "summary": "会话摘要/S004_期中冲刺计划与修复.md"
+    },
+    {
+      "id": "S005",
+      "date": "2026-10-26",
+      "topic": "AISC5000 期中冲刺 Day 1（L01 诊断开始）",
       "status": "进行中",
       "summary": null
     }
   ],
   "last_session": "2026-10-26",
-  "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；2026-10-26 起切换 AISC5000 期中冲刺（2026-10-29），新增 M0–M7 覆盖层与 19 个考试概念（均未开始），原阶段 A–F 保留；30 课 L01–L30 已拆 P0/P1 子项，P 级以大纲考点总表为准；S004 为计划/修复会话，Day 1/2/3 计划为 S005/S006/S007（尚未开始）。",
+  "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；完成 AISC5000 期中冲刺计划与验收修复，P 级以大纲考点总表为准，原阶段 A–F 保留；S004 已收尾。S005：Day 1 开始，当前 L01 诊断；诊断后进入 L02–L10。冲刺结束或内容学完后，按大纲 §7 回到原 A–F。",
   "sprint_session_plan": [
     {
       "id": "S005",
       "day": "Day 1",
       "lessons": "L01–L10",
-      "status": "计划中"
+      "status": "进行中"
     },
     {
       "id": "S006",
