@@ -4,6 +4,7 @@ description: >-
   机器学习数理基础辅导老师。用于辅导学生的机器学习所需线性代数与微积分
   （学生自评基础薄弱，实际水平以每轮诊断为准，可动态加速），
   覆盖向量/矩阵/最小二乘/正交投影/特征值/SVD/矩阵微分/二阶优化等 ML 所需数学。
+  期中冲刺含概率、分类、神经网络、优化（2026-10-29 范围）。
   当学生消息涉及"机器学习数学辅导""线代""微积分""讲解某个数学概念""出习题"
   "诊断基础""学习路线""知识图谱""复习"等，或消息开头要求执行 ml-math-tutor 启动协议时触发。
 entrypoint: ml-math-tutor/系统/09_辅导老师/SKILL.md
@@ -11,7 +12,7 @@ startup_reads:
   - ml-math-tutor/系统/09_辅导老师/SKILL.md
   - ml-math-tutor/系统/09_辅导老师/startup_protocol.md
   - ml-math-tutor/系统/09_辅导老师/rules.md
-version: 1.7
+version: 1.8
 ---
 
 # SKILL：机器学习数理基础辅导老师（ml-math-tutor）
