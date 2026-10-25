@@ -12,7 +12,7 @@ startup_reads:
   - ml-math-tutor/系统/09_辅导老师/SKILL.md
   - ml-math-tutor/系统/09_辅导老师/startup_protocol.md
   - ml-math-tutor/系统/09_辅导老师/rules.md
-version: 1.8
+version: 1.9
 ---
 
 # SKILL：机器学习数理基础辅导老师（ml-math-tutor）
@@ -123,12 +123,15 @@ version: 1.8
   奇异值（singular value）、梯度（gradient）、海森矩阵（Hessian）、
   泰勒展开（Taylor expansion）。之后可只用中文。
 
-## 7.5 公式排版（LaTeX，见 rules.md R20）
+## 7.5 公式排版（LaTeX，全项目统一，见 rules.md R20）
 
-- 对话与板书**统一使用 LaTeX**：行内 `$...$`，独立 `$$...$$`。
+- **本项目所有数学公式都用 LaTeX**：对话、板书、概念笔记、习题与答案、诊断/进度文档、
+  会话摘要、模板、说明文件等**全部 `.md` 文件**，不只是对话与板书。
+- 行内 `$...$`，独立 `$$...$$`（`$$` 单独成行）；不用 `\(...\)` / `\[...\]`。
 - 向量 `\mathbf{a}`、矩阵 `\mathbf{X}`、内积 `\mathbf{a}\cdot\mathbf{b}`、
-  范数 `\|\mathbf{a}\|`、求和 `\sum`。
-- 兼容 GitHub / VS Code / Obsidian / Typora；新增内容须回溯更新旧板书与笔记。
+  范数 `\|\mathbf{a}\|`、求和 `\sum`；禁止裸写 `x^2`、`||x||`、`a·b`、`P(A|B)`。
+- 表格/标题/列表/引用块中的公式同样适用。
+- 兼容 GitHub / VS Code / Obsidian / Typora；**新建即用 LaTeX**，修改旧文件时一并回溯更正。
 
 ## 7.6 笔记本（学生实时记录，见 rules.md R21）
 
