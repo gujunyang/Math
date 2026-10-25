@@ -16,7 +16,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
-plt.rcParams["font.sans-serif"] = ["Arial Unicode MS", "Hiragino Sans GB", "Songti SC"]
+plt.rcParams["font.sans-serif"] = ["Arial Unicode MS", "Microsoft YaHei", "SimHei",
+                                  "Hiragino Sans GB", "Songti SC"]
 plt.rcParams["axes.unicode_minus"] = False
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -411,6 +412,121 @@ def fig_det_columns():
     save(fig, "fig_det_columns.png")
 
 
+# --- 图 13：正交 = 夹角 90°（点积为 0），夹角与点积符号 ---------------------
+def fig_orthogonality():
+    fig, axes = plt.subplots(1, 3, figsize=(12.6, 4.3))
+    a = np.array([2.2, 0.0])
+    cases = [
+        ("锐角：$\\mathbf{a}\\cdot\\mathbf{b}>0$", np.array([1.7, 1.5]), GREEN),
+        ("直角：$\\mathbf{a}\\cdot\\mathbf{b}=0$（正交）", np.array([0.0, 2.2]), RED),
+        ("钝角：$\\mathbf{a}\\cdot\\mathbf{b}<0$", np.array([-1.2, 1.6]), GRAY),
+    ]
+    for ax, (title, b, color) in zip(axes, cases):
+        arrow(ax, *a, BLUE, lw=2.4, label=r"$\mathbf{a}$")
+        arrow(ax, *b, color, lw=2.4, label=r"$\mathbf{b}$")
+        # 直角标记（仅中间的"正交"图）
+        if abs(np.dot(a, b)) < 1e-12:
+            u = b / np.linalg.norm(b)
+            v = a / np.linalg.norm(a)
+            s = 0.3
+            pts = np.array([u * s, u * s + v * s, v * s])
+            ax.plot(pts[:, 0], pts[:, 1], color="k", lw=1.2)
+            ax.text(0.1, 0.55, r"$90^\circ$", fontsize=12)
+            ax.text(0.7, 1.0, r"$\mathbf{a}^{\top}\mathbf{b}=0$", color=RED, fontsize=12)
+        ax.set_title(title, fontsize=11)
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.set_xlim(-2.2, 3.0)
+        ax.set_ylim(-0.8, 2.8)
+        ax.set_aspect("equal")
+        ax.grid(True, alpha=0.2)
+        ax.legend(loc="lower right", fontsize=10, frameon=False)
+    fig.suptitle("正交 = 夹角 90° = 内积为 0；内积的符号就是夹角的锐/直/钝",
+                 y=1.03)
+    save(fig, "fig_orthogonality.png")
+
+
+# --- 图 14：投影到一条直线 = 拆成"平行分量 + 垂直分量" ----------------------
+def fig_projection_line():
+    fig, ax = plt.subplots(figsize=(6.0, 5.4))
+    a = np.array([3.0, 4.0])
+    b = np.array([4.0, 2.0])
+    t = np.dot(a, b) / np.dot(a, a)          # = 0.8
+    p = t * a                                # (2.4, 3.2)
+    e = b - p                                # (1.6, -1.2)
+
+    # 直线 span{a}
+    tt = np.linspace(-0.6, 2.2, 2)
+    ax.plot(a[0] * tt, a[1] * tt, ls="--", color=GRAY, lw=1.2,
+            label=r"直线 $\mathrm{span}\{\mathbf{a}\}$")
+    ax.annotate("", xy=a, xytext=(0, 0),
+                arrowprops=dict(arrowstyle="-|>", color=BLUE, lw=2.2))
+    ax.text(a[0] * 1.02, a[1] * 1.02, r"$\mathbf{a}$", color=BLUE, fontsize=13)
+    ax.annotate("", xy=b, xytext=(0, 0),
+                arrowprops=dict(arrowstyle="-|>", color=RED, lw=2.4))
+    ax.text(b[0] + 0.08, b[1] + 0.08, r"$\mathbf{b}$", color=RED, fontsize=13)
+    # 投影 p 与残差 e
+    ax.annotate("", xy=p, xytext=(0, 0),
+                arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.6))
+    ax.text(p[0] - 1.35, p[1] + 0.45, r"$\mathbf{p}=\mathrm{proj}_{\mathbf{a}}\mathbf{b}$",
+            color=GREEN, fontsize=12)
+    ax.annotate("", xy=b, xytext=p,
+                arrowprops=dict(arrowstyle="-|>", color="#8c564b", lw=2.0))
+    ax.text((p[0] + b[0]) / 2 + 0.05, (p[1] + b[1]) / 2 - 0.35,
+            r"$\mathbf{e}=\mathbf{b}-\mathbf{p}$", color="#8c564b", fontsize=12)
+    # 直角标记
+    u = a / np.linalg.norm(a)
+    n = e / np.linalg.norm(e)
+    s = 0.28
+    pts = np.array([p + n * s, p + n * s + u * s, p + u * s])
+    ax.plot(pts[:, 0], pts[:, 1], color="k", lw=1.1)
+    ax.scatter([p[0]], [p[1]], color=GREEN, s=30, zorder=6)
+    ax.text(0.02, 0.96, r"$\mathbf{p}=t\,\mathbf{a},\quad t=\dfrac{\mathbf{a}^{\top}\mathbf{b}}{\mathbf{a}^{\top}\mathbf{a}}=0.8$",
+            transform=ax.transAxes, va="top", fontsize=12)
+    ax.set_title("投影 = 只保留 $\\mathbf{b}$ 沿 $\\mathbf{a}$ 方向的分量", fontsize=12)
+    ax.axhline(0, color=GRAY, lw=0.8)
+    ax.axvline(0, color=GRAY, lw=0.8)
+    ax.set_xlim(-1.0, 5.4)
+    ax.set_ylim(-1.0, 5.2)
+    ax.set_aspect("equal")
+    ax.grid(True, alpha=0.2)
+    ax.legend(loc="lower right", fontsize=9, frameon=False)
+    save(fig, "fig_projection_line.png")
+
+
+# --- 图 15：投影到一个平面（列空间）—— 残差垂直平面 = 最小二乘的几何 --------
+def fig_projection_subspace():
+    from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
+
+    fig = plt.figure(figsize=(6.6, 5.6))
+    ax = fig.add_subplot(111, projection="3d")
+    # 平面：span{e1, e2} = 列空间
+    g = np.linspace(-0.3, 2.6, 2)
+    GX, GY = np.meshgrid(g, g)
+    ax.plot_surface(GX, GY, np.zeros_like(GX), color="#cfe3ff", alpha=0.45,
+                    edgecolor=GRAY, linewidth=0.4)
+    y = np.array([1.4, 1.0, 2.0])
+    p = np.array([1.4, 1.0, 0.0])
+    r = y - p
+    ax.quiver(0, 0, 0, *y, color=RED, lw=2.4, arrow_length_ratio=0.08)
+    ax.quiver(0, 0, 0, *p, color=BLUE, lw=2.4, arrow_length_ratio=0.08)
+    ax.quiver(p[0], p[1], p[2], *r, color=GREEN, lw=2.4, arrow_length_ratio=0.12)
+    ax.text(*(y * 1.04), r"$\mathbf{y}$", color=RED, fontsize=13)
+    ax.text(*(p * 1.03 + np.array([0, 0, 0.08])), r"$\hat{\mathbf{y}}$", color=BLUE, fontsize=13)
+    ax.text(*(p + r / 2 + np.array([0.1, 0.05, 0.0])), r"$\mathbf{r}=\mathbf{y}-\hat{\mathbf{y}}$",
+            color=GREEN, fontsize=11)
+    ax.set_xlabel(r"$x_1$")
+    ax.set_ylabel(r"$x_2$")
+    ax.set_zlabel(r"$x_3$")
+    ax.set_title("投影到子空间：残差 $\\mathbf{r}\\perp$ 列空间\n（最小二乘就是找平面上离 $\\mathbf{y}$ 最近的点）",
+                 fontsize=11)
+    ax.set_xlim(0, 2.4)
+    ax.set_ylim(0, 2.4)
+    ax.set_zlim(0, 2.4)
+    ax.view_init(elev=20, azim=-58)
+    save(fig, "fig_projection_subspace.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -424,4 +540,7 @@ if __name__ == "__main__":
     fig_span()
     fig_independence()
     fig_det_columns()
+    fig_orthogonality()
+    fig_projection_line()
+    fig_projection_subspace()
     print("全部完成 ->", os.path.relpath(OUT, ROOT))
