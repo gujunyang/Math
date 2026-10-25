@@ -23,6 +23,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # ROOT = .../ml-math-tutor
+REPO_ROOT = os.path.dirname(ROOT)
 
 errors = []
 warns = []
@@ -236,6 +237,128 @@ PROTECTED = [
 for parts in PROTECTED:
     if not os.path.exists(p(*parts)):
         err("受保护文件缺失: " + "/".join(parts))
+
+
+# ---- 8. 期中计划关键文件存在 ----------------------------------------------
+PLAN_FILES = [
+    ("学习内容", "01_学习计划", "AISC5000期中复习大纲.md"),
+    ("学习内容", "01_学习计划", "AISC5000期中30课冲刺课表.md"),
+    ("学习内容", "01_学习计划", "AISC5000期中公式速查.md"),
+    ("学习内容", "01_学习计划", "AISC5000期中微课执行协议.md"),
+    ("系统", "05_学习进度", "AISC5000期中诊断.md"),
+    ("学习内容", "01_学习计划", "学习路线.md"),
+]
+for parts in PLAN_FILES:
+    if not os.path.exists(p(*parts)):
+        err("期中计划文件缺失: " + "/".join(parts))
+
+# 仓库根下的课程资料（公告/HW；讲义可本地保留，但公告与 HW 必须在）
+AISC_ROOT = os.path.join(REPO_ROOT, "AISC5000")
+for relp in [
+    "AISC5000/midterm-announcement.md",
+    "AISC5000/HW/Homework 1.pdf",
+    "AISC5000/HW/Homework 2.pdf",
+    "AISC5000/HW/Homework 3.pdf",
+]:
+    if not os.path.exists(os.path.join(REPO_ROOT, relp)):
+        err("课程资料缺失: " + relp)
+
+
+# ---- 9. 作业索引里的 PDF 路径必须存在 -------------------------------------
+hw_idx = p("学习内容", "07_学校作业", "学校作业索引.md")
+if os.path.exists(hw_idx):
+    with open(hw_idx, encoding="utf-8") as f:
+        hw_txt = f.read()
+    for m in re.finditer(r"`([^`]+\.pdf)`", hw_txt):
+        relp = m.group(1)
+        if not os.path.exists(os.path.join(REPO_ROOT, relp)):
+            err(f"作业索引 PDF 路径不存在: {relp}")
+
+
+# ---- 10. 大纲 P 级 / 30 课表 / §6 一致性 ----------------------------------
+outline_path = p("学习内容", "01_学习计划", "AISC5000期中复习大纲.md")
+if os.path.exists(outline_path):
+    with open(outline_path, encoding="utf-8") as f:
+        outline_txt = f.read()
+    if "目标深度" not in outline_txt:
+        err("大纲考点总表缺少「目标深度」列")
+    if "P 级唯一来源" not in outline_txt:
+        err("大纲未声明「P 级唯一来源」")
+    for line in outline_txt.splitlines():
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 6:
+            continue
+        plev = cells[4]  # 模块 | 考点 | 教材 | 作业 | P级 | ...
+        if plev == "P2" and "本轮不看" in line:
+            err("P2 行不应同时写「本轮不看」: " + line[:80])
+        if plev == "—" and not any(
+            k in line for k in ("本轮不看", "不考", "不占 P 级", "不复习")
+        ):
+            warn("`—` 行未说明本轮不看: " + line[:80])
+    if "### Day 1 = L01–L10" not in outline_txt:
+        err("大纲 §6 缺少 Day 1 = L01–L10")
+    if "### Day 2 = L11–L20" not in outline_txt:
+        err("大纲 §6 缺少 Day 2 = L11–L20")
+    m = re.search(r"### Day 3 = L21–L30.*?(?=\n## |\Z)", outline_txt, re.S)
+    if not m:
+        err("大纲 §6 缺少 Day 3 = L21–L30")
+    else:
+        seg = m.group(0)
+        if "P1 补漏" in seg or "只做 P1" in seg:
+            err("大纲 Day 3 仍写「P1 补漏/只做 P1」")
+
+course_path = p("学习内容", "01_学习计划", "AISC5000期中30课冲刺课表.md")
+if os.path.exists(course_path):
+    with open(course_path, encoding="utf-8") as f:
+        course_txt = f.read()
+    for token in ("P0 子项", "P1 子项", "P0 覆盖对照", "P1 补充"):
+        if token not in course_txt:
+            err("30 课表缺少: " + token)
+    ids = re.findall(r"^\| (L\d{2}) \|", course_txt, re.MULTILINE)
+    if len(ids) != 30 or set(ids) != {f"L{i:02d}" for i in range(1, 31)}:
+        err(f"30 课表 L01–L30 行数/编号异常: {len(ids)} 行")
+
+route_path = p("学习内容", "01_学习计划", "学习路线.md")
+if os.path.exists(route_path):
+    with open(route_path, encoding="utf-8") as f:
+        route_txt = f.read()
+    for token in ("| Day 1 | L01–L10 |", "| Day 2 | L11–L20 |", "| Day 3 | L21–L30 |"):
+        if token not in route_txt:
+            err("学习路线 30 课 Day 映射缺失: " + token)
+
+
+# ---- 11. review_queue / next_review 同步 ----------------------------------
+if progress is not None:
+    rq = progress.get("review_queue", [])
+    if not any(x.get("concept") == "orthogonal_projection" for x in rq if isinstance(x, dict)):
+        err("progress.json review_queue 缺少 orthogonal_projection")
+    if not any(x.get("date") == "2026-10-28" for x in rq if isinstance(x, dict)):
+        err("progress.json review_queue 缺少 2026-10-28 期中总复习")
+    for c in progress.get("concepts", []):
+        if c.get("id") == "orthogonal_projection" and c.get("next_review") != "2026-10-27":
+            err("orthogonal_projection.next_review 未同步为 2026-10-27")
+
+
+# ---- 12. 关键文件未跟踪提醒（git 可用时） ---------------------------------
+try:
+    import subprocess
+
+    out = subprocess.run(
+        ["git", "-c", "core.quotepath=false", "-C", REPO_ROOT, "status", "--porcelain"],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        timeout=10,
+    )
+    for line in out.stdout.splitlines():
+        if line.startswith("??") and any(
+            k in line for k in ("AISC5000期中", "AISC5000/", "S004_第06课", "S003_阶段A")
+        ):
+            warn("关键文件尚未纳入 git: " + line[3:])
+except Exception:
+    pass
 
 
 # ---- 输出 -----------------------------------------------------------------

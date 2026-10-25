@@ -1,6 +1,6 @@
 name: ml-math-tutor
 display_name: 机器学习数理基础辅导老师
-version: 1.6
+version: 1.7
 layout:
   top_level:
     - 系统/        # 管理与系统类：09_辅导老师, 05_学习进度, 06_学习习惯, 08_模板

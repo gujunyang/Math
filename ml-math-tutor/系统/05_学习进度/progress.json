@@ -5,54 +5,502 @@
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "阶段 A：第 05 课（线性无关与张成）已讲，待进入 A8 正交与投影",
+  "current_stage": "AISC5000 期中冲刺（2026-10-29）",
   "concepts": [
-    { "id": "vector", "name": "向量", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "inner_product", "name": "内积", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "norm", "name": "范数", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "distance_cosine", "name": "距离与余弦相似度", "priority": "掌握", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "matrix_mult", "name": "矩阵与矩阵乘法", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "transpose_inv", "name": "转置与逆", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "linear_independence", "name": "线性无关与张成", "priority": "必学", "status": "学习中", "mastery": 0, "next_review": null },
-    { "id": "orthogonal_projection", "name": "正交与投影", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "linear_model", "name": "线性模型 y=Xw", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "residual", "name": "残差", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "orthogonality_condition", "name": "正交性条件 Xᵀr=0", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "normal_equation", "name": "正规方程", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "least_squares", "name": "最小二乘估计", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "eigen", "name": "特征值与特征向量", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "eigen_decomposition", "name": "特征分解", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "singular_value", "name": "奇异值", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "svd", "name": "奇异值分解 SVD", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "pseudo_inverse", "name": "伪逆", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "low_rank", "name": "低秩近似与降维", "priority": "了解", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "graph_laplacian", "name": "图拉普拉斯", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "algebraic_connectivity", "name": "代数连通度", "priority": "了解", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "gradient", "name": "梯度（标量对向量求导）", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "scalar_derivative_layout", "name": "求导方向与布局约定", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "jacobian", "name": "雅可比矩阵", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "chain_rule", "name": "链式法则", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "autodiff", "name": "自动微分/反向传播", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "second_derivative", "name": "二阶导", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "hessian", "name": "海森矩阵", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "taylor", "name": "泰勒展开", "priority": "必学", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "convexity", "name": "凸性", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "gradient_descent", "name": "梯度下降", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "newton", "name": "牛顿法", "priority": "了解", "status": "未开始", "mastery": 0, "next_review": null },
-    { "id": "ridge", "name": "岭回归/L2正则", "priority": "掌握", "status": "未开始", "mastery": 0, "next_review": null }
+    {
+      "id": "vector",
+      "name": "向量",
+      "priority": "必学",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "inner_product",
+      "name": "内积",
+      "priority": "必学",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "norm",
+      "name": "范数",
+      "priority": "必学",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "distance_cosine",
+      "name": "距离与余弦相似度",
+      "priority": "掌握",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "matrix_mult",
+      "name": "矩阵与矩阵乘法",
+      "priority": "必学",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "transpose_inv",
+      "name": "转置与逆",
+      "priority": "必学",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "linear_independence",
+      "name": "线性无关与张成",
+      "priority": "必学",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "orthogonal_projection",
+      "name": "正交与投影",
+      "priority": "必学",
+      "status": "学习中",
+      "mastery": 0,
+      "next_review": "2026-10-27"
+    },
+    {
+      "id": "linear_model",
+      "name": "线性模型 y=Xw",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "residual",
+      "name": "残差",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "orthogonality_condition",
+      "name": "正交性条件 Xᵀr=0",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "normal_equation",
+      "name": "正规方程",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "least_squares",
+      "name": "最小二乘估计",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "eigen",
+      "name": "特征值与特征向量",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "eigen_decomposition",
+      "name": "特征分解",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "singular_value",
+      "name": "奇异值",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "svd",
+      "name": "奇异值分解 SVD",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "pseudo_inverse",
+      "name": "伪逆",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "low_rank",
+      "name": "低秩近似与降维",
+      "priority": "了解",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "graph_laplacian",
+      "name": "图拉普拉斯",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "algebraic_connectivity",
+      "name": "代数连通度",
+      "priority": "了解",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "gradient",
+      "name": "梯度（标量对向量求导）",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "scalar_derivative_layout",
+      "name": "求导方向与布局约定",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "jacobian",
+      "name": "雅可比矩阵",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "chain_rule",
+      "name": "链式法则",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "autodiff",
+      "name": "自动微分/反向传播",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "second_derivative",
+      "name": "二阶导",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "hessian",
+      "name": "海森矩阵",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "taylor",
+      "name": "泰勒展开",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "convexity",
+      "name": "凸性",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "gradient_descent",
+      "name": "梯度下降",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "newton",
+      "name": "牛顿法",
+      "priority": "了解",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "ridge",
+      "name": "岭回归/L2正则",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "prob_rules",
+      "name": "概率规则与 Bayes（sum/product/Bayes/independence）",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "prob_density",
+      "name": "概率密度、CDF、期望/方差/协方差",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "gaussian",
+      "name": "高斯分布与 MLE",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "density_transform",
+      "name": "密度变换与 Jacobian",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "probabilistic_regression",
+      "name": "线性回归的概率视角（Gaussian noise→SSE）",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "overfitting_regularization",
+      "name": "过拟合、正则化、验证/测试",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "linear_discriminant",
+      "name": "线性判别函数、决策边界、signed distance",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "target_coding",
+      "name": "1-of-K / one-hot 编码",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "least_squares_classification",
+      "name": "最小二乘用于分类的局限",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "decision_theory_classification",
+      "name": "误分类率、loss matrix、expected loss",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "reject_option",
+      "name": "拒识选项",
+      "priority": "了解",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "classifier_metrics",
+      "name": "混淆矩阵、accuracy/precision/recall/F1、ROC/AUC",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "deep_network",
+      "name": "深度网络结构、forward pass、depth/representation",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "activation_function",
+      "name": "sigmoid/tanh/ReLU/leaky ReLU/softplus 及选择",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "error_function",
+      "name": "SSE/BCE/CE、输出-损失配对",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "error_surface",
+      "name": "误差面、stationary points、saddle、Hessian 判定",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "batch_gd",
+      "name": "batch gradient descent",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "sgd",
+      "name": "stochastic / mini-batch gradient descent",
+      "priority": "掌握",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    },
+    {
+      "id": "gd_convergence",
+      "name": "二次模型下的收敛条件与条件数",
+      "priority": "必学",
+      "status": "未开始",
+      "mastery": 0,
+      "next_review": null
+    }
   ],
   "wrong_questions": [
-    { "id": "diag_q8", "session": "S002", "date": "2026-10-15", "concept": "chain_rule", "desc": "混淆位移的一阶导=速度 与 速度变化率=加速度", "status": "待复习" }
+    {
+      "id": "diag_q8",
+      "session": "S002",
+      "date": "2026-10-15",
+      "concept": "chain_rule",
+      "desc": "混淆位移的一阶导=速度 与 速度变化率=加速度",
+      "status": "待复习"
+    }
   ],
-  "review_queue": [],
-  "sessions_count": 2,
-  "session_counter": 3,
-  "current_session_id": "S003",
+  "review_queue": [
+    {
+      "concept": "orthogonal_projection",
+      "next_review": "2026-10-27",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "item": "AISC5000 期中 P0 总复习",
+      "date": "2026-10-28",
+      "scope": "M1–M7 P0",
+      "note": "非概念条目；不记录复习次数/掌握度"
+    }
+  ],
+  "sessions_count": 3,
+  "session_counter": 4,
+  "current_session_id": "S004",
   "session_index": [
-    { "id": "S001", "date": "2026-10-14", "topic": "系统搭建", "status": "已结束", "summary": "会话摘要/S001_系统搭建.md" },
-    { "id": "S002", "date": "2026-10-15", "topic": "诊断+第01课 向量与内积+系统机制(板书/LaTeX/笔记本/目录重构/护栏)", "status": "已结束", "summary": "会话摘要/S002_系统建设与第01课.md" },
-    { "id": "S003", "date": "2026-10-16", "topic": "待定（拟：第02课 范数 + 距离/余弦相似度）", "status": "进行中", "summary": null }
+    {
+      "id": "S001",
+      "date": "2026-10-14",
+      "topic": "系统搭建",
+      "status": "已结束",
+      "summary": "会话摘要/S001_系统搭建.md"
+    },
+    {
+      "id": "S002",
+      "date": "2026-10-15",
+      "topic": "诊断+第01课 向量与内积+系统机制(板书/LaTeX/笔记本/目录重构/护栏)",
+      "status": "已结束",
+      "summary": "会话摘要/S002_系统建设与第01课.md"
+    },
+    {
+      "id": "S003",
+      "date": "2026-10-16",
+      "topic": "第02–05课 范数/距离余弦、矩阵乘法、转置与逆、线性无关与张成+几何配图",
+      "status": "已结束",
+      "summary": "会话摘要/S003_阶段A线代基础与几何优先.md"
+    },
+    {
+      "id": "S004",
+      "date": "2026-10-26",
+      "topic": "第06课 正交与投影（阶段 A 收尾）",
+      "status": "进行中",
+      "summary": null
+    }
   ],
-  "last_session": "2026-10-15",
-  "notes": "S002：诊断完成(10题9对)。开讲第01课。新增板书(R19)/LaTeX(R20)/笔记本(R21)(已确认)。目录重构为顶层 系统/ 与 学习内容/(已确认)。"
+  "last_session": "2026-10-26",
+  "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；2026-10-26 起切换 AISC5000 期中冲刺（2026-10-29），新增 M0–M7 覆盖层与 19 个考试概念（均未开始），原阶段 A–F 保留；30 课 L01–L30 已拆 P0/P1 子项，P 级以大纲考点总表为准；S004 为计划/修复会话，Day 1/2/3 计划为 S005/S006/S007（尚未开始）。",
+  "sprint_session_plan": [
+    {
+      "id": "S005",
+      "day": "Day 1",
+      "lessons": "L01–L10",
+      "status": "计划中"
+    },
+    {
+      "id": "S006",
+      "day": "Day 2",
+      "lessons": "L11–L20",
+      "status": "计划中"
+    },
+    {
+      "id": "S007",
+      "day": "Day 3",
+      "lessons": "L21–L30",
+      "status": "计划中"
+    }
+  ]
 }

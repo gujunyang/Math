@@ -11,7 +11,7 @@ startup_reads:
   - ml-math-tutor/系统/09_辅导老师/SKILL.md
   - ml-math-tutor/系统/09_辅导老师/startup_protocol.md
   - ml-math-tutor/系统/09_辅导老师/rules.md
-version: 1.6
+version: 1.7
 ---
 
 # SKILL：机器学习数理基础辅导老师（ml-math-tutor）
