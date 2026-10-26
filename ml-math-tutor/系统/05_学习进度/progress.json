@@ -5,7 +5,7 @@
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "AISC5000 期中冲刺 Day 1（S005 / L01 诊断）",
+  "current_stage": "AISC5000 期中冲刺 Day 1（S005 / L04 已讲，练习待做）",
   "concepts": [
     {
       "id": "vector",
@@ -115,9 +115,9 @@
       "id": "eigen",
       "name": "特征值与特征向量",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-27"
     },
     {
       "id": "eigen_decomposition",
@@ -442,6 +442,12 @@
       "status": "学习中"
     },
     {
+      "concept": "eigen",
+      "next_review": "2026-10-27",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
       "item": "AISC5000 期中 P0 总复习",
       "date": "2026-10-28",
       "scope": "M1–M7 P0",
@@ -489,7 +495,7 @@
     }
   ],
   "last_session": "2026-10-26",
-  "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；完成 AISC5000 期中冲刺计划与验收修复，P 级以大纲考点总表为准，原阶段 A–F 保留；S004 已收尾。S005：Day 1 开始，当前 L01 诊断；诊断后进入 L02–L10。冲刺结束或内容学完后，按大纲 §7 回到原 A–F。",
+  "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；完成 AISC5000 期中冲刺计划与验收修复，P 级以大纲考点总表为准，原阶段 A–F 保留；S004 已收尾。S005：Day 1 开始，L01 诊断结果=仅 Q1（ℓp 范数）可独立完成，其余 14 题未作答；经核对这 14 题覆盖的 eigen/微积分/概率/回归/分类/NN/优化多数尚未讲过，属未学而非降级信号，故不切 P0-only，按 L02–L10 正常推进；L02 已讲（范数/内积/余弦/正交/投影回炉）。冲刺结束或内容学完后，按大纲 §7 回到原 A–F。",
   "sprint_session_plan": [
     {
       "id": "S005",
