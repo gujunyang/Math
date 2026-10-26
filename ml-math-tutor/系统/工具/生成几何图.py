@@ -527,6 +527,54 @@ def fig_projection_subspace():
     save(fig, "fig_projection_subspace.png")
 
 
+# --- 图 16：特征向量（方向不变） -------------------------------------------
+def fig_eigen():
+    A = np.array([[2.0, 1.0], [1.0, 2.0]])
+    fig, ax = plt.subplots(figsize=(6.2, 5.6))
+
+    # 单位圆 -> 椭圆（矩阵把圆拉成椭圆）
+    th = np.linspace(0, 2 * np.pi, 400)
+    circle = np.vstack([np.cos(th), np.sin(th)])
+    ell = A @ circle
+    ax.plot(circle[0], circle[1], color=GRAY, ls="--", lw=1.2,
+            label=r"单位圆 $\|\mathbf{x}\|=1$")
+    ax.plot(ell[0], ell[1], color=BLUE, lw=2.2,
+            label=r"像椭圆 $\mathbf{A}\mathbf{x}$")
+
+    # 两条特征方向（虚线辅助线）
+    for d, c in [(np.array([1.0, 1.0]), RED), (np.array([1.0, -1.0]), GREEN)]:
+        t = np.linspace(-3.6, 3.6, 2)
+        ax.plot(d[0] * t, d[1] * t, color=c, ls=":", lw=1.0, alpha=0.7, zorder=1)
+
+    # v1 -> A v1 = 3 v1（同向，变长）
+    v1 = np.array([1.0, 1.0])
+    arrow(ax, *v1, RED, lw=2.0, label=r"$\mathbf{v}_1$")
+    arrow(ax, *(A @ v1), RED, lw=2.0, ls="--")
+    ax.text(3.15, 3.15, r"$\mathbf{A}\mathbf{v}_1=3\mathbf{v}_1$", color=RED, fontsize=12)
+
+    # v2 -> A v2 = v2（同向，长度不变）
+    v2 = np.array([1.0, -1.0])
+    arrow(ax, *v2, GREEN, lw=2.0, label=r"$\mathbf{v}_2$")
+    arrow(ax, *(A @ v2), GREEN, lw=3.2, ls="--")
+    ax.text(1.05, -1.55, r"$\mathbf{A}\mathbf{v}_2=1\cdot\mathbf{v}_2$", color=GREEN, fontsize=12)
+
+    # 一般向量：方向会转
+    u = np.array([1.6, 0.4])
+    arrow(ax, *u, GRAY, lw=1.8, ls="-.")
+    arrow(ax, *(A @ u), GRAY, lw=1.8, ls=":")
+    ax.text(2.0, 1.0, r"一般向量：方向会变", color=GRAY, fontsize=10)
+
+    ax.set_title(r"特征向量：$A\mathbf{v}=\lambda\mathbf{v}$ —— 方向不变，只被拉伸 $\lambda$ 倍")
+    ax.axhline(0, color=GRAY, lw=0.8)
+    ax.axvline(0, color=GRAY, lw=0.8)
+    ax.grid(True, alpha=0.25)
+    ax.set_xlim(-4, 4.2)
+    ax.set_ylim(-4, 4.2)
+    ax.set_aspect("equal")
+    ax.legend(loc="lower right", fontsize=9)
+    save(fig, "fig_eigen_direction.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -543,4 +591,5 @@ if __name__ == "__main__":
     fig_orthogonality()
     fig_projection_line()
     fig_projection_subspace()
+    fig_eigen()
     print("全部完成 ->", os.path.relpath(OUT, ROOT))
