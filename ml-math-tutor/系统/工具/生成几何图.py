@@ -575,6 +575,188 @@ def fig_eigen():
     save(fig, "fig_eigen_direction.png")
 
 
+# --- 图 17：谱分解三步 —— 换坐标 → 拉伸 → 转回来 ---------------------------
+def fig_spectral_steps():
+    A = np.array([[2.0, 1.0], [1.0, 2.0]])
+    Q = np.array([[1.0, 1.0], [1.0, -1.0]]) / np.sqrt(2.0)
+    Lam = np.diag([3.0, 1.0])
+    steps = [
+        (np.eye(2), "① 原图：单位圆 + 标准网格\n（蓝 = 单位圆）"),
+        (Q.T, "② 乘 $\\mathbf{Q}^\\top$：换到特征坐标\n（网格转到特征方向，圆还是圆）"),
+        (Lam @ Q.T, "③ 乘 $\\boldsymbol{\\Lambda}$：沿两条特征轴\n分别拉伸 3 倍、1 倍"),
+        (Q @ Lam @ Q.T, "④ 乘 $\\mathbf{Q}$：转回原坐标\n→ 半轴 3 和 1 的椭圆"),
+    ]
+    th = np.linspace(0, 2 * np.pi, 400)
+    circle = np.vstack([np.cos(th), np.sin(th)])
+    q1 = Q[:, 0]
+    q2 = Q[:, 1]
+
+    fig, axes = plt.subplots(1, 4, figsize=(17, 4.4))
+    for ax, (M, title) in zip(axes, steps):
+        # 网格
+        for t in np.linspace(-4, 4, 17):
+            for seg in (np.array([[t, -4], [t, 4]]), np.array([[-4, t], [4, t]])):
+                p = seg @ M.T
+                ax.plot(p[:, 0], p[:, 1], color=GRAY, lw=0.6, alpha=0.6)
+        # 单位圆的像
+        img = M @ circle
+        ax.plot(img[0], img[1], color=BLUE, lw=2.2)
+        # 两条特征方向在这个视角下的样子
+        for vec, color, name in [(q1, RED, r"$\mathbf{q}_1$"), (q2, GREEN, r"$\mathbf{q}_2$")]:
+            w = M @ vec
+            ax.annotate("", xy=w, xytext=(0, 0),
+                        arrowprops=dict(arrowstyle="-|>", color=color, lw=2.2))
+            ax.text(w[0] * 1.06 + 0.06, w[1] * 1.06 + 0.06, name, color=color, fontsize=12)
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.set_title(title, fontsize=10.5)
+        ax.set_xlim(-3.6, 3.6)
+        ax.set_ylim(-3.6, 3.6)
+        ax.set_aspect("equal")
+        ax.set_xticks([-3, 0, 3])
+        ax.set_yticks([-3, 0, 3])
+    fig.suptitle(r"$\mathbf{A}=\mathbf{Q}\boldsymbol{\Lambda}\mathbf{Q}^\top$：换个坐标系说话 → 各方向拉伸 → 换回来说",
+                 y=1.03, fontsize=13)
+    save(fig, "fig_spectral_steps.png")
+
+
+# --- 图 18：二次型的等高线 —— 椭圆（碗）/ 双曲线（鞍）/ 平行线（谷） --------
+def fig_quadratic_contours():
+    x = np.linspace(-2.4, 2.4, 500)
+    X, Y = np.meshgrid(x, x)
+    cases = [
+        (np.array([[2.0, 1.0], [1.0, 2.0]]),
+         "① 正定（" + r"$\lambda=3,\,1$" + "）\n等高线是椭圆：碗，原点最低"),
+        (np.array([[1.0, 2.0], [2.0, 1.0]]),
+         "② 不定（" + r"$\lambda=3,\,-1$" + "）\n等高线是双曲线：马鞍"),
+        (np.array([[1.0, 1.0], [1.0, 1.0]]),
+         "③ 半正定（" + r"$\lambda=2,\,0$" + "）\n等高线是平行直线：山谷"),
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
+    for ax, (M, title) in zip(axes, cases):
+        Q = M[0, 0] * X ** 2 + (M[0, 1] + M[1, 0]) * X * Y + M[1, 1] * Y ** 2
+        ax.contour(X, Y, Q, levels=[1, 2, 4, 8], colors=[BLUE], linewidths=1.6)
+        ax.contour(X, Y, Q, levels=[-8, -4, -2, -1], colors=[RED], linewidths=1.6,
+                   linestyles="--")
+        # 特征方向
+        w, V = np.linalg.eigh(M)
+        for k, color in [(0, GREEN), (1, RED)]:
+            v = V[:, k]
+            ax.annotate("", xy=v * 2.2, xytext=(0, 0),
+                        arrowprops=dict(arrowstyle="-|>", color=color, lw=1.6, ls=":"))
+            ax.text(v[0] * 2.35, v[1] * 2.35, rf"$\lambda={w[k]:.0f}$", color=color,
+                    fontsize=11)
+        ax.scatter([0], [0], color="k", s=22, zorder=6)
+        ax.text(0.06, -0.28, "原点", fontsize=10)
+        ax.set_title(title, fontsize=11)
+        ax.axhline(0, color=GRAY, lw=0.7)
+        ax.axvline(0, color=GRAY, lw=0.7)
+        ax.set_xlim(-2.4, 2.4)
+        ax.set_ylim(-2.4, 2.4)
+        ax.set_aspect("equal")
+        ax.set_xticks([-2, 0, 2])
+        ax.set_yticks([-2, 0, 2])
+    fig.suptitle(r"二次型 $q(\mathbf{x})=\mathbf{x}^\top\mathbf{A}\mathbf{x}$ 的等高线：蓝 = 正值，红虚线 = 负值",
+                 y=1.03, fontsize=13)
+    save(fig, "fig_quadratic_contours.png")
+
+
+# --- 图 19：梯度 ⟂ 等高线，指向上升最快方向 --------------------------------
+def fig_gradient_contour():
+    from matplotlib.lines import Line2D
+
+    x = np.linspace(-2.6, 2.6, 500)
+    X, Y = np.meshgrid(x, x)
+    F = X ** 2 + 2 * Y ** 2
+
+    fig, ax = plt.subplots(figsize=(6.6, 5.8))
+    cs = ax.contour(X, Y, F, levels=[0.5, 1, 2, 4, 8], colors=[GRAY],
+                    linewidths=1.3)
+    ax.clabel(cs, fmt="f=%.1f", fontsize=9, inline=True)
+
+    def grad(p):
+        return np.array([2 * p[0], 4 * p[1]])
+
+    # 蓝色：梯度（最陡上升）
+    for p in [np.array([1.45, 0.75]), np.array([-1.3, 1.1]),
+              np.array([-1.5, -0.75]), np.array([0.95, -1.35])]:
+        g = grad(p)
+        g = g / np.linalg.norm(g) * 0.75
+        ax.annotate("", xy=p + g, xytext=p,
+                    arrowprops=dict(arrowstyle="-|>", color=BLUE, lw=2.0))
+
+    # 绿色：负梯度（最陡下降）
+    p0 = np.array([-1.3, 1.1])
+    g0 = grad(p0)
+    g0 = -g0 / np.linalg.norm(g0) * 0.75
+    ax.annotate("", xy=p0 + g0, xytext=p0,
+                arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.2))
+    ax.text(p0[0] - 0.95, p0[1] - 0.55, r"$-\nabla f$（下山）", color=GREEN, fontsize=11)
+
+    # 直角标记：梯度 ⟂ 切线
+    p = np.array([1.2, 1.0])
+    g = grad(p)
+    u1 = g / np.linalg.norm(g)
+    u2 = np.array([-u1[1], u1[0]])
+    s = 0.3
+    ax.plot(*np.array([p - s * u2, p + s * u2]).T, color=GRAY, lw=1.4, ls="--")
+    k = 0.18
+    sq = np.array([p + k * u1, p + k * u1 + k * u2, p + k * u2])
+    ax.plot(sq[:, 0], sq[:, 1], color="k", lw=1.1)
+    ax.scatter([p[0]], [p[1]], color="k", s=24, zorder=6)
+    ax.annotate("", xy=p + u1 * 0.85, xytext=p,
+                arrowprops=dict(arrowstyle="-|>", color=BLUE, lw=2.6))
+
+    ax.set_title(r"梯度 $\nabla f$ 垂直于等高线，指向 $f$ 增大最快的方向", fontsize=12)
+    ax.axhline(0, color=GRAY, lw=0.7)
+    ax.axvline(0, color=GRAY, lw=0.7)
+    ax.set_xlim(-2.6, 2.6)
+    ax.set_ylim(-2.6, 2.6)
+    ax.set_aspect("equal")
+    ax.set_xticks([-2, 0, 2])
+    ax.set_yticks([-2, 0, 2])
+    ax.legend(handles=[
+        Line2D([], [], color=BLUE, lw=2, label=r"$\nabla f$：最陡上升"),
+        Line2D([], [], color=GREEN, lw=2, label=r"$-\nabla f$：最陡下降"),
+        Line2D([], [], color=GRAY, lw=1.3, ls="--", label="切线 = 等高线方向"),
+        Line2D([], [], color=GRAY, lw=1.3, label="等高线 $f=c$"),
+    ], loc="lower right", fontsize=9, frameon=False)
+    save(fig, "fig_gradient_contour.png")
+
+
+# --- 图 20：二阶 Taylor = 在一点贴一条抛物线 --------------------------------
+def fig_taylor_parabola():
+    w = np.linspace(-0.95, 1.2, 500)
+    L = 0.5 * (w * np.exp(w) - 2) ** 2
+    tan = 2.0 - 2.0 * w                 # 一阶 Taylor
+    par = 2.0 - 2.0 * w - 1.5 * w ** 2  # 二阶 Taylor（L''(0) = -3）
+
+    fig, ax = plt.subplots(figsize=(7.2, 5.2))
+    ax.plot(w, L, color=BLUE, lw=2.6, label=r"$L(w)=\frac{1}{2}(we^w-2)^2$")
+    ax.plot(w, tan, color=GRAY, lw=1.6, ls="--", label=r"一阶：切线 $L(0)+L'(0)w$")
+    ax.plot(w, par, color=RED, lw=2.0, ls="-",
+            label=r"二阶：抛物线 $L(0)+L'(0)w+\frac{L''(0)}{2}w^2$")
+
+    ax.scatter([0], [2], color="k", s=40, zorder=6)
+    ax.text(-0.92, 0.55, r"$w_0=0$：" + "\n" + r"$L=2,\ L'=-2,\ L''=-3$",
+            fontsize=10, bbox=dict(boxstyle="round", fc="white", ec=GRAY, alpha=0.9))
+
+    ws = 0.8526
+    ax.scatter([ws], [0], color=GREEN, s=40, zorder=6)
+    ax.annotate(r"真正的最小 $w\approx0.85$", xy=(ws, 0.03), xytext=(0.40, 0.62),
+                fontsize=10, color=GREEN,
+                arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.1))
+
+    ax.set_title("局部二次近似：值、斜率、曲率三样都对上", fontsize=12)
+    ax.set_xlabel(r"$w$")
+    ax.set_ylabel(r"$L(w)$")
+    ax.grid(True, alpha=0.25)
+    ax.set_xlim(-0.95, 1.2)
+    ax.set_ylim(-0.3, 3.4)
+    ax.legend(loc="upper center", fontsize=9, frameon=False)
+    save(fig, "fig_taylor_parabola.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -592,4 +774,8 @@ if __name__ == "__main__":
     fig_projection_line()
     fig_projection_subspace()
     fig_eigen()
+    fig_spectral_steps()
+    fig_quadratic_contours()
+    fig_gradient_contour()
+    fig_taylor_parabola()
     print("全部完成 ->", os.path.relpath(OUT, ROOT))

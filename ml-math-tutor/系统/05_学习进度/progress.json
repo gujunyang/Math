@@ -5,7 +5,7 @@
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "AISC5000 期中冲刺 Day 1（S005 / L05 已讲，练习待做）",
+  "current_stage": "AISC5000 期中冲刺 Day 1（S005 / L08 已讲，练习待做）",
   "concepts": [
     {
       "id": "vector",
@@ -187,9 +187,9 @@
       "id": "gradient",
       "name": "梯度（标量对向量求导）",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-28"
     },
     {
       "id": "scalar_derivative_layout",
@@ -211,9 +211,9 @@
       "id": "chain_rule",
       "name": "链式法则",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-28"
     },
     {
       "id": "autodiff",
@@ -227,25 +227,25 @@
       "id": "second_derivative",
       "name": "二阶导",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-28"
     },
     {
       "id": "hessian",
       "name": "海森矩阵",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-28"
     },
     {
       "id": "taylor",
       "name": "泰勒展开",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-28"
     },
     {
       "id": "convexity",
@@ -468,6 +468,30 @@
       "status": "学习中"
     },
     {
+      "concept": "gradient",
+      "next_review": "2026-10-28",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "concept": "chain_rule",
+      "next_review": "2026-10-28",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "concept": "hessian",
+      "next_review": "2026-10-28",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "concept": "taylor",
+      "next_review": "2026-10-28",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
       "item": "AISC5000 期中 P0 总复习",
       "date": "2026-10-28",
       "scope": "M1–M7 P0",
@@ -515,7 +539,7 @@
     }
   ],
   "last_session": "2026-10-26",
-  "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；完成 AISC5000 期中冲刺计划与验收修复，P 级以大纲考点总表为准，原阶段 A–F 保留；S004 已收尾。S005：Day 1 开始，L01 诊断结果=仅 Q1（ℓp 范数）可独立完成，其余 14 题未作答；经核对这 14 题覆盖的 eigen/微积分/概率/回归/分类/NN/优化多数尚未讲过，属未学而非降级信号，故不切 P0-only，按 L02–L10 正常推进；L02 已讲（范数/内积/余弦/正交/投影回炉）；L03–L05 已讲（矩阵/转置/逆/det、eigen、trace/det/对称/正定）。冲刺结束或内容学完后，按大纲 §7 回到原 A–F。",
+  "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；完成 AISC5000 期中冲刺计划与验收修复，P 级以大纲考点总表为准，原阶段 A–F 保留；S004 已收尾。S005：Day 1 开始，L01 诊断结果=仅 Q1（ℓp 范数）可独立完成，其余 14 题未作答；经核对这 14 题覆盖的 eigen/微积分/概率/回归/分类/NN/优化多数尚未讲过，属未学而非降级信号，故不切 P0-only，按 L02–L10 正常推进；L02 已讲（范数/内积/余弦/正交/投影回炉）；L03–L05 已讲（矩阵/转置/逆/det、eigen、trace/det/对称/正定）。L06 已讲（偏导、梯度列向量与形状、方向导数、链式法则两条：路径版与 X^T r 版）。冲刺结束或内容学完后，按大纲 §7 回到原 A–F。",
   "sprint_session_plan": [
     {
       "id": "S005",
