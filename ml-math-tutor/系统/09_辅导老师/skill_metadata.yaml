@@ -53,7 +53,7 @@ naming:
   data_files: 英文（progress.json / habits.jsonl / skill_metadata.yaml）
   agent_skill_files: 英文
   math_terms: 首次出现同时标注英文
-  math_formulas: 全项目所有数学公式统一 LaTeX，行内 $...$，独立 $$...$$（全部 .md 文件，不只对话与板书）
+  math_formulas: 学习内容类文档（学习内容/** 全部 .md）与对话统一 LaTeX，行内 $...$，独立 $$...$$；系统/** 管理记录类不强制（R20）
   teaching_order: 直觉 → 几何(配图) → 计算/公式（几何优先，见 R2/R23）
 priority_levels: [必学, 掌握, 了解]
 checks:
