@@ -3,7 +3,7 @@
 - 会话ID：`S005`
 - 日期：2026-10-27
 - 对应：L07 / M2
-- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源；（v5）2026-10-27 7.3.1 补「三行结论怎么来的」：$i=k$ 项提取 $x_k$ 得 $\mathbf{A}$ 第 $k$ 行内积、$j=k$ 项用 $(\mathbf{A}^\top)_{kj}=a_{jk}$ 换成 $\mathbf{A}^\top$ 第 $k$ 行、$a_{kk}x_k^2$ 两类各分一半；并加 $\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ 的逐项表与两个和核对（$\nabla f=(7,13)^\top$）；（v6）2026-10-27 7.5 扩写为 7.5.1–7.5.7「符号表 / 为什么平方（含高斯最大似然、L1 对比）/ 投影几何与法方程 / 闭式解与可解性 / 残差正交性手算（$J=\frac16$）/ 翻车场景 / ML 位置」；（v7）2026-10-27 7.6 扩写为 7.6.1–7.6.3「四道手算（最小/最大/鞍点/双驻点）+ 二阶失效反例（$x^2\pm y^4$ 同 H 不同结局）+ 手算流程与汇总表」
+- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源；（v5）2026-10-27 7.3.1 补「三行结论怎么来的」：$i=k$ 项提取 $x_k$ 得 $\mathbf{A}$ 第 $k$ 行内积、$j=k$ 项用 $(\mathbf{A}^\top)_{kj}=a_{jk}$ 换成 $\mathbf{A}^\top$ 第 $k$ 行、$a_{kk}x_k^2$ 两类各分一半；并加 $\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ 的逐项表与两个和核对（$\nabla f=(7,13)^\top$）；（v6）2026-10-27 7.5 扩写为 7.5.1–7.5.7「符号表 / 为什么平方（含高斯最大似然、L1 对比）/ 投影几何与法方程 / 闭式解与可解性 / 残差正交性手算（$J=\frac16$）/ 翻车场景 / ML 位置」；（v7）2026-10-27 7.6 扩写为 7.6.1–7.6.3「四道手算（最小/最大/鞍点/双驻点）+ 二阶失效反例（$x^2\pm y^4$ 同 H 不同结局）+ 手算流程与汇总表」；（v8）2026-10-27 关键词改中英对照：7.3–7.7 小节标题加英文，例 1–4 标注 local minimum / local maximum / saddle point，新增 7.6.4 术语对照表（25 条）
 
 ---
 
@@ -76,7 +76,7 @@ $$
 
   明显对称（第 1 行第 2 列 = 第 2 行第 1 列，都是 $2x+6y$）。
 
-#### 7.2.1 梯度 vs Hessian：同一道题，两层信息
+#### 7.2.1 梯度 vs Hessian（gradient vs Hessian）：同一道题，两层信息
 
 设
 
@@ -150,7 +150,7 @@ $$
   $\mathbf{A}+\mathbf{A}^\top=\begin{bmatrix}2&5\\5&8\end{bmatrix}$ ⇒ $\nabla f=(7,13)^\top$。
   直接展开 $f=x_1^2+5x_1x_2+4x_2^2$：$f_{x_1}=2x_1+5x_2=7$，$f_{x_2}=5x_1+8x_2=13$ ✓
 
-#### 7.3.1 推导一：逐分量（最稳，考试够用）
+#### 7.3.1 推导一：逐分量（component-wise derivation）
 
 把二次型写成双重和：
 
@@ -246,7 +246,7 @@ $$
 
 与 7.3 开头的例子完全一致 ✓。
 
-#### 7.3.2 推导二：矩阵微分（最快，三行）
+#### 7.3.2 推导二：矩阵微分（matrix differential）
 
 只用两条事实：
 
@@ -273,7 +273,7 @@ $$
 > 布局约定：本课统一用**分母布局**（梯度写成 $n\times1$ 列向量），所以结果直接是列向量；
 > 若用分子布局（梯度写成行向量），结果是 $\mathbf{x}^\top(\mathbf{A}+\mathbf{A}^\top)$，只是转置了一下。
 
-#### 7.3.3 三个立刻能验算的特例
+#### 7.3.3 三个特例（special cases）
 
 | 情形 | 二次型 | 梯度 | 直觉 |
 |---|---|---|---|
@@ -285,7 +285,7 @@ $$
   所以 $\nabla f$ 里只剩对称部分——这与 L05 5.6.2 视角 4 是同一件事。
 - 对称时 $\mathbf{A}+\mathbf{A}^\top=2\mathbf{A}$，所以**梯度里的 2 就是这么来的**（不是背下来的）。
 
-### 7.4 二次型的 Hessian
+### 7.4 二次型的 Hessian（Hessian of a quadratic form）
 
 $$
 f(\mathbf{x})=\mathbf{x}^\top\mathbf{A}\mathbf{x}
@@ -298,7 +298,7 @@ $$
 - **符号**：梯度是**线性**的，再求一次导就回到常数矩阵；$\mathbf{H}$ 一定对称。
 - **例**：上例 $\mathbf{H}=\begin{bmatrix}2&5\\5&8\end{bmatrix}$。直接算 $f_{x_1x_1}=2$、$f_{x_1x_2}=5$、$f_{x_2x_2}=8$ ✓
 
-#### 7.4.1 推导：梯度是线性的，再求一次导就“降回常数”
+#### 7.4.1 推导：Hessian（differentiate the gradient）
 
 7.3 已经得到
 
@@ -340,7 +340,7 @@ $$
 > 一句话链条：**二次 → 求一次导变线性 → 再求一次导变常数**。
 > 这也是为什么二次型是“最容易算”的函数。
 
-#### 7.4.2 带上 $\frac12$ 和线性项：最小二乘的接口
+#### 7.4.2 带 $\frac12$ 与线性项（least-squares template）
 
 实际损失函数很少是“纯二次型”，更常见的是
 
@@ -379,7 +379,7 @@ $$
 这正是 7.5 那两个公式的**来源**（7.5 只给结论，这里给推导）。
 $\mathbf{X}^\top\mathbf{X}$ 半正定，加 $\lambda\mathbf{I}$ 后正定——L05 的二次型判号在这里直接派上用场。
 
-### 7.5 最小二乘目标的梯度与 Hessian
+### 7.5 最小二乘目标（least squares）的梯度与 Hessian
 
 $$
 J(\mathbf{w})=\tfrac12\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2
@@ -395,7 +395,7 @@ $$
 
 > 推导见 7.4.2（$\frac12$ 模板 + 展开）。本节讲**这个目标本身**：为什么这么写、几何上在干什么、解怎么来。
 
-#### 7.5.1 每个符号是什么
+#### 7.5.1 符号与维度（notation & shapes）
 
 | 符号 | 维度 | 含义 |
 |---|---|---|
@@ -405,13 +405,13 @@ $$
 | $\mathbf{w}$ | $n\times1$ | 要学的参数 |
 | $\mathbf{y}$ | $m\times1$ | 真实标签 |
 | $\mathbf{X}\mathbf{w}$ | $m\times1$ | 预测值 $\hat{\mathbf{y}}$ |
-| $\mathbf{r}=\mathbf{X}\mathbf{w}-\mathbf{y}$ | $m\times1$ | **残差**（预测减真实） |
+| $\mathbf{r}=\mathbf{X}\mathbf{w}-\mathbf{y}$ | $m\times1$ | **残差（residual）**（预测减真实） |
 | $J$ | **一个数** | 残差长度的平方 |
 
 - $J$ 是“给一组 $\mathbf{w}$，返回一个分数”的函数：分数越小，拟合越好。
 - 目标是 $\min_{\mathbf{w}}J(\mathbf{w})$，**不是**让每个残差都为零（一般做不到）。
 
-#### 7.5.2 为什么是“平方”
+#### 7.5.2 为什么用平方（why squared loss）
 
 | 理由 | 说明 |
 |---|---|
@@ -424,9 +424,9 @@ $$
 > 换成 $\sum|r_i|$ 就是**最小绝对偏差（L1 / 中位数回归）**：更抗离群点，但没有闭式解。
 > **平方 → 均值；绝对值 → 中位数。**
 
-#### 7.5.3 几何：最小二乘 = 找影子（投影）
+#### 7.5.3 几何：正交投影（orthogonal projection）
 
-$\mathbf{X}\mathbf{w}$ 无论 $\mathbf{w}$ 怎么取，都只能落在 $\mathbf{X}$ 的**列空间**里（一张过原点的平面/超平面）。
+$\mathbf{X}\mathbf{w}$ 无论 $\mathbf{w}$ 怎么取，都只能落在 $\mathbf{X}$ 的**列空间（column space）**里（一张过原点的平面/超平面）。
 $\mathbf{y}$ 一般**不在这张平面上**，于是
 
 $$
@@ -434,7 +434,7 @@ $$
 =\text{在列空间里找离 }\mathbf{y}\text{ 最近的点}
 $$
 
-最近点就是 $\mathbf{y}$ 的**正交投影**，所以残差必须垂直于列空间：
+最近点就是 $\mathbf{y}$ 的**正交投影（orthogonal projection）**，所以残差必须垂直于列空间：
 
 $$
 \mathbf{X}^\top(\mathbf{X}\mathbf{w}-\mathbf{y})=\mathbf{0}
@@ -450,7 +450,7 @@ $$
 
 > 一句话：**$\mathbf{X}\mathbf{w}$ 是 $\mathbf{y}$ 投在列空间上的影子，$J$ 是“影子到本体距离”的平方。**
 
-#### 7.5.4 闭式解与“什么时候能解”
+#### 7.5.4 闭式解与可解性（closed form & solvability）
 
 令 $\nabla J=\mathbf{0}$ 得法方程，若 $\mathbf{X}^\top\mathbf{X}$ 可逆：
 
@@ -461,12 +461,12 @@ $$
 | $\mathbf{X}^\top\mathbf{X}$ 的状态 | 条件 | 结果 |
 |---|---|---|
 | **正定** | $\mathbf{X}$ 列满秩（无共线、样本够） | 唯一解，碗底唯一 |
-| **半正定、有零特征值** | 特征冗余 / $m<n$ | 无穷多解，取最小范数解（伪逆 $\mathbf{X}^+$） |
+| **半正定、有零特征值** | 特征冗余 / $m<n$ | 无穷多解，取最小范数解（伪逆 / pseudoinverse $\mathbf{X}^+$） |
 
-- “有零特征值”的方向就是**不可辨识**的方向：沿它走 $J$ 完全不变（一条平底槽）。
+- “有零特征值”的方向就是**不可辨识（unidentifiable）**的方向：沿它走 $J$ 完全不变（一条平底槽）。
 - 加 $\lambda\|\mathbf{w}\|^2$ 后 $\mathbf{H}=\mathbf{X}^\top\mathbf{X}+\lambda\mathbf{I}$ 正定，槽被填成碗 ⇒ 唯一解（岭回归）。
 
-#### 7.5.5 残差与正交性（接第 4 节的手算）
+#### 7.5.5 残差与正交性（residual & orthogonality）
 
 第 4 节已经解出 $\mathbf{w}^\star=(\tfrac76,\tfrac12)^\top$。把它代回去看残差：
 
@@ -490,7 +490,7 @@ $$
 
 这就是 7.5.3 那个“影子”的代数证据。
 
-#### 7.5.6 什么时候会翻车
+#### 7.5.6 失效场景（failure modes）
 
 | 问题 | 原因 | 对策 |
 |---|---|---|
@@ -499,7 +499,7 @@ $$
 | 关系是弯的 | 模型太简单 | 多项式/基函数特征 |
 | 样本数 < 特征数 | 欠定，无穷多解 | 正则化 / 最小范数解 |
 
-#### 7.5.7 它在机器学习里到处都是
+#### 7.5.7 在机器学习中的位置（where it shows up）
 
 - **线性回归 / 多项式回归**：就是它本身；
 - **岭回归**：加 $\lambda\|\mathbf{w}\|^2$，把碗捏圆；
@@ -510,7 +510,7 @@ $$
 
 > **只记三句**：$J$ 是一个数（残差长度平方）；$\nabla J=0$ 给法方程 $\mathbf{X}^\top\mathbf{X}\mathbf{w}=\mathbf{X}^\top\mathbf{y}$；$\mathbf{H}=\mathbf{X}^\top\mathbf{X}$ 半正定，列满秩才是碗。
 
-### 7.6 驻点分类（second-order test）
+### 7.6 驻点分类（stationary point classification）
 
 $$
 \nabla f(\mathbf{x}_0)=\mathbf{0}
@@ -524,11 +524,11 @@ $$
 $$
 
 - **符号**：$\succ\mathbf{0}$ 读作“正定”（$\lambda_i>0$）；前提是 $\mathbf{H}$ 对称——这总成立。
-- **用法**：先在**驻点处**算 $\mathbf{H}$ 再判号；$\mathbf{H}$ 随 $\mathbf{x}$ 变，**不能拿别处的 $\mathbf{H}$**。
+- **用法**：先在**驻点（stationary point）**处算 $\mathbf{H}$ 再判号；$\mathbf{H}$ 随 $\mathbf{x}$ 变，**不能拿别处的 $\mathbf{H}$**。
 
-#### 7.6.1 四道手算（覆盖四种结局）
+#### 7.6.1 四道手算（four cases）
 
-**例 1（局部最小）** $f(x,y)=x^2+2xy+3y^2$
+**例 1（局部最小 / local minimum）** $f(x,y)=x^2+2xy+3y^2$
 
 1. 求驻点：
 
@@ -547,7 +547,7 @@ $$
 3. 判号：$a=2>0$，$\det=12-4=8>0$ ⇒ **正定**（特征值 $4\pm2\sqrt2>0$，一致）。
 4. 结论：$(0,0)$ 是局部最小，$f(0,0)=0$。
 
-**例 2（局部最大）** $f(x,y)=5-x^2-xy-y^2$
+**例 2（局部最大 / local maximum）** $f(x,y)=5-x^2-xy-y^2$
 
 1. 求驻点：
 
@@ -566,7 +566,7 @@ $$
 3. 判号：$a=-2<0$，$\det=4-1=3>0$ ⇒ **负定**。
 4. 结论：$(0,0)$ 是局部最大，$f(0,0)=5$。
 
-**例 3（鞍点）** $f(x,y)=x^2-y^2$
+**例 3（鞍点 / saddle point）** $f(x,y)=x^2-y^2$
 
 1. 求驻点：$f_x=2x,\ f_y=-2y$ ⇒ 唯一驻点 $(0,0)$。
 2. Hessian：
@@ -578,7 +578,7 @@ $$
 3. 判号：$\det=-4<0$ ⇒ **不定**。
 4. 结论：**鞍点**。沿 $x$ 轴上坡（$f=x^2>0$），沿 $y$ 轴下坡（$f=-y^2<0$）。
 
-**例 4（两个驻点，类型不同）** $f(x,y)=x^3-3x+y^2$
+**例 4（两个驻点 / stationary points，类型不同）** $f(x,y)=x^3-3x+y^2$
 
 1. 求驻点：
 
@@ -603,7 +603,7 @@ $$
 
 4. 教训：**同一个函数，不同驻点可以完全不同**——必须逐点算 $\mathbf{H}$，不能算一次用到底。
 
-#### 7.6.2 二阶判不了的时候：同一个 $\mathbf{H}$，两个结局
+#### 7.6.2 二阶判别失效（inconclusive Hessian）
 
 $$
 f_1=x^2+y^4,\qquad f_2=x^2-y^4
@@ -624,7 +624,7 @@ $$
 > 教训：**“$\mathbf{H}$ 半定”不是“没有结论”，而是“二阶信息不够”**，必须看三阶、四阶项。
 > （对比：$f=x^4$ 在 $0$ 处 $f''=0$，但仍是极小——所以 $f''=0$ 从来不能直接判最大。）
 
-#### 7.6.3 手算流程（照着走）
+#### 7.6.3 手算流程（recipe）
 
 1. 解 $\nabla f=\mathbf{0}$，列出**所有**驻点；
 2. 对**每个**驻点单独算 $\mathbf{H}$；
@@ -645,7 +645,37 @@ $$
 | $x^3-3x+y^2$ | $(1,0)$ | $\operatorname{diag}(6,2)$ | 正定 | 最小 |
 | 同上 | $(-1,0)$ | $\operatorname{diag}(-6,2)$ | $\det=-12<0$ | 鞍点 |
 
-### 7.7 二阶判别法（$2\times2$ 版本，考试最快）
+#### 7.6.4 术语对照（glossary）
+
+| 中文 | English | 一句话 |
+|---|---|---|
+| 驻点 | stationary point | $\nabla f=\mathbf{0}$ 的点 |
+| 局部最小 | local minimum | 附近都比它高 |
+| 局部最大 | local maximum | 附近都比它低 |
+| 鞍点 | saddle point | 有的方向上坡、有的方向下坡 |
+| 正定 | positive definite | $\mathbf{x}^\top\mathbf{A}\mathbf{x}>0$，碗 |
+| 负定 | negative definite | 倒扣的碗 |
+| 半正定 | positive semidefinite | 允许某些方向为 $0$，谷 |
+| 不定 | indefinite | 有正有负，马鞍 |
+| 梯度 | gradient | 一阶信息：往哪走最陡 |
+| Hessian | Hessian matrix | 二阶信息：怎么弯 |
+| 二阶判别法 | second-order test | 用 $\mathbf{H}$ 判驻点类型 |
+| 残差 | residual | $\mathbf{r}=\mathbf{X}\mathbf{w}-\mathbf{y}$ |
+| 设计矩阵 | design matrix | $\mathbf{X}$，每行一个样本 |
+| 列空间 | column space | $\mathbf{X}\mathbf{w}$ 能到达的所有点 |
+| 正交投影 | orthogonal projection | 列空间里离 $\mathbf{y}$ 最近的点 |
+| 法方程 | normal equations | $\mathbf{X}^\top\mathbf{X}\mathbf{w}=\mathbf{X}^\top\mathbf{y}$ |
+| 闭式解 | closed-form solution | 能用公式直接写出来的解 |
+| 伪逆 | pseudoinverse | $\mathbf{X}^+$，不可逆时的替代 |
+| 不可辨识 | unidentifiable | 那个方向上 $J$ 完全不变 |
+| 岭回归 | ridge regression | 加 $\lambda\|\mathbf{w}\|^2$ 把槽填成碗 |
+| 条件数 | condition number | $\lambda_{\max}/\lambda_{\min}$，碗有多扁 |
+| 离群点 | outlier | 把线拉歪的极端点 |
+| 共线 | collinearity | 特征之间线性相关 |
+| 欠定 | underdetermined | 样本数 $<$ 特征数 |
+| 最大似然 | maximum likelihood | 高斯噪声下等价于最小二乘 |
+
+### 7.7 二阶判别法（second-order test，$2\times2$，考试最快）
 
 $$
 \det\mathbf{H}=f_{xx}f_{yy}-f_{xy}^2
