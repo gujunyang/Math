@@ -3,7 +3,7 @@
 - 会话ID：`S005`
 - 日期：2026-10-27
 - 对应：L07 / M2
-- 修订记录：（初版）2026-10-27
+- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」
 
 ---
 
@@ -67,8 +67,14 @@ $$
 $$
 
 - **符号**：$\mathbf{H}$ 是 $n\times n$ **对称**矩阵（因为 $f_{x_ix_j}=f_{x_jx_i}$，Schwarz 定理）；第 $(i,j)$ 元 = 先对 $x_j$ 再对 $x_i$。
-- **例**：上面的 $f$：$\mathbf{H}=\begin{bmatrix}f_{xx}&f_{xy}\\f_{yx}&f_{yy}\end{bmatrix}
-  =\begin{bmatrix}2y&2x+6y\\2x+6y&6x\end{bmatrix}$，明显对称（$12$ 与 $21$ 位相同）。
+- **例**：上面的 $f$：
+
+$$
+\mathbf{H}=\begin{bmatrix}f_{xx}&f_{xy}\\f_{yx}&f_{yy}\end{bmatrix}
+=\begin{bmatrix}2y&2x+6y\\2x+6y&6x\end{bmatrix}
+$$
+
+  明显对称（第 1 行第 2 列 = 第 2 行第 1 列，都是 $2x+6y$）。
 
 ### 7.3 二次型的梯度（gradient of a quadratic form）
 
