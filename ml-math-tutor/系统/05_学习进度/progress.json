@@ -5,7 +5,7 @@
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "AISC5000 期中冲刺 Day 1（S005 / L08 已讲，练习待做）",
+  "current_stage": "AISC5000 期中冲刺 Day 2（S006 / 从 L09 概率规则起步）",
   "concepts": [
     {
       "id": "vector",
@@ -498,9 +498,9 @@
       "note": "非概念条目；不记录复习次数/掌握度"
     }
   ],
-  "sessions_count": 4,
-  "session_counter": 5,
-  "current_session_id": "S005",
+  "sessions_count": 5,
+  "session_counter": 6,
+  "current_session_id": "S006",
   "session_index": [
     {
       "id": "S001",
@@ -533,30 +533,37 @@
     {
       "id": "S005",
       "date": "2026-10-26",
-      "topic": "AISC5000 期中冲刺 Day 1（L01 诊断开始）",
+      "topic": "AISC5000 期中冲刺 Day 1（L01–L08：诊断/线代回炉/eigen+正定/梯度/Hessian/Taylor）",
+      "status": "已结束",
+      "summary": "会话摘要/S005_期中冲刺Day1线代微积分.md"
+    },
+    {
+      "id": "S006",
+      "date": "2026-10-28",
+      "topic": "AISC5000 期中冲刺 Day 2（L09 起：概率/Bayes→Gaussian→回归）",
       "status": "进行中",
       "summary": null
     }
   ],
-  "last_session": "2026-10-26",
+  "last_session": "2026-10-28",
   "notes": "S003：完成阶段 A 第02–05课，确立几何优先+配图(R23)。S004：第06课正交与投影已讲；完成 AISC5000 期中冲刺计划与验收修复，P 级以大纲考点总表为准，原阶段 A–F 保留；S004 已收尾。S005：Day 1 开始，L01 诊断结果=仅 Q1（ℓp 范数）可独立完成，其余 14 题未作答；经核对这 14 题覆盖的 eigen/微积分/概率/回归/分类/NN/优化多数尚未讲过，属未学而非降级信号，故不切 P0-only，按 L02–L10 正常推进；L02 已讲（范数/内积/余弦/正交/投影回炉）；L03–L05 已讲（矩阵/转置/逆/det、eigen、trace/det/对称/正定）。L06 已讲（偏导、梯度列向量与形状、方向导数、链式法则两条：路径版与 X^T r 版）。冲刺结束或内容学完后，按大纲 §7 回到原 A–F。",
   "sprint_session_plan": [
     {
       "id": "S005",
       "day": "Day 1",
-      "lessons": "L01–L10",
-      "status": "进行中"
+      "lessons": "L01–L08（计划 L01–L10，L09–L10 顺延到 Day 2）",
+      "status": "已完成"
     },
     {
       "id": "S006",
       "day": "Day 2",
-      "lessons": "L11–L20",
-      "status": "计划中"
+      "lessons": "L09–L18（够快再推 L19–L20）",
+      "status": "进行中"
     },
     {
       "id": "S007",
       "day": "Day 3",
-      "lessons": "L21–L30",
+      "lessons": "L19–L30 + P0 总复盘",
       "status": "计划中"
     }
   ]
