@@ -3,7 +3,7 @@
 - 会话ID：`S005`
 - 日期：2026-10-27
 - 对应：L07 / M2
-- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源
+- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源；（v5）2026-10-27 7.3.1 补「三行结论怎么来的」：$i=k$ 项提取 $x_k$ 得 $\mathbf{A}$ 第 $k$ 行内积、$j=k$ 项用 $(\mathbf{A}^\top)_{kj}=a_{jk}$ 换成 $\mathbf{A}^\top$ 第 $k$ 行、$a_{kk}x_k^2$ 两类各分一半；并加 $\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ 的逐项表与两个和核对（$\nabla f=(7,13)^\top$）
 
 ---
 
@@ -171,22 +171,80 @@ $$
 - 第二项 = $\mathbf{A}^\top$ 的第 $k$ 行和 $\mathbf{x}$ 的内积 = $(\mathbf{A}^\top\mathbf{x})_k$；
 - $i=j=k$ 那一项被算了两次（$a_{kk}x_k+a_{kk}x_k=2a_{kk}x_k$），正好是 $a_{kk}x_k^2$ 的导数 ✓。
 
+**这三行分别是怎么来的？**
+
+1. **第一项 = “$x_k$ 站在第一个位置”的所有项**（即 $i=k$）：
+
+$$
+a_{k1}x_kx_1+a_{k2}x_kx_2+\cdots+a_{kn}x_kx_n
+=x_k\sum_{j=1}^{n}a_{kj}x_j
+$$
+
+   对 $x_k$ 求导时，$x_k$ 这个因子留下 ⇒ 剩下 $\sum_j a_{kj}x_j$。
+   而 $\sum_j a_{kj}x_j$ 正是 $\mathbf{A}$ 的**第 $k$ 行**与 $\mathbf{x}$ 的内积 $=(\mathbf{A}\mathbf{x})_k$。
+
+2. **第二项 = “$x_k$ 站在第二个位置”的所有项**（即 $j=k$）：
+
+$$
+\sum_{i=1}^{n}a_{ik}x_ix_k
+\ \xrightarrow{\ \partial/\partial x_k\ }\
+\sum_{i=1}^{n}a_{ik}x_i
+$$
+
+   注意 $(\mathbf{A}^\top)_{kj}=a_{jk}$，所以
+   $\sum_j(\mathbf{A}^\top)_{kj}x_j=\sum_j a_{jk}x_j=\sum_i a_{ik}x_i$，
+   即 $\mathbf{A}^\top$ 的**第 $k$ 行**与 $\mathbf{x}$ 的内积 $=(\mathbf{A}^\top\mathbf{x})_k$。
+
+3. **$a_{kk}x_k^2$ 同时属于上面两类**（$i=j=k$），所以在两个和里各出现一次：
+   $a_{kk}x_k+a_{kk}x_k=2a_{kk}x_k$，正好等于 $(a_{kk}x_k^2)'=2a_{kk}x_k$。
+   不是算重了，而是**两类各分一半**。
+
 把 $k=1,\dots,n$ 摞成列向量：
 
 $$
 \nabla f=(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}
 $$
 
-**$2\times2$ 手算核对**：$\mathbf{A}=\begin{bmatrix}a&b\\c&d\end{bmatrix}$，展开得 $f=ax_1^2+(b+c)x_1x_2+dx_2^2$，
+**具体例子：$\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$，$\mathbf{x}=(x_1,x_2)^\top$。**
+
+先展开（注意 $a_{12}x_1x_2$ 与 $a_{21}x_2x_1$ 是两项）：
 
 $$
-\nabla f=
-\begin{bmatrix}2ax_1+(b+c)x_2\\(b+c)x_1+2dx_2\end{bmatrix}
-=
-\begin{bmatrix}2a&b+c\\b+c&2d\end{bmatrix}
-\begin{bmatrix}x_1\\x_2\end{bmatrix}
-=(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}
+f=\mathbf{x}^\top\mathbf{A}\mathbf{x}
+=x_1^2+2x_1x_2+3x_2x_1+4x_2^2
+=x_1^2+5x_1x_2+4x_2^2
 $$
+
+对 $x_1$ 逐项拆开看：
+
+| 项 | 对 $x_1$ 求导 | 归到哪一类 |
+|---|---|---|
+| $a_{11}x_1^2=x_1^2$ | $2x_1=a_{11}x_1+a_{11}x_1$ | 两类都算（$i=j=1$） |
+| $a_{12}x_1x_2=2x_1x_2$ | $2x_2=a_{12}x_2$ | 第一类（$i=1$） |
+| $a_{21}x_2x_1=3x_2x_1$ | $3x_2=a_{21}x_2$ | 第二类（$j=1$） |
+| $a_{22}x_2^2=4x_2^2$ | $0$ | 不含 $x_1$ |
+
+加起来：$2x_1+(2+3)x_2=2x_1+5x_2$。再用“两个和”核对：
+
+$$
+(\mathbf{A}\mathbf{x})_1=1\cdot x_1+2\cdot x_2=x_1+2x_2
+$$
+$$
+(\mathbf{A}^\top\mathbf{x})_1=1\cdot x_1+3\cdot x_2=x_1+3x_2
+$$
+$$
+\Rightarrow\ \big[(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}\big]_1
+=(x_1+2x_2)+(x_1+3x_2)=2x_1+5x_2\ \checkmark
+$$
+
+对 $x_2$ 同理：$(\mathbf{A}\mathbf{x})_2=3x_1+4x_2$、$(\mathbf{A}^\top\mathbf{x})_2=2x_1+4x_2$，和为 $5x_1+8x_2$。
+所以在 $\mathbf{x}=(1,1)^\top$ 处
+
+$$
+\nabla f=\begin{bmatrix}2+5\\5+8\end{bmatrix}=\begin{bmatrix}7\\13\end{bmatrix}
+$$
+
+与 7.3 开头的例子完全一致 ✓。
 
 #### 7.3.2 推导二：矩阵微分（最快，三行）
 
