@@ -3,7 +3,7 @@
 - 会话ID：`S005`
 - 日期：2026-10-27
 - 对应：L07 / M2
-- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源；（v5）2026-10-27 7.3.1 补「三行结论怎么来的」：$i=k$ 项提取 $x_k$ 得 $\mathbf{A}$ 第 $k$ 行内积、$j=k$ 项用 $(\mathbf{A}^\top)_{kj}=a_{jk}$ 换成 $\mathbf{A}^\top$ 第 $k$ 行、$a_{kk}x_k^2$ 两类各分一半；并加 $\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ 的逐项表与两个和核对（$\nabla f=(7,13)^\top$）；（v6）2026-10-27 7.5 扩写为 7.5.1–7.5.7「符号表 / 为什么平方（含高斯最大似然、L1 对比）/ 投影几何与法方程 / 闭式解与可解性 / 残差正交性手算（$J=\frac16$）/ 翻车场景 / ML 位置」；（v7）2026-10-27 7.6 扩写为 7.6.1–7.6.3「四道手算（最小/最大/鞍点/双驻点）+ 二阶失效反例（$x^2\pm y^4$ 同 H 不同结局）+ 手算流程与汇总表」；（v8）2026-10-27 关键词改中英对照：7.3–7.7 小节标题加英文，例 1–4 标注 local minimum / local maximum / saddle point，新增 7.6.4 术语对照表（25 条）；（v9）2026-10-27 7.7 重写：明确 $a=H_{11}=f_{xx}$、$b=H_{12}=f_{xy}$、$d=H_{22}=f_{yy}$ 及「$a$ 不是特征值」；新增 7.7.1 配方一行证明判据 + $a>0$ 单独不够的反例 + 特征值对照；7.6.1 例 1 判号补 $a,b,d$ 的定义；（v10）2026-10-27 新增 7.7.2「特征值怎么算」：特征方程 $\lambda^2-8\lambda+8=0$、求根得 $4\pm2\sqrt2$、数值 $6.83/1.17$、$\operatorname{tr}/\det$ 速算与验算
+- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源；（v5）2026-10-27 7.3.1 补「三行结论怎么来的」：$i=k$ 项提取 $x_k$ 得 $\mathbf{A}$ 第 $k$ 行内积、$j=k$ 项用 $(\mathbf{A}^\top)_{kj}=a_{jk}$ 换成 $\mathbf{A}^\top$ 第 $k$ 行、$a_{kk}x_k^2$ 两类各分一半；并加 $\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ 的逐项表与两个和核对（$\nabla f=(7,13)^\top$）；（v6）2026-10-27 7.5 扩写为 7.5.1–7.5.7「符号表 / 为什么平方（含高斯最大似然、L1 对比）/ 投影几何与法方程 / 闭式解与可解性 / 残差正交性手算（$J=\frac16$）/ 翻车场景 / ML 位置」；（v7）2026-10-27 7.6 扩写为 7.6.1–7.6.3「四道手算（最小/最大/鞍点/双驻点）+ 二阶失效反例（$x^2\pm y^4$ 同 H 不同结局）+ 手算流程与汇总表」；（v8）2026-10-27 关键词改中英对照：7.3–7.7 小节标题加英文，例 1–4 标注 local minimum / local maximum / saddle point，新增 7.6.4 术语对照表（25 条）；（v9）2026-10-27 7.7 重写：明确 $a=H_{11}=f_{xx}$、$b=H_{12}=f_{xy}$、$d=H_{22}=f_{yy}$ 及「$a$ 不是特征值」；新增 7.7.1 配方一行证明判据 + $a>0$ 单独不够的反例 + 特征值对照；7.6.1 例 1 判号补 $a,b,d$ 的定义；（v10）2026-10-27 新增 7.7.2「特征值怎么算」：特征方程 $\lambda^2-8\lambda+8=0$、求根得 $4\pm2\sqrt2$、数值 $6.83/1.17$、$\operatorname{tr}/\det$ 速算与验算；（v11）2026-10-28 第 6 节易错点补第 5 条：$\det\mathbf{H}=0$ 是「判别法失效」而非「不定」，并给出三个同 $\mathbf{H}$ 不同结局的反例（呼应 7.6.2）；（v12）2026-10-28 应学生要求把原 7.6.3 手算流程、7.6.4 术语对照、7.7 判据**合并为 7.7**：7.7.1 四步流程（加 Step 0 前提与 Step 4 边界/局部性）、7.7.2 术语按用途分 A/B/C 三组、7.7.3 判别原理（二阶 Taylor 来源 → 沿坐标轴 $q=a t^2$ / $q=d t^2$ → 交叉项 $b$ 会掀碗 → 配方两系数 $a,\det/a$ → $\det>0\Rightarrow a,d$ 同号故 $\lambda$ 符号 $=a$ 符号 → **鞍点沿哪条轴**：对角看坐标轴、非对角看特征方向，例 $x^2-y^2$ 与 $x^2+6xy+y^2$）、7.7.4 特征值速算与 $\operatorname{tr}/\det$ 验算；（v13）2026-10-28 第 4 节完整手算补「符号一句话」（$\mathbf{X}/\mathbf{w}/\mathbf{y}/J(\mathbf{w})$ 各是什么，并区分正则化系数 $\lambda$ 与特征值 $\lambda$）
 
 ---
 
@@ -607,34 +607,56 @@ $$
 #### 7.6.2 二阶判别失效（inconclusive Hessian）
 
 $$
-f_1=x^2+y^4,\qquad f_2=x^2-y^4
+f_1=x^2+y^4,\qquad f_2=x^2-y^4,\qquad f_3=-(x^2+y^4)
 $$
 
 在原点的梯度都是 $\mathbf{0}$，Hessian **完全一样**：
 
 $$
 \mathbf{H}=\begin{bmatrix}2&0\\0&0\end{bmatrix}
-\quad(\text{半正定，有零特征值})
+\quad(\text{半正定，有零特征值};\ \det=0)
 $$
 
 二阶判别法在这里**失效**（$\det=0$，四种结论都套不上）。但直接看函数：
 
 - $f_1=x^2+y^4\ge0$，只在原点取 $0$ ⇒ **全局最小**；
-- $f_2=x^2-y^4$：沿 $x$ 轴为正、沿 $y$ 轴为负 ⇒ **鞍点**。
+- $f_2=x^2-y^4$：沿 $x$ 轴为正、沿 $y$ 轴为负 ⇒ **鞍点**；
+- $f_3=-(x^2+y^4)\le0$，只在原点取 $0$ ⇒ **全局最大**（同一 $\mathbf{H}$ 也能是最大，
+  所以「$\det=0$ 就是不定」是错的）。
 
 > 教训：**“$\mathbf{H}$ 半定”不是“没有结论”，而是“二阶信息不够”**，必须看三阶、四阶项。
 > （对比：$f=x^4$ 在 $0$ 处 $f''=0$，但仍是极小——所以 $f''=0$ 从来不能直接判最大。）
 
-#### 7.6.3 手算流程（recipe）
+### 7.7 二阶判别法：先会做 → 再认词 → 最后懂为什么（second-order test, merged）
 
-1. 解 $\nabla f=\mathbf{0}$，列出**所有**驻点；
-2. 对**每个**驻点单独算 $\mathbf{H}$；
-3. $2\times2$ 快速判号：
-   - $a>0$ 且 $\det>0$ → 最小；
-   - $a<0$ 且 $\det>0$ → 最大；
-   - $\det<0$ → 鞍点；
-   - $\det=0$ → **判不了**，看更高阶；
-4. 把驻点代回 $f$，得到极值。
+> 本节合并原「7.6.3 手算流程」「7.6.4 术语对照」「7.7 判据」三块：
+> **7.7.1 做题流程**（考场上照抄）→ **7.7.2 术语对照**（看懂题）→ **7.7.3 判别原理**（为什么 $a$、$\det$ 够用；鞍点沿哪条轴上下坡）→ **7.7.4 特征值与验算**。
+
+#### 7.7.1 做题流程（recipe，四步 + 两个前提）
+
+**Step 0｜前提检查**（30 秒）
+- $f$ 二阶可导，且 $\mathbf{H}$ 对称（$f_{xy}=f_{yx}$，Clairaut 定理）；
+- 只在**内部点**用这套判据；边界上的极值另算（见 Step 4 备注）。
+
+**Step 1｜找驻点**：解 $\nabla f(\mathbf{x})=\mathbf{0}$，列出**所有**解。
+$\nabla f=\mathbf{0}$ 是极值的**必要不充分**条件：谷底/山顶/山口都满足它。
+
+**Step 2｜逐点算 Hessian**：$\mathbf{H}(\mathbf{x})=\begin{bmatrix}a&b\\b&d\end{bmatrix}=\begin{bmatrix}f_{xx}&f_{xy}\\f_{xy}&f_{yy}\end{bmatrix}$。
+$\mathbf{H}$ 是 $\mathbf{x}$ 的函数，**每个驻点单独代**，不要一个矩阵用到底。
+
+**Step 3｜$2\times2$ 判号**（只需 $a$、$\det$）：
+
+| $\det=ad-b^2$ | $a=f_{xx}$ | 特征值 | 结论 |
+|---|---|---|---|
+| $>0$ | $>0$ | 全正 | 正定（positive definite）⇒ **局部最小** |
+| $>0$ | $<0$ | 全负 | 负定（negative definite）⇒ **局部最大** |
+| $<0$ | 任意 | 一正一负 | 不定（indefinite）⇒ **鞍点** |
+| $=0$ | 任意 | 有 $0$ | 半定 ⇒ **判别法失效**，看更高阶（7.6.2） |
+
+**Step 4｜收尾**
+- 把驻点代回 $f$ 求极值；多个候选点要**逐个比大小**；
+- 若定义域有边界（如 $x\ge0$、$x^2+y^2\le1$），边界上的最大/最小**单独检查**；
+- 一切结论都是**局部**的；要全局结论需额外论证（如 $\mathbf{H}\succ\mathbf{0}$ 处处成立 ⇒ 凸 ⇒ 全局最小）。
 
 **一页汇总：**
 
@@ -646,21 +668,37 @@ $$
 | $x^3-3x+y^2$ | $(1,0)$ | $\operatorname{diag}(6,2)$ | 正定 | 最小 |
 | 同上 | $(-1,0)$ | $\operatorname{diag}(-6,2)$ | $\det=-12<0$ | 鞍点 |
 
-#### 7.6.4 术语对照（glossary）
+#### 7.7.2 术语对照（glossary，按用途分三组）
+
+**A. 点与极值**
 
 | 中文 | English | 一句话 |
 |---|---|---|
-| 驻点 | stationary point | $\nabla f=\mathbf{0}$ 的点 |
+| 驻点 | stationary point | $\nabla f=\mathbf{0}$ 的点（不一定是极值） |
 | 局部最小 | local minimum | 附近都比它高 |
 | 局部最大 | local maximum | 附近都比它低 |
+| 全局最小 / 最大 | global minimum / maximum | 整个定义域里最低 / 最高 |
 | 鞍点 | saddle point | 有的方向上坡、有的方向下坡 |
+
+**B. 矩阵定性与判别**
+
+| 中文 | English | 一句话 |
+|---|---|---|
 | 正定 | positive definite | $\mathbf{x}^\top\mathbf{A}\mathbf{x}>0$，碗 |
 | 负定 | negative definite | 倒扣的碗 |
-| 半正定 | positive semidefinite | 允许某些方向为 $0$，谷 |
+| 半正定 | positive semidefinite | 允许某些方向为 $0$，槽 |
+| 半负定 | negative semidefinite | 槽，但朝下 |
 | 不定 | indefinite | 有正有负，马鞍 |
 | 梯度 | gradient | 一阶信息：往哪走最陡 |
 | Hessian | Hessian matrix | 二阶信息：怎么弯 |
+| 特征值 / 特征向量 | eigenvalue / eigenvector | 主方向上的伸缩倍数 / 主方向 |
 | 二阶判别法 | second-order test | 用 $\mathbf{H}$ 判驻点类型 |
+| 条件数 | condition number | $\lambda_{\max}/\lambda_{\min}$，碗有多扁 |
+
+**C. 回归 / 最小二乘（后面 L17–L19 要用）**
+
+| 中文 | English | 一句话 |
+|---|---|---|
 | 残差 | residual | $\mathbf{r}=\mathbf{X}\mathbf{w}-\mathbf{y}$ |
 | 设计矩阵 | design matrix | $\mathbf{X}$，每行一个样本 |
 | 列空间 | column space | $\mathbf{X}\mathbf{w}$ 能到达的所有点 |
@@ -670,95 +708,125 @@ $$
 | 伪逆 | pseudoinverse | $\mathbf{X}^+$，不可逆时的替代 |
 | 不可辨识 | unidentifiable | 那个方向上 $J$ 完全不变 |
 | 岭回归 | ridge regression | 加 $\lambda\|\mathbf{w}\|^2$ 把槽填成碗 |
-| 条件数 | condition number | $\lambda_{\max}/\lambda_{\min}$，碗有多扁 |
 | 离群点 | outlier | 把线拉歪的极端点 |
 | 共线 | collinearity | 特征之间线性相关 |
 | 欠定 | underdetermined | 样本数 $<$ 特征数 |
 | 最大似然 | maximum likelihood | 高斯噪声下等价于最小二乘 |
 
-### 7.7 二阶判别法（second-order test，$2\times2$，考试最快）
+#### 7.7.3 判别原理（为什么只看 $a$ 与 $\det$ 就够）
 
-先把 $\mathbf{H}$ 的四个位置起个名字：
-
-$$
-\mathbf{H}=\begin{bmatrix}a&b\\b&d\end{bmatrix}
-=\begin{bmatrix}f_{xx}&f_{xy}\\f_{xy}&f_{yy}\end{bmatrix}
-$$
-
-- $a=H_{11}=f_{xx}$：**左上角**，沿 $x$ 方向的曲率；
-- $b=H_{12}=H_{21}=f_{xy}$：**右上 = 左下**，交叉项；
-- $d=H_{22}=f_{yy}$：**右下角**，沿 $y$ 方向的曲率；
-- $\det\mathbf{H}=ad-b^2=f_{xx}f_{yy}-f_{xy}^2=\lambda_1\lambda_2$。
-
-> **最容易混的一点**：$a$ **不是特征值**，只是矩阵左上角那个数。判正定要 $a$ 和 $\det$ 一起看。
-
-**判据：**
+**一句话来源**：在驻点处一阶项消失，函数长什么样由二次项决定。
 
 $$
-\mathbf{H}\succ\mathbf{0}
-\quad\Longleftrightarrow\quad
-a>0\ \text{且}\ \det=ad-b^2>0
+f(\mathbf{x}_0+\mathbf{d})\approx f(\mathbf{x}_0)+\underbrace{\nabla f(\mathbf{x}_0)^\top\mathbf{d}}_{=0}
++\frac12\mathbf{d}^\top\mathbf{H}\mathbf{d}
+=f_0+\frac12\,q(\mathbf{d})
 $$
 
-| $\det=ad-b^2$ | $a=f_{xx}$ | 结论 |
-|---|---|---|
-| $>0$ | $>0$ | 正定 ⇒ 局部最小 |
-| $>0$ | $<0$ | 负定 ⇒ 局部最大 |
-| $<0$ | 任意 | 不定 ⇒ 鞍点 |
-| $=0$ | 任意 | 失效（看更高阶） |
+$\mathbf{d}$ 是从驻点迈出的一小步。$\dfrac12q(\mathbf{d})$ 是**正**还是**负**，就决定这一步是上坡还是下坡。
+所以整个判别法只回答一个问题：$q(\mathbf{d})=\mathbf{d}^\top\mathbf{H}\mathbf{d}$ 的符号能不能固定？
 
-#### 7.7.1 这条判据为什么成立（配方一行）
+**第一步：先沿两条坐标轴走**（这就是 $a$ 和 $d$ 的含义）
 
-把二次型按 $x_1$ 配方：
+$$
+q(\mathbf{d})\Big|_{\mathbf{d}=(t,0)}=a\,t^2,
+\qquad
+q(\mathbf{d})\Big|_{\mathbf{d}=(0,t)}=d\,t^2
+$$
+
+- $a>0$：沿 $x$ 轴走，**上坡**；$a<0$：下坡；
+- $d>0$：沿 $y$ 轴走，**上坡**；$d<0$：下坡。
+
+但**两条轴都上坡，不等于所有方向都上坡**——因为还有交叉项 $b$：
+
+$$
+q(t,t)=(a+2b+d)\,t^2
+$$
+
+$\mathbf{H}=\begin{bmatrix}1&3\\3&1\end{bmatrix}$ 就是活例子：$a=d=1>0$，$x$ 轴、$y$ 轴都上坡，
+但沿 $(1,-1)$ 走：
+
+$$
+q(1,-1)=1-3-3+1=-4<0\ \Rightarrow\ \text{下坡}
+$$
+
+所以「只看 $a>0$」会被交叉项骗。$\det=ad-b^2$ 正是用来量 $b$ 有没有大到把碗掀翻。
+
+**第二步：把 $q$ 配方，得到真正的两个曲率**
 
 $$
 q=a x_1^2+2b x_1x_2+d x_2^2
 =a\left(x_1+\frac{b}{a}x_2\right)^2+\frac{ad-b^2}{a}\,x_2^2
 $$
 
-- 两个平方项的系数是 $a$ 和 $\dfrac{\det}{a}$；
-- $a>0$ 且 $\det>0$ ⇒ 两个系数都为正 ⇒ $q>0$（$\mathbf{x}\ne\mathbf{0}$）⇒ **正定**；
-- $a<0$ 且 $\det>0$ ⇒ 两个系数都为负 ⇒ **负定**；
-- $\det<0$ ⇒ 两个系数异号 ⇒ 有的方向上坡、有的方向下坡 ⇒ **不定（鞍）**。
+两个平方项的系数是 $a$ 和 $\dfrac{\det}{a}$：
 
-**为什么 $a>0$ 单独不够**：$\mathbf{H}=\begin{bmatrix}1&3\\3&1\end{bmatrix}$ 的 $a=1>0$，但 $\det=1-9=-8<0$ ⇒ 鞍点。
-只看左上角会判错。
+| 情形 | 两个系数 | 地形 | 结论 |
+|---|---|---|---|
+| $a>0,\ \det>0$ | 正、正 | 碗 | 正定 ⇒ 最小 |
+| $a<0,\ \det>0$ | 负、负 | 倒扣的碗 | 负定 ⇒ 最大 |
+| $\det<0$ | 一正一负 | 马鞍 | 不定 ⇒ 鞍点 |
+| $\det=0$ | 有一个是 $0$ | 槽 / 更复杂 | 失效 |
 
-**和特征值对一下**：$\operatorname{tr}=a+d$、$\det=ad-b^2$，
-
-$$
-\lambda=\frac{(a+d)\pm\sqrt{(a+d)^2-4(ad-b^2)}}{2}
-$$
-
-以 $\mathbf{H}=\begin{bmatrix}2&2\\2&6\end{bmatrix}$ 为例：$\operatorname{tr}=8$、$\det=8$ ⇒ $\lambda=4\pm2\sqrt2>0$。
-
-#### 7.7.2 特征值是怎么算出来的（本题完整推导）
-
-对 $\mathbf{H}=\begin{bmatrix}2&2\\2&6\end{bmatrix}$，解特征方程 $\det(\mathbf{H}-\lambda\mathbf{I})=0$：
+**第三步：为什么 $\det>0$ 时看 $a$ 的符号就够**
 
 $$
-\det(\mathbf{H}-\lambda\mathbf{I})
-=\begin{vmatrix}2-\lambda&2\\2&6-\lambda\end{vmatrix}
-=(2-\lambda)(6-\lambda)-2\cdot2
-=\lambda^2-8\lambda+8=0
+\det=ad-b^2>0\ \Longrightarrow\ ad>b^2\ge0\ \Longrightarrow\ a,d\ \text{同号}
 $$
 
-求根公式：
+又因为 $\lambda_1\lambda_2=\det>0$（同号）且 $\lambda_1+\lambda_2=a+d$（与 $a$ 同号），
+所以**两个特征值的符号 = $a$ 的符号**。这就是判据 $a>0\ \&\ \det>0$ 的全部来历。
+
+**第四步：鞍点到底沿哪条轴上下坡？**
+
+| $\mathbf{H}$ 的形状 | 上/下坡方向 | 怎么找 |
+|---|---|---|
+| 对角（$b=0$） | 就是坐标轴 | 直接看 $a$、$d$ 的符号 |
+| 非对角（$b\ne0$） | **不是**坐标轴，是**特征向量方向** | 解 $(\mathbf{H}-\lambda\mathbf{I})\mathbf{v}=\mathbf{0}$，或直接试算 $q(\mathbf{d})$ |
+
+两个必会例子：
+
+**(a) $f=x^2-y^2$**，$\mathbf{H}=\operatorname{diag}(2,-2)$。
+沿 $x$ 轴上坡（$a=2>0$），沿 $y$ 轴下坡（$d=-2<0$）——鞍点，两条轴就是特征方向。
+
+**(b) $f=x^2+6xy+y^2$**，$\mathbf{H}=\begin{bmatrix}1&3\\3&1\end{bmatrix}$，$\operatorname{tr}=2$、$\det=-8$。
+特征值 $\lambda=\dfrac{2\pm\sqrt{4+32}}{2}=1\pm3=4,-2$；
+特征向量：$\lambda=4\Rightarrow(1,1)/\sqrt2$（**上坡**），$\lambda=-2\Rightarrow(1,-1)/\sqrt2$（**下坡**）。
+注意：沿 $x$ 轴、$y$ 轴**都是上坡**，只有斜着走才下坡——所以「沿哪个轴」在非对角情形要理解成「沿哪个**特征方向**」。
+
+**考场速判**：$\det<0$ 就一定一上一下；只需再写一句「沿特征向量 $\mathbf{v}_-$ 方向下坡」即可，不必求完整特征向量。
+
+> 几何图：`图片/fig_quadratic_contours.png`（正定椭圆 / 不定双曲线 / 半正定平行线）。
+> **看图**：双曲线那格的两条渐近线方向就是两个特征方向；一条上坡、一条下坡，交叉点就是鞍点。
+
+#### 7.7.4 特征值算法与一致性验算（when you need $\lambda$）
+
+**速算**：$2\times2$ 的特征方程永远是
+
+$$
+\lambda^2-\operatorname{tr}(\mathbf{H})\,\lambda+\det(\mathbf{H})=0
+$$
+
+**完整例**：$\mathbf{H}=\begin{bmatrix}2&2\\2&6\end{bmatrix}$，$\operatorname{tr}=8$、$\det=8$：
 
 $$
 \lambda=\frac{8\pm\sqrt{8^2-4\cdot1\cdot8}}{2}
-=\frac{8\pm\sqrt{64-32}}{2}
 =\frac{8\pm\sqrt{32}}{2}
 =\frac{8\pm4\sqrt2}{2}
-=4\pm2\sqrt2
+=4\pm2\sqrt2\approx6.83,\ 1.17
 $$
 
-- $\sqrt2\approx1.414\Rightarrow2\sqrt2\approx2.828$，所以 $\lambda\approx6.83$ 与 $\lambda\approx1.17$，**两个都大于 $0$**。
-- **速算版**：$2\times2$ 的特征方程永远是 $\lambda^2-\operatorname{tr}(\mathbf{H})\lambda+\det(\mathbf{H})=0$；本题 $\operatorname{tr}=8$、$\det=8$。
-- **验算**：$\lambda_1+\lambda_2=8=\operatorname{tr}$ ✓，$\lambda_1\lambda_2=(4+2\sqrt2)(4-2\sqrt2)=16-8=8=\det$ ✓。
+两个都正 ⇒ 正定，与「$a=2>0,\ \det=8>0$」一致。
 
-> 两条路等价：$\lambda_i>0\iff$ 正定；$2\times2$ 时又 $\iff a>0$ 且 $\det>0$。
-> 前者要解方程，后者只要两次乘法——**所以考试用后者，前者用来“一致”验算**。
+**验算两件套**（永远成立）：
+
+$$
+\lambda_1+\lambda_2=\operatorname{tr}\mathbf{H},\qquad
+\lambda_1\lambda_2=\det\mathbf{H}
+$$
+
+> 两条路等价：$\lambda_i>0\iff$ 正定 $\iff$（$2\times2$）$a>0$ 且 $\det>0$。
+> 考试用后者（两次乘法），前者只用来验算或写理由。
 
 ---
 
@@ -767,6 +835,11 @@ $$
 **Example.** Let $\mathbf{X}=\begin{bmatrix}1&0\\1&1\\1&2\end{bmatrix}$，$\mathbf{y}=\begin{bmatrix}1\\2\\2\end{bmatrix}$，
 $J(\mathbf{w})=\tfrac12\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2+\tfrac{\lambda}{2}\|\mathbf{w}\|^2$（取 $\lambda=0$）。
 Find $\nabla J$、$\mathbf{H}_J$，判其正定性，并求驻点。
+
+> **符号一句话**：$\mathbf{X}$ 是设计矩阵（每行一个样本）；$\mathbf{w}$ 是待求参数；$\mathbf{y}$ 是真实输出；
+> $J(\mathbf{w})$ 是**目标函数 / 损失**——给一个 $\mathbf{w}$，它告诉你预测 $\mathbf{X}\mathbf{w}$ 离真值 $\mathbf{y}$ 有多远
+> （平方误差总和的一半），越小越好；
+> 公式里的 $\lambda$ 是**正则化系数**（取 $0$ = 普通最小二乘），第 4 步的 $\lambda$ 是**特征值**，两者不是一回事。
 
 1. 先算两个“零件”：
 
@@ -828,6 +901,9 @@ $$
 2. **$\nabla(\mathbf{x}^\top\mathbf{A}\mathbf{x})=2\mathbf{A}\mathbf{x}$ 只在 $\mathbf{A}$ 对称时成立**；一般情形是 $(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}$。
 3. **$\nabla f=\mathbf{0}$ 不能直接说是最小**。$f=x^2-y^2$ 在原点梯度为 $0$，但 $\mathbf{H}=\operatorname{diag}(2,-2)$ 不定 ⇒ 鞍点。
 4. **$\det\mathbf{H}<0$ 是鞍点，不是最大**。最大要求 $\det>0$ 且 $f_{xx}<0$。
+5. **$\det\mathbf{H}=0$ 不是“不定”**，而是“**二阶判别法失效**”（inconclusive）：可能是最小、最大，也可能是鞍点。
+   “不定”（indefinite）是 $\det<0$ 的专属说法。三个同 Hessian 的反例见 7.6.2：
+   $x^2+y^4$（最小）、$-(x^2+y^4)$（最大）、$x^2-y^4$（鞍点），在原点都有 $\mathbf{H}=\operatorname{diag}(2,0)$、$\det=0$。
 
 ---
 
