@@ -3,7 +3,7 @@
 - 会话ID：`S005`
 - 日期：2026-10-27
 - 对应：L07 / M2
-- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻
+- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源
 
 ---
 
@@ -150,6 +150,83 @@ $$
   $\mathbf{A}+\mathbf{A}^\top=\begin{bmatrix}2&5\\5&8\end{bmatrix}$ ⇒ $\nabla f=(7,13)^\top$。
   直接展开 $f=x_1^2+5x_1x_2+4x_2^2$：$f_{x_1}=2x_1+5x_2=7$，$f_{x_2}=5x_1+8x_2=13$ ✓
 
+#### 7.3.1 推导一：逐分量（最稳，考试够用）
+
+把二次型写成双重和：
+
+$$
+f(\mathbf{x})=\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}x_ix_j
+$$
+
+对 $x_k$ 求偏导，只有 $i=k$ 或 $j=k$ 的项还“活着”：
+
+$$
+\frac{\partial f}{\partial x_k}
+=\underbrace{\sum_{j=1}^{n}a_{kj}x_j}_{i=k\ \text{的项}}
++\underbrace{\sum_{i=1}^{n}a_{ik}x_i}_{j=k\ \text{的项}}
+=\big[(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}\big]_k
+$$
+
+- 第一项 = $\mathbf{A}$ 的**第 $k$ 行**和 $\mathbf{x}$ 的内积 = $(\mathbf{A}\mathbf{x})_k$；
+- 第二项 = $\mathbf{A}^\top$ 的第 $k$ 行和 $\mathbf{x}$ 的内积 = $(\mathbf{A}^\top\mathbf{x})_k$；
+- $i=j=k$ 那一项被算了两次（$a_{kk}x_k+a_{kk}x_k=2a_{kk}x_k$），正好是 $a_{kk}x_k^2$ 的导数 ✓。
+
+把 $k=1,\dots,n$ 摞成列向量：
+
+$$
+\nabla f=(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}
+$$
+
+**$2\times2$ 手算核对**：$\mathbf{A}=\begin{bmatrix}a&b\\c&d\end{bmatrix}$，展开得 $f=ax_1^2+(b+c)x_1x_2+dx_2^2$，
+
+$$
+\nabla f=
+\begin{bmatrix}2ax_1+(b+c)x_2\\(b+c)x_1+2dx_2\end{bmatrix}
+=
+\begin{bmatrix}2a&b+c\\b+c&2d\end{bmatrix}
+\begin{bmatrix}x_1\\x_2\end{bmatrix}
+=(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}
+$$
+
+#### 7.3.2 推导二：矩阵微分（最快，三行）
+
+只用两条事实：
+
+1. 乘积法则：$d(\mathbf{x}^\top\mathbf{A}\mathbf{x})=(d\mathbf{x})^\top\mathbf{A}\mathbf{x}+\mathbf{x}^\top\mathbf{A}\,d\mathbf{x}$；
+2. 标量的转置等于自己：$(d\mathbf{x})^\top\mathbf{A}\mathbf{x}=\mathbf{x}^\top\mathbf{A}^\top d\mathbf{x}$。
+
+$$
+\begin{aligned}
+df
+&=d(\mathbf{x}^\top\mathbf{A}\mathbf{x})\\
+&=(d\mathbf{x})^\top\mathbf{A}\mathbf{x}+\mathbf{x}^\top\mathbf{A}\,d\mathbf{x}\\
+&=\mathbf{x}^\top\mathbf{A}^\top d\mathbf{x}+\mathbf{x}^\top\mathbf{A}\,d\mathbf{x}\\
+&=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})\,d\mathbf{x}\\
+&=\big[(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}\big]^\top d\mathbf{x}
+\end{aligned}
+$$
+
+而全微分的定义是 $df=(\nabla f)^\top d\mathbf{x}$，**逐项比较系数**（$d\mathbf{x}$ 任意）得
+
+$$
+\nabla f=(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}
+$$
+
+> 布局约定：本课统一用**分母布局**（梯度写成 $n\times1$ 列向量），所以结果直接是列向量；
+> 若用分子布局（梯度写成行向量），结果是 $\mathbf{x}^\top(\mathbf{A}+\mathbf{A}^\top)$，只是转置了一下。
+
+#### 7.3.3 三个立刻能验算的特例
+
+| 情形 | 二次型 | 梯度 | 直觉 |
+|---|---|---|---|
+| $\mathbf{A}=\mathbf{I}$ | $\|\mathbf{x}\|^2$ | $2\mathbf{x}$ | 离原点越远，坡越陡 |
+| $\mathbf{A}$ 对称 | $\mathbf{x}^\top\mathbf{A}\mathbf{x}$ | $2\mathbf{A}\mathbf{x}$ | 最常用，系数干净 |
+| $\mathbf{A}$ 反对称（$\mathbf{A}^\top=-\mathbf{A}$） | $\mathbf{x}^\top\mathbf{A}\mathbf{x}$ | $\mathbf{0}$ | 反对称部分对二次型**毫无贡献** |
+
+- 最后一行值得记：$\mathbf{x}^\top\mathbf{A}\mathbf{x}$ 里反对称部分自己抵消掉了，
+  所以 $\nabla f$ 里只剩对称部分——这与 L05 5.6.2 视角 4 是同一件事。
+- 对称时 $\mathbf{A}+\mathbf{A}^\top=2\mathbf{A}$，所以**梯度里的 2 就是这么来的**（不是背下来的）。
+
 ### 7.4 二次型的 Hessian
 
 $$
@@ -162,6 +239,87 @@ $$
 
 - **符号**：梯度是**线性**的，再求一次导就回到常数矩阵；$\mathbf{H}$ 一定对称。
 - **例**：上例 $\mathbf{H}=\begin{bmatrix}2&5\\5&8\end{bmatrix}$。直接算 $f_{x_1x_1}=2$、$f_{x_1x_2}=5$、$f_{x_2x_2}=8$ ✓
+
+#### 7.4.1 推导：梯度是线性的，再求一次导就“降回常数”
+
+7.3 已经得到
+
+$$
+\nabla f(\mathbf{x})=(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}
+$$
+
+右边是 $\mathbf{x}$ 的**线性函数**（矩阵乘向量）。线性映射 $\mathbf{M}\mathbf{x}$ 对 $\mathbf{x}$ 的导数就是 $\mathbf{M}$ 本身：
+
+$$
+d(\nabla f)=(\mathbf{A}+\mathbf{A}^\top)\,d\mathbf{x}
+\quad\Longrightarrow\quad
+\nabla^2 f=\mathbf{A}+\mathbf{A}^\top
+$$
+
+**逐分量再验证一遍**：记 $g_k=(\nabla f)_k=\sum_j(a_{kj}+a_{jk})x_j$，再对 $x_l$ 求一次：
+
+$$
+\frac{\partial g_k}{\partial x_l}=a_{kl}+a_{lk}=(\mathbf{A}+\mathbf{A}^\top)_{kl}
+$$
+
+所以 $\mathbf{H}$ 的第 $(k,l)$ 元就是 $a_{kl}+a_{lk}$，即
+
+$$
+\mathbf{H}=\mathbf{A}+\mathbf{A}^\top,
+\qquad
+\mathbf{A}=\mathbf{A}^\top\ \Rightarrow\ \mathbf{H}=2\mathbf{A}
+$$
+
+**为什么 $\mathbf{H}$ 一定对称**：
+
+$$
+\mathbf{H}^\top=(\mathbf{A}+\mathbf{A}^\top)^\top=\mathbf{A}+\mathbf{A}^\top=\mathbf{H}
+$$
+
+这与 Schwarz 定理（$f_{x_ix_j}=f_{x_jx_i}$，混合偏导可交换）是同一件事——
+**二次型的 Hessian 天生对称，而且是常数矩阵**（弯曲程度处处一样）。
+
+> 一句话链条：**二次 → 求一次导变线性 → 再求一次导变常数**。
+> 这也是为什么二次型是“最容易算”的函数。
+
+#### 7.4.2 带上 $\frac12$ 和线性项：最小二乘的接口
+
+实际损失函数很少是“纯二次型”，更常见的是
+
+$$
+f(\mathbf{x})=\tfrac12\mathbf{x}^\top\mathbf{A}\mathbf{x}-\mathbf{b}^\top\mathbf{x}+c,
+\qquad \mathbf{A}=\mathbf{A}^\top
+$$
+
+逐项求导（$\mathbf{b}^\top\mathbf{x}$ 的梯度是 $\mathbf{b}$，常数项为 $\mathbf{0}$）：
+
+$$
+\nabla f=\tfrac12(\mathbf{A}+\mathbf{A}^\top)\mathbf{x}-\mathbf{b}
+=\mathbf{A}\mathbf{x}-\mathbf{b},
+\qquad
+\nabla^2 f=\mathbf{A}
+$$
+
+**为什么要写 $\frac12$**：正是为了让梯度里的 $2$ 被约掉，形式最干净。
+
+**最小二乘就是它的一个实例**：
+
+$$
+J(\mathbf{w})=\tfrac12\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2
+=\tfrac12\mathbf{w}^\top(\mathbf{X}^\top\mathbf{X})\mathbf{w}-(\mathbf{X}^\top\mathbf{y})^\top\mathbf{w}+\tfrac12\|\mathbf{y}\|^2
+$$
+
+对照上面的模板，取 $\mathbf{A}=\mathbf{X}^\top\mathbf{X}$、$\mathbf{b}=\mathbf{X}^\top\mathbf{y}$：
+
+$$
+\nabla J=\mathbf{X}^\top\mathbf{X}\mathbf{w}-\mathbf{X}^\top\mathbf{y}
+=\mathbf{X}^\top(\mathbf{X}\mathbf{w}-\mathbf{y}),
+\qquad
+\mathbf{H}_J=\mathbf{X}^\top\mathbf{X}
+$$
+
+这正是 7.5 那两个公式的**来源**（7.5 只给结论，这里给推导）。
+$\mathbf{X}^\top\mathbf{X}$ 半正定，加 $\lambda\mathbf{I}$ 后正定——L05 的二次型判号在这里直接派上用场。
 
 ### 7.5 最小二乘目标的梯度与 Hessian
 
