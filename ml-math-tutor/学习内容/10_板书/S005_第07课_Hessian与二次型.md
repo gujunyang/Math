@@ -3,7 +3,7 @@
 - 会话ID：`S005`
 - 日期：2026-10-27
 - 对应：L07 / M2
-- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源；（v5）2026-10-27 7.3.1 补「三行结论怎么来的」：$i=k$ 项提取 $x_k$ 得 $\mathbf{A}$ 第 $k$ 行内积、$j=k$ 项用 $(\mathbf{A}^\top)_{kj}=a_{jk}$ 换成 $\mathbf{A}^\top$ 第 $k$ 行、$a_{kk}x_k^2$ 两类各分一半；并加 $\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ 的逐项表与两个和核对（$\nabla f=(7,13)^\top$）
+- 修订记录：（初版）2026-10-27；（v2）2026-10-27 修 7.2 例：原来把公式拆成两行写在行内 `$...$` 里，导致渲染成乱码，改为独立公式块，并把「12 与 21 位相同」改成「第 1 行第 2 列 = 第 2 行第 1 列」；（v3）2026-10-27 7.2 后新增 7.2.1「梯度 vs Hessian 对比例题」：$f=x^2+xy+y^3$ 在 $(1,1)$ 的梯度 $(3,4)^\top$ 与 Hessian $\begin{bmatrix}2&1\\1&6\end{bmatrix}$，并排对比表、切平面 3.7 vs 二次碗 3.75 vs 真值 3.751、开车比喻；（v4）2026-10-27 7.3/7.4 补推导：7.3.1 逐分量（双重和、$i=k$/$j=k$ 两项、$2\times2$ 核对）、7.3.2 矩阵微分（$df=\mathbf{x}^\top(\mathbf{A}^\top+\mathbf{A})d\mathbf{x}$）、7.3.3 三特例（$\mathbf{I}$/对称/反对称）、7.4.1 Hessian 推导（线性映射导数为自身 + 逐分量 + 对称性）、7.4.2 $\frac12$ 与线性项模板及最小二乘来源；（v5）2026-10-27 7.3.1 补「三行结论怎么来的」：$i=k$ 项提取 $x_k$ 得 $\mathbf{A}$ 第 $k$ 行内积、$j=k$ 项用 $(\mathbf{A}^\top)_{kj}=a_{jk}$ 换成 $\mathbf{A}^\top$ 第 $k$ 行、$a_{kk}x_k^2$ 两类各分一半；并加 $\mathbf{A}=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ 的逐项表与两个和核对（$\nabla f=(7,13)^\top$）；（v6）2026-10-27 7.5 扩写为 7.5.1–7.5.7「符号表 / 为什么平方（含高斯最大似然、L1 对比）/ 投影几何与法方程 / 闭式解与可解性 / 残差正交性手算（$J=\frac16$）/ 翻车场景 / ML 位置」
 
 ---
 
@@ -392,6 +392,123 @@ $$
 - **符号**：$\mathbf{X}\in\mathbb{R}^{m\times n}$、$\mathbf{w}\in\mathbb{R}^{n\times1}$；$\mathbf{X}^\top\mathbf{X}$ 是 $n\times n$ **对称半正定**；加正则后 $\mathbf{H}=\mathbf{X}^\top\mathbf{X}+\lambda\mathbf{I}$ 正定（$\lambda>0$）。
 - **例**：$\mathbf{X}=\begin{bmatrix}1&0\\1&1\\1&2\end{bmatrix}$，$\mathbf{X}^\top\mathbf{X}=\begin{bmatrix}3&3\\3&5\end{bmatrix}$，
   $\mathbf{H}=\begin{bmatrix}3&3\\3&5\end{bmatrix}$，$\operatorname{tr}=8$、$\det=6>0$ ⇒ 正定。
+
+> 推导见 7.4.2（$\frac12$ 模板 + 展开）。本节讲**这个目标本身**：为什么这么写、几何上在干什么、解怎么来。
+
+#### 7.5.1 每个符号是什么
+
+| 符号 | 维度 | 含义 |
+|---|---|---|
+| $m$ | 标量 | 样本数 |
+| $n$ | 标量 | 特征数（含截距时 $+1$） |
+| $\mathbf{X}$ | $m\times n$ | 设计矩阵，**第 $i$ 行** = 第 $i$ 个样本 $\mathbf{x}_i^\top$ |
+| $\mathbf{w}$ | $n\times1$ | 要学的参数 |
+| $\mathbf{y}$ | $m\times1$ | 真实标签 |
+| $\mathbf{X}\mathbf{w}$ | $m\times1$ | 预测值 $\hat{\mathbf{y}}$ |
+| $\mathbf{r}=\mathbf{X}\mathbf{w}-\mathbf{y}$ | $m\times1$ | **残差**（预测减真实） |
+| $J$ | **一个数** | 残差长度的平方 |
+
+- $J$ 是“给一组 $\mathbf{w}$，返回一个分数”的函数：分数越小，拟合越好。
+- 目标是 $\min_{\mathbf{w}}J(\mathbf{w})$，**不是**让每个残差都为零（一般做不到）。
+
+#### 7.5.2 为什么是“平方”
+
+| 理由 | 说明 |
+|---|---|
+| 正负不抵消 | 用 $\sum r_i$ 的话，正负误差会互相抵消，可能 $J=0$ 但拟合很烂 |
+| 大错罚更重 | 误差 $10$ 的代价是误差 $1$ 的 $100$ 倍 |
+| 光滑可导 | $r^2$ 处处可导，可以直接令 $\nabla J=\mathbf{0}$ 解出来；$|r|$ 在 $0$ 处不可导 |
+| 几何上是距离 | $\|\mathbf{r}\|^2$ 就是欧氏距离的平方 |
+| 概率上是最大似然 | 若 $\mathbf{y}=\mathbf{X}\mathbf{w}+\boldsymbol{\varepsilon}$、$\boldsymbol{\varepsilon}\sim N(\mathbf{0},\sigma^2\mathbf{I})$，最大化似然**等价于**最小化 $\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2$ |
+
+> 换成 $\sum|r_i|$ 就是**最小绝对偏差（L1 / 中位数回归）**：更抗离群点，但没有闭式解。
+> **平方 → 均值；绝对值 → 中位数。**
+
+#### 7.5.3 几何：最小二乘 = 找影子（投影）
+
+$\mathbf{X}\mathbf{w}$ 无论 $\mathbf{w}$ 怎么取，都只能落在 $\mathbf{X}$ 的**列空间**里（一张过原点的平面/超平面）。
+$\mathbf{y}$ 一般**不在这张平面上**，于是
+
+$$
+\min_{\mathbf{w}}\|\mathbf{X}\mathbf{w}-\mathbf{y}\|^2
+=\text{在列空间里找离 }\mathbf{y}\text{ 最近的点}
+$$
+
+最近点就是 $\mathbf{y}$ 的**正交投影**，所以残差必须垂直于列空间：
+
+$$
+\mathbf{X}^\top(\mathbf{X}\mathbf{w}-\mathbf{y})=\mathbf{0}
+\quad\Longleftrightarrow\quad
+\boxed{\mathbf{X}^\top\mathbf{X}\,\mathbf{w}=\mathbf{X}^\top\mathbf{y}}
+$$
+
+这叫**法方程（normal equations）**。勾股定理也成立：
+
+$$
+\|\mathbf{y}\|^2=\|\mathbf{X}\mathbf{w}\|^2+\|\mathbf{r}\|^2
+$$
+
+> 一句话：**$\mathbf{X}\mathbf{w}$ 是 $\mathbf{y}$ 投在列空间上的影子，$J$ 是“影子到本体距离”的平方。**
+
+#### 7.5.4 闭式解与“什么时候能解”
+
+令 $\nabla J=\mathbf{0}$ 得法方程，若 $\mathbf{X}^\top\mathbf{X}$ 可逆：
+
+$$
+\mathbf{w}^\star=(\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}
+$$
+
+| $\mathbf{X}^\top\mathbf{X}$ 的状态 | 条件 | 结果 |
+|---|---|---|
+| **正定** | $\mathbf{X}$ 列满秩（无共线、样本够） | 唯一解，碗底唯一 |
+| **半正定、有零特征值** | 特征冗余 / $m<n$ | 无穷多解，取最小范数解（伪逆 $\mathbf{X}^+$） |
+
+- “有零特征值”的方向就是**不可辨识**的方向：沿它走 $J$ 完全不变（一条平底槽）。
+- 加 $\lambda\|\mathbf{w}\|^2$ 后 $\mathbf{H}=\mathbf{X}^\top\mathbf{X}+\lambda\mathbf{I}$ 正定，槽被填成碗 ⇒ 唯一解（岭回归）。
+
+#### 7.5.5 残差与正交性（接第 4 节的手算）
+
+第 4 节已经解出 $\mathbf{w}^\star=(\tfrac76,\tfrac12)^\top$。把它代回去看残差：
+
+$$
+\hat{\mathbf{y}}=\mathbf{X}\mathbf{w}^\star
+=\Big(\tfrac76,\ \tfrac53,\ \tfrac{13}{6}\Big)^\top,
+\qquad
+\mathbf{r}=\hat{\mathbf{y}}-\mathbf{y}
+=\Big(\tfrac16,\ -\tfrac13,\ \tfrac16\Big)^\top
+$$
+
+$$
+J=\|\mathbf{r}\|^2=\tfrac1{36}+\tfrac19+\tfrac1{36}=\tfrac16
+\quad\Big(\text{若用 }\tfrac12\|\cdot\|^2\text{ 则为 }\tfrac1{12}\Big)
+$$
+
+**验证“残差垂直于列空间”**（$\mathbf{X}^\top\mathbf{r}=\mathbf{0}$）：
+
+- 第 1 列（全 $1$）：$\tfrac16-\tfrac13+\tfrac16=0$ ✓
+- 第 2 列（$0,1,2$）：$0-\tfrac13+\tfrac13=0$ ✓
+
+这就是 7.5.3 那个“影子”的代数证据。
+
+#### 7.5.6 什么时候会翻车
+
+| 问题 | 原因 | 对策 |
+|---|---|---|
+| 离群点把线拉歪 | 平方放大异常值 | Huber / L1 损失 |
+| 特征共线，解乱跳 | $\mathbf{X}^\top\mathbf{X}$ 接近奇异，条件数爆炸 | 岭回归、PCA、去相关 |
+| 关系是弯的 | 模型太简单 | 多项式/基函数特征 |
+| 样本数 < 特征数 | 欠定，无穷多解 | 正则化 / 最小范数解 |
+
+#### 7.5.7 它在机器学习里到处都是
+
+- **线性回归 / 多项式回归**：就是它本身；
+- **岭回归**：加 $\lambda\|\mathbf{w}\|^2$，把碗捏圆；
+- **Gauss–Newton**：非线性最小二乘，每步解一个加权最小二乘；
+- **神经网络最后一层**：固定特征时，输出层就是最小二乘；
+- **矩阵分解 / 推荐系统**：交替最小二乘（ALS）；
+- **卡尔曼滤波**：每步更新也是一个加权最小二乘。
+
+> **只记三句**：$J$ 是一个数（残差长度平方）；$\nabla J=0$ 给法方程 $\mathbf{X}^\top\mathbf{X}\mathbf{w}=\mathbf{X}^\top\mathbf{y}$；$\mathbf{H}=\mathbf{X}^\top\mathbf{X}$ 半正定，列满秩才是碗。
 
 ### 7.6 驻点分类（second-order test）
 
