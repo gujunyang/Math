@@ -5,7 +5,7 @@
     "goal": "掌握机器学习所需线性代数与微积分，能独立做题并映射到 ML",
     "preferences_pending": false
   },
-  "current_stage": "AISC5000 期中冲刺 压缩批（S006 产出第 14–23 课板书；批 B 若跨天由 S007 授课）",
+  "current_stage": "AISC5000 期中冲刺 Day 3（S007：考前答疑与回炉；考试 2026-10-29 18:30）",
   "concepts": [
     {
       "id": "vector",
@@ -522,9 +522,9 @@
       "note": "非概念条目；不记录复习次数/掌握度"
     }
   ],
-  "sessions_count": 5,
-  "session_counter": 6,
-  "current_session_id": "S006",
+  "sessions_count": 6,
+  "session_counter": 7,
+  "current_session_id": "S007",
   "session_index": [
     {
       "id": "S001",
@@ -564,12 +564,19 @@
     {
       "id": "S006",
       "date": "2026-10-28",
-      "topic": "AISC5000 期中冲刺 Day 2（L09 起：概率/Bayes→Gaussian→回归）",
+      "topic": "AISC5000 期中冲刺 Day 2（L09–L13 授课 + L14–L23 压缩批板书 + L11/L13 答疑）",
+      "status": "已结束",
+      "summary": "会话摘要/S006_期中冲刺Day2概率与回归.md"
+    },
+    {
+      "id": "S007",
+      "date": "2026-10-29",
+      "topic": "AISC5000 期中冲刺 Day 3（考前答疑与回炉；考试 18:30）",
       "status": "进行中",
       "summary": null
     }
   ],
-  "last_session": "2026-10-28",
+  "last_session": "2026-10-29",
   "notes": "S006（2026-10-28）：完成 L09–L13；规划师定「剩余 L14–L30 压缩为第 14–23 课」，新建 `AISC5000期中压缩10课表.md`（剩余内容唯一执行表），30 课表 L14–L30 标「已被取代」。10 份微板书已产出（批 A/B 均为 `S006`；若跨天由 S007 授课，只记教学流水，板书名不改），尚未开讲，概念状态不升级、不批量置「已掌握」。返工（T36）：修正 L17 Hessian、L19 漏诊/虚警、L21 偏置与 depth 模板、L22 写 loss 例，补 L14/15/18/23 建议项。P0 一个未删；同型题全部换数字/情境，不给学校作业答案。历史：S003 阶段 A 第02–05课、几何优先；S004 第06课正交投影 + 期中冲刺计划/修复；S005 Day 1 L01–L08（诊断仅 Q1 可独立完成，其余属未学）；L02–L12 已讲，L13 一维变量变换已讲。冲刺后按大纲 §7 回原 A–F。",
   "sprint_session_plan": [
     {
