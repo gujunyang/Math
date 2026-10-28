@@ -283,33 +283,33 @@
       "id": "prob_rules",
       "name": "概率规则与 Bayes（sum/product/Bayes/independence）",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-29"
     },
     {
       "id": "prob_density",
       "name": "概率密度、CDF、期望/方差/协方差",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-29"
     },
     {
       "id": "gaussian",
       "name": "高斯分布与 MLE",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-29"
     },
     {
       "id": "density_transform",
       "name": "密度变换与 Jacobian",
       "priority": "必学",
-      "status": "未开始",
+      "status": "学习中",
       "mastery": 0,
-      "next_review": null
+      "next_review": "2026-10-29"
     },
     {
       "id": "probabilistic_regression",
@@ -488,6 +488,30 @@
     {
       "concept": "taylor",
       "next_review": "2026-10-28",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "concept": "prob_rules",
+      "next_review": "2026-10-29",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "concept": "prob_density",
+      "next_review": "2026-10-29",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "concept": "gaussian",
+      "next_review": "2026-10-29",
+      "review_count": 0,
+      "status": "学习中"
+    },
+    {
+      "concept": "density_transform",
+      "next_review": "2026-10-29",
       "review_count": 0,
       "status": "学习中"
     },
