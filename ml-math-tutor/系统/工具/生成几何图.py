@@ -757,6 +757,237 @@ def fig_taylor_parabola():
     save(fig, "fig_taylor_parabola.png")
 
 
+# --- 图 21：概率规则 = 面积（Venn + Bayes 先验→后验） ----------------------
+def fig_prob_rules():
+    from matplotlib.patches import Circle
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.6, 4.6))
+
+    # 左：Venn 图（并 = 相加后减去重叠）
+    ax1.add_patch(Circle((0.40, 0.57), 0.27, facecolor=BLUE, alpha=0.26,
+                         edgecolor=BLUE, lw=2))
+    ax1.add_patch(Circle((0.63, 0.47), 0.22, facecolor=RED, alpha=0.26,
+                         edgecolor=RED, lw=2))
+    ax1.text(0.24, 0.82, r"$A$", color=BLUE, fontsize=15, ha="center")
+    ax1.text(0.81, 0.66, r"$B$", color=RED, fontsize=15, ha="center")
+    ax1.annotate(r"$A\cap B$", xy=(0.53, 0.52), xytext=(0.53, 0.22),
+                 ha="center", fontsize=11, color="#5b2d8e",
+                 arrowprops=dict(arrowstyle="->", color="#5b2d8e", lw=1.0))
+    ax1.text(0.5, 0.02, r"$P(A\cup B)=P(A)+P(B)-P(A\cap B)$",
+             ha="center", fontsize=10.5)
+    ax1.text(0.5, -0.10, r"$P(A\,|\,B)=\dfrac{P(A\cap B)}{P(B)}$",
+             ha="center", fontsize=11)
+    ax1.set_xlim(0, 1)
+    ax1.set_ylim(-0.16, 1.0)
+    ax1.set_aspect("equal")
+    ax1.axis("off")
+    ax1.set_title("概率 = 面积：条件化 = 换一个分母", fontsize=11.5)
+
+    # 右：Bayes = 先验 → 后验（同一条 [0,1]，面积重新分配）
+    ax2.barh(1, 0.02, height=0.32, color=BLUE, edgecolor="white")
+    ax2.barh(1, 0.98, left=0.02, height=0.32, color=RED, alpha=0.75,
+             edgecolor="white")
+    ax2.barh(0, 0.3265, height=0.32, color=BLUE, edgecolor="white")
+    ax2.barh(0, 0.6735, left=0.3265, height=0.32, color=RED, alpha=0.75,
+             edgecolor="white")
+
+    ax2.text(-0.02, 1, r"先验 $P(C)$", ha="right", va="center", fontsize=10.5)
+    ax2.text(-0.02, 0, r"后验 $P(C\,|\,T{=}1)$", ha="right", va="center",
+             fontsize=10.5)
+    ax2.text(0.01, 1.26, r"$2\%$", color=BLUE, fontsize=11)
+    ax2.text(0.50, 1.0, r"$98\%$", color="white", ha="center", va="center",
+             fontsize=11)
+    ax2.text(0.163, 0.0, r"$32.6\%$", color="white", ha="center", va="center",
+             fontsize=11)
+    ax2.text(0.67, 0.0, r"$67.4\%$", color="white", ha="center", va="center",
+             fontsize=11)
+
+    ax2.annotate("证据把 2% 抬到 32.6%\n（仍然不到一半）",
+                 xy=(0.10, -0.19), xytext=(0.30, -0.46), fontsize=10.5,
+                 arrowprops=dict(arrowstyle="->", color=GRAY, lw=1.1))
+    ax2.text(0.02, -0.80,
+             r"$P(C{=}1\,|\,T{=}1)=\dfrac{0.019}{0.019+0.0392}=0.326$",
+             fontsize=10.5)
+    ax2.set_xlim(0, 1)
+    ax2.set_ylim(-0.95, 1.45)
+    ax2.set_yticks([])
+    ax2.set_xlabel("概率质量（面积）")
+    ax2.set_title("Bayes：先验 → 后验，分母是全概率", fontsize=11.5)
+    ax2.grid(True, axis="x", alpha=0.2)
+
+    save(fig, "fig_prob_rules.png")
+
+
+# --- 图 22：密度 = 高度，概率 = 面积；CDF = 累积面积 ------------------------
+def fig_density_cdf():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.2, 4.2))
+
+    # 左：p(x)=2x，阴影面积 = P(X<1/2)
+    x = np.linspace(0, 1, 200)
+    ax1.plot(x, 2 * x, color=BLUE, lw=2.2, label=r"$p(x)=2x$")
+    xs = np.linspace(0, 0.5, 100)
+    ax1.fill_between(xs, 0, 2 * xs, color=BLUE, alpha=0.28)
+    ax1.plot([0.5, 0.5], [0, 1.0], ls="--", color=GRAY, lw=1)
+    ax1.text(0.22, 0.30, r"面积 $=P(X<1/2)=\frac{1}{4}$", fontsize=10.5, color=BLUE)
+    ax1.annotate("", xy=(1.0, 2.0), xytext=(1.0, 0.0),
+                 arrowprops=dict(arrowstyle="<->", color=GRAY, lw=1))
+    ax1.text(1.02, 0.9, "总面积\n$=1$", fontsize=10, color=GRAY, va="center")
+    ax1.set_xlim(0, 1.18)
+    ax1.set_ylim(0, 2.25)
+    ax1.set_xlabel(r"$x$")
+    ax1.set_ylabel(r"$p(x)$")
+    ax1.set_title("密度是「高度」，概率是「面积」", fontsize=11.5)
+    ax1.grid(True, alpha=0.25)
+
+    # 右：F(x)=x^2
+    xx = np.linspace(-0.25, 1.25, 500)
+    F = np.where(xx < 0, 0.0, np.where(xx > 1, 1.0, xx ** 2))
+    ax2.plot(xx, F, color=GREEN, lw=2.2, label=r"$F(x)=P(X\le x)$")
+    ax2.plot([0.5, 0.5], [0, 0.25], ls="--", color=GRAY, lw=1)
+    ax2.plot([0, 0.5], [0.25, 0.25], ls="--", color=GRAY, lw=1)
+    ax2.scatter([0.5], [0.25], color=GREEN, s=35, zorder=6)
+    ax2.text(0.55, 0.16, r"$F(0.5)=0.5^2=0.25$", fontsize=10.2, color=GREEN)
+    ax2.text(-0.22, 1.04, r"$F=1$", fontsize=10, color=GRAY)
+    ax2.text(-0.22, -0.10, r"$F=0$", fontsize=10, color=GRAY)
+    ax2.set_xlim(-0.28, 1.28)
+    ax2.set_ylim(-0.18, 1.18)
+    ax2.set_xlabel(r"$x$")
+    ax2.set_ylabel(r"$F(x)$")
+    ax2.set_title("CDF = 从左往右累积的面积", fontsize=11.5)
+    ax2.grid(True, alpha=0.25)
+
+    save(fig, "fig_density_cdf.png")
+
+
+# --- 图 23：Gaussian：μ 定位置、σ 定宽度；Σ 定椭圆 ------------------------
+def fig_gaussian():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.2, 4.3))
+
+    # 左：一元正态
+    x = np.linspace(-4, 4, 400)
+    y = np.exp(-x ** 2 / 2) / np.sqrt(2 * np.pi)
+    ax1.plot(x, y, color=BLUE, lw=2.2)
+    xs = np.linspace(-1, 1, 200)
+    ax1.fill_between(xs, 0, np.exp(-xs ** 2 / 2) / np.sqrt(2 * np.pi),
+                     color=BLUE, alpha=0.25)
+    ax1.plot([0, 0], [0, 1 / np.sqrt(2 * np.pi)], ls="--", color=GRAY, lw=1)
+    ax1.text(0, 0.05, r"$\mu$", ha="center", color=GRAY, fontsize=12)
+    ax1.annotate(r"$\mu\pm\sigma$：约 $68\%$", xy=(0.55, 0.16),
+                 xytext=(1.2, 0.24), fontsize=10, color=BLUE,
+                 arrowprops=dict(arrowstyle="->", color=BLUE, lw=1))
+    ax1.set_xlim(-4, 4)
+    ax1.set_ylim(0, 0.46)
+    ax1.set_xlabel(r"$x$")
+    ax1.set_ylabel(r"$p(x)$")
+    ax1.set_title(r"一元：$\mu$ 定位置，$\sigma$ 定宽度", fontsize=11.5)
+    ax1.grid(True, alpha=0.25)
+
+    # 右：二维相关正态的椭圆等高线 + 主轴
+    S = np.array([[1.6, 0.9], [0.9, 1.0]])
+    w, V = np.linalg.eigh(S)
+    gx = np.linspace(-3.2, 3.2, 260)
+    X, Y = np.meshgrid(gx, gx)
+    Si = np.linalg.inv(S)
+    Z = np.exp(-0.5 * (Si[0, 0] * X ** 2 + 2 * Si[0, 1] * X * Y
+                       + Si[1, 1] * Y ** 2))
+    ax2.contour(X, Y, Z, levels=[0.15, 0.4, 0.7, 0.9], colors=[BLUE],
+                linewidths=1.6, alpha=0.8)
+    for i in range(2):
+        v = V[:, i] * 2.2 * np.sqrt(w[i])
+        ax2.annotate("", xy=(v[0], v[1]), xytext=(0, 0),
+                     arrowprops=dict(arrowstyle="-|>", color=RED, lw=2))
+        ax2.text(v[0] * 1.08, v[1] * 1.08,
+                 r"$\sqrt{\lambda_%d}$" % (i + 1), color=RED, fontsize=11)
+    ax2.set_xlim(-3.2, 3.2)
+    ax2.set_ylim(-3.2, 3.2)
+    ax2.set_aspect("equal")
+    ax2.set_xlabel(r"$x_1$")
+    ax2.set_ylabel(r"$x_2$")
+    ax2.set_title(r"多维：$\Sigma$ 定椭圆（轴 = 特征方向）", fontsize=11.5)
+    ax2.grid(True, alpha=0.2)
+
+    save(fig, "fig_gaussian.png")
+
+
+# --- 图 24：MLE：对数似然的峰值 -------------------------------------------
+def fig_mle():
+    x = np.array([498.0, 502.0, 500.0, 504.0, 496.0])
+    N = x.size
+    S = float(np.sum((x - x.mean()) ** 2))  # 40
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.2, 4.0))
+
+    # 左：ℓ(μ)，σ² 固定为 8
+    mu = np.linspace(494, 506, 400)
+    ll_mu = -(N / 2) * np.log(2 * np.pi * 8) - np.sum(
+        (x[None, :] - mu[:, None]) ** 2, axis=1) / (2 * 8)
+    ax1.plot(mu, ll_mu, color=BLUE, lw=2.2)
+    ax1.axvline(x.mean(), ls="--", color=GRAY, lw=1)
+    ax1.scatter([x.mean()], [ll_mu.max()], color=RED, s=40, zorder=6)
+    ax1.annotate(r"$\hat\mu=\bar x=500$", xy=(500, ll_mu.max()),
+                 xytext=(501.2, ll_mu.max() - 1.6), fontsize=10.5,
+                 color=RED, arrowprops=dict(arrowstyle="->", color=RED, lw=1))
+    ax1.set_xlabel(r"$\mu$")
+    ax1.set_ylabel(r"$\ell(\mu)$")
+    ax1.set_title(r"固定 $\sigma^2$：$\ell$ 的峰在样本均值", fontsize=11.5)
+    ax1.grid(True, alpha=0.25)
+
+    # 右：ℓ(σ²)，μ 固定为 500
+    v = np.linspace(2, 20, 400)
+    ll_v = -(N / 2) * np.log(v) - S / (2 * v)
+    ax2.plot(v, ll_v, color=BLUE, lw=2.2, label=r"$\ell(\sigma^2)$")
+    ax2.axvline(S / N, ls="--", color=RED, lw=1.5)
+    ax2.axvline(S / (N - 1), ls=":", color=GREEN, lw=1.6)
+    ax2.text(S / N + 0.3, ll_v.min() + 0.6,
+             r"ML: $40/5=8$", color=RED, fontsize=10.5)
+    ax2.text(S / (N - 1) + 0.3, ll_v.min() + 1.8,
+             r"无偏: $40/4=10$", color=GREEN, fontsize=10.5)
+    ax2.set_xlabel(r"$\sigma^2$")
+    ax2.set_ylabel(r"$\ell(\sigma^2)$")
+    ax2.set_title(r"固定 $\mu$：峰在 $\sigma^2=S/N$，不是 $S/(N-1)$", fontsize=11.5)
+    ax2.grid(True, alpha=0.25)
+
+    save(fig, "fig_mle.png")
+
+
+# --- 图 25：变量变换：同一块概率质量被拉伸 ---------------------------------
+def fig_change_of_vars():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.2, 4.1))
+
+    # 左：p_X(x)=2x，阴影 x∈[0.4,0.6]
+    x = np.linspace(0, 1, 300)
+    ax1.plot(x, 2 * x, color=BLUE, lw=2.2)
+    xs = np.linspace(0.4, 0.6, 120)
+    ax1.fill_between(xs, 0, 2 * xs, color=BLUE, alpha=0.28)
+    ax1.text(0.5, 1.80, r"$x\in[0.4,\,0.6]$", ha="center", fontsize=10.5)
+    ax1.text(0.5, 0.42, "面积 $=0.2$", ha="center", fontsize=10.5, color=BLUE)
+    ax1.set_xlim(0, 1.05)
+    ax1.set_ylim(0, 2.2)
+    ax1.set_xlabel(r"$x$")
+    ax1.set_ylabel(r"$p_X(x)=2x$")
+    ax1.set_title("变换前：边长越长越常见", fontsize=11.5)
+    ax1.grid(True, alpha=0.25)
+
+    # 右：p_Y(y)=1，阴影 y∈[0.16,0.36]
+    y = np.linspace(0, 1, 300)
+    ax2.plot(y, np.ones_like(y), color=GREEN, lw=2.2)
+    ys = np.linspace(0.16, 0.36, 120)
+    ax2.fill_between(ys, 0, 1, color=GREEN, alpha=0.28)
+    ax2.text(0.26, 1.42, r"$y\in[0.16,\,0.36]$", ha="center", fontsize=10.5)
+    ax2.text(0.26, 0.45, "面积 $=0.2$", ha="center", fontsize=10.5, color=GREEN)
+    ax2.set_xlim(0, 1.05)
+    ax2.set_ylim(0, 1.75)
+    ax2.set_xlabel(r"$y=x^2$")
+    ax2.set_ylabel(r"$p_Y(y)=1$")
+    ax2.set_title("变换后：面积反而完全均匀", fontsize=11.5)
+    ax2.grid(True, alpha=0.25)
+
+    fig.subplots_adjust(bottom=0.24, wspace=0.25)
+    fig.text(0.5, 0.04, "同一块概率质量换了个坐标：宽度被拉伸，高度就必须压扁——面积不变。",
+             ha="center", fontsize=10.5, color=GRAY)
+    save(fig, "fig_change_of_vars.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -778,4 +1009,5 @@ if __name__ == "__main__":
     fig_quadratic_contours()
     fig_gradient_contour()
     fig_taylor_parabola()
+    fig_prob_rules()
     print("全部完成 ->", os.path.relpath(OUT, ROOT))
