@@ -988,6 +988,206 @@ def fig_change_of_vars():
     save(fig, "fig_change_of_vars.png")
 
 
+# --- 图 26：线性判别的决策边界、法向量与 signed distance -------------------
+def fig_decision_boundary():
+    w = np.array([3.0, 4.0])
+    w0 = -6.0
+    nrm = np.linalg.norm(w)
+    nhat = w / nrm
+    foot = -w0 * w / (nrm ** 2)            # 原点到边界的垂足 (0.72, 0.96)
+    r0 = -w0 / nrm                          # 1.2
+    xa = np.array([4.0, 2.0])
+    ra = (w @ xa + w0) / nrm                # 2.8
+    pa = xa - ra * nhat                     # 边界上的垂足
+
+    fig, ax = plt.subplots(figsize=(6.2, 5.6))
+    xs = np.linspace(-1.0, 5.5, 200)
+    ys = (-w0 - w[0] * xs) / w[1]           # 边界 3x+4y=6
+    ax.plot(xs, ys, color=BLUE, lw=2.2, label=r"决策边界 $y(\mathbf{x})=0$")
+
+    # 两个半平面
+    ylo, yhi = -1.2, 6.0
+    ax.fill_between(xs, ys, yhi, color=BLUE, alpha=0.10)
+    ax.fill_between(xs, ylo, ys, color=RED, alpha=0.08)
+    ax.text(3.6, 5.0, r"$C_1:\ y>0$", color=BLUE, fontsize=12)
+    ax.text(-0.75, 0.9, r"$C_2:\ y<0$", color=RED, fontsize=12)
+
+    # 法向量：从垂足出发
+    ax.annotate("", xy=foot + 2.0 * nhat, xytext=foot,
+                arrowprops=dict(arrowstyle="-|>", color=BLUE, lw=2.2))
+    ax.text(*(foot + 2.1 * nhat), r"$\mathbf{w}$（法向）", color=BLUE, fontsize=12)
+
+    # r0：原点到边界的 signed distance
+    ax.annotate("", xy=foot, xytext=(0, 0),
+                arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=2.0))
+    ax.text(0.10, 0.35, r"$r_0=1.2$", color=GREEN, fontsize=11.5)
+
+    # x_A 与它到边界的距离
+    ax.scatter([xa[0]], [xa[1]], color=RED, s=42, zorder=6)
+    ax.text(xa[0] + 0.10, xa[1] + 0.15, r"$\mathbf{x}_A=(4,2)$", color=RED, fontsize=11.5)
+    ax.plot([xa[0], pa[0]], [xa[1], pa[1]], ls="--", color=RED, lw=1.6)
+    ax.text((xa[0] + pa[0]) / 2 + 0.12, (xa[1] + pa[1]) / 2 + 0.18,
+            r"$r_A=2.8$", color=RED, fontsize=11.5)
+    ax.scatter([pa[0]], [pa[1]], color=RED, s=24, zorder=6)
+
+    ax.set_title(r"$\mathbf{w}$ 垂直边界；$r_0=-w_0/\|\mathbf{w}\|$ 是原点到边界的距离", fontsize=11.5)
+    ax.set_xlabel(r"$x_1$")
+    ax.set_ylabel(r"$x_2$")
+    ax.set_xlim(-1.0, 5.5)
+    ax.set_ylim(-1.2, 6.0)
+    ax.set_aspect("equal")
+    ax.grid(True, alpha=0.2)
+    ax.legend(loc="lower left", fontsize=9, frameon=False)
+    save(fig, "fig_decision_boundary.png")
+
+
+# --- 图 27：误差面、等高线与梯度下降的 zig-zag ------------------------------
+def fig_error_surface():
+    fig = plt.figure(figsize=(11.6, 4.6))
+    w1 = np.linspace(-2.2, 2.2, 160)
+    w2 = np.linspace(-2.2, 2.2, 160)
+    W1, W2 = np.meshgrid(w1, w2)
+    E = 0.5 * (4.0 * W1 ** 2 + 1.0 * W2 ** 2)
+
+    ax1 = fig.add_subplot(1, 2, 1, projection="3d")
+    ax1.plot_surface(W1, W2, E, cmap="viridis", alpha=0.9, linewidth=0, antialiased=True)
+    ax1.contour(W1, W2, E, levels=8, zdir="z", offset=0, cmap="viridis", linewidths=1.0)
+    ax1.scatter([0], [0], [0], color=RED, s=30)
+    ax1.text(0.1, 0.1, 1.2, r"$\nabla E=0$", color=RED, fontsize=11)
+    ax1.set_xlabel(r"$w_1$")
+    ax1.set_ylabel(r"$w_2$")
+    ax1.set_zlabel(r"$E(\mathbf{w})$")
+    ax1.set_title("误差面：驻点处梯度为 0", fontsize=11.5)
+    ax1.view_init(elev=28, azim=-125)
+
+    # 右：等高线 + GD 轨迹（λ1=4, λ2=1, η=0.4）
+    ax2 = fig.add_subplot(1, 2, 2)
+    cs = ax2.contour(W1, W2, E, levels=10, cmap="viridis")
+    ax2.clabel(cs, inline=True, fontsize=8)
+    pts = [(2.0, 2.0)]
+    for _ in range(6):
+        a, b = pts[-1]
+        pts.append((a - 0.4 * 4.0 * a, b - 0.4 * 1.0 * b))
+    pts = np.array(pts)
+    ax2.plot(pts[:, 0], pts[:, 1], "-o", color=RED, lw=1.8, ms=4,
+             label=r"GD：$\eta=0.4$")
+    ax2.scatter([0], [0], color=BLUE, s=36, zorder=6)
+    ax2.text(0.08, 0.12, r"$w^\star$", color=BLUE, fontsize=12)
+    ax2.text(0.55, 0.96, "陡方向 $w_1$：$\\lambda_{\\max}=4$", transform=ax2.transAxes,
+             ha="center", va="top", fontsize=10, color=GRAY)
+    ax2.text(0.55, 0.06, "平方向 $w_2$：$\\lambda_{\\min}=1$", transform=ax2.transAxes,
+             ha="center", va="bottom", fontsize=10, color=GRAY)
+    ax2.set_xlabel(r"$w_1$")
+    ax2.set_ylabel(r"$w_2$")
+    ax2.set_title("等高线是椭圆：陡方向来回抖，平方向走得慢", fontsize=11.5)
+    ax2.set_aspect("equal")
+    ax2.grid(True, alpha=0.2)
+    ax2.legend(loc="lower right", fontsize=9, frameon=False)
+
+    fig.subplots_adjust(bottom=0.14, wspace=0.28)
+    fig.text(0.5, 0.03, "误差面像地形图：梯度指上坡，负梯度指下坡；等高线越扁，越容易 zig-zag。",
+             ha="center", fontsize=10.5, color=GRAY)
+    save(fig, "fig_error_surface.png")
+
+
+# --- 图 28：过拟合：M=1/3/9 的拟合与训练/测试误差 ---------------------------
+def fig_overfit_M():
+    import warnings
+
+    rng = np.random.default_rng(4)
+    x = np.linspace(0.0, 1.0, 10)
+    t = np.sin(2 * np.pi * x) + rng.normal(0, 0.18, size=x.size)
+    xs = np.linspace(0.0, 1.0, 400)
+    true = np.sin(2 * np.pi * xs)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.2, 4.4))
+    ax1.scatter(x, t, color=GRAY, s=24, zorder=5, label="训练数据")
+    ax1.plot(xs, true, ls="--", color=GRAY, lw=1.0, label=r"真实曲线 $\sin 2\pi x$")
+    styles = {1: (BLUE, r"$M=1$：欠拟合"),
+              3: (RED, r"$M=3$：合适"),
+              9: (GREEN, r"$M=9$：过拟合")}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        for M, (c, lab) in styles.items():
+            coef = np.polyfit(x, t, M)
+            ax1.plot(xs, np.polyval(coef, xs), color=c, lw=1.8, label=lab)
+    ax1.set_ylim(-1.9, 2.7)
+    ax1.set_xlabel("x")
+    ax1.set_ylabel("t")
+    ax1.set_title("同一批点，三种弯曲程度", fontsize=11.5)
+    ax1.legend(fontsize=8.5, frameon=False, loc="lower left")
+    ax1.grid(True, alpha=0.2)
+
+    Ms = list(range(0, 10))
+    train, test = [], []
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        for M in Ms:
+            coef = np.polyfit(x, t, M)
+            train.append(np.mean((np.polyval(coef, x) - t) ** 2))
+            test.append(np.mean((np.polyval(coef, xs) - true) ** 2))
+    ax2.semilogy(Ms, train, "-o", color=BLUE, ms=4, label="训练误差")
+    ax2.semilogy(Ms, test, "-s", color=RED, ms=4, label="测试误差")
+    ax2.set_ylim(1e-6, 1.0)
+    ax2.set_xlabel(r"多项式阶数 $M$")
+    ax2.set_ylabel("均方误差（对数轴）")
+    ax2.set_title("训练误差一路降，测试误差先降后升", fontsize=11.5)
+    ax2.legend(fontsize=9, frameon=False)
+    ax2.grid(True, alpha=0.2, which="both")
+
+    fig.subplots_adjust(bottom=0.2, wspace=0.25)
+    fig.text(0.5, 0.03,
+             "M 越大越能穿过训练点，但点与点之间开始乱摆——训练误差降、测试误差升，就是过拟合。",
+             ha="center", fontsize=10.5, color=GRAY)
+    save(fig, "fig_overfit_M.png")
+
+
+# --- 图 29：激活函数与导数（饱和） -----------------------------------------
+def fig_activation():
+    a = np.linspace(-5.0, 5.0, 500)
+    sig = 1.0 / (1.0 + np.exp(-a))
+    th = np.tanh(a)
+    relu = np.maximum(0.0, a)
+    leaky = np.where(a < 0, 0.1 * a, a)
+    soft = np.log1p(np.exp(a))
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.2, 4.3))
+    ax1.plot(a, sig, color=BLUE, lw=2.0, label=r"$\sigma$（sigmoid）")
+    ax1.plot(a, th, color=RED, lw=2.0, label=r"$\tanh$")
+    ax1.plot(a, relu, color=GREEN, lw=2.0, label="ReLU")
+    ax1.plot(a, leaky, color=GRAY, lw=1.4, ls="--", label="leaky ReLU")
+    ax1.plot(a, soft, color="#ff7f0e", lw=1.4, ls=":", label="softplus")
+    ax1.axhline(0.0, color=GRAY, lw=0.8)
+    ax1.axhline(1.0, color=GRAY, lw=0.8, ls=":")
+    ax1.set_xlim(-5, 5)
+    ax1.set_ylim(-1.6, 5.2)
+    ax1.set_xlabel("a")
+    ax1.set_ylabel("h(a)")
+    ax1.set_title("激活函数：中段近似线性，两端压平", fontsize=11.5)
+    ax1.legend(fontsize=8.5, frameon=False, loc="upper left")
+    ax1.grid(True, alpha=0.2)
+
+    ax2.plot(a, sig * (1 - sig), color=BLUE, lw=2.0, label=r"$\sigma'=\sigma(1-\sigma)$")
+    ax2.plot(a, 1 - th ** 2, color=RED, lw=2.0, label=r"$\tanh'=1-\tanh^2$")
+    ax2.plot(a, (a > 0).astype(float), color=GREEN, lw=1.6, label="ReLU'")
+    ax2.plot(a, sig, color=GRAY, lw=1.2, ls="--", label=r"softplus$'=\sigma$")
+    ax2.axvline(5, color=GRAY, lw=0.8, ls=":")
+    ax2.text(2.6, 0.12, r"$\sigma'(5)\approx0.0067$", fontsize=9.5, color=BLUE)
+    ax2.set_xlim(-5, 5)
+    ax2.set_ylim(-0.05, 1.05)
+    ax2.set_xlabel("a")
+    ax2.set_ylabel("h'(a)")
+    ax2.set_title("导数：两端趋 0（饱和）", fontsize=11.5)
+    ax2.legend(fontsize=8.5, frameon=False, loc="upper left")
+    ax2.grid(True, alpha=0.2)
+
+    fig.subplots_adjust(bottom=0.2, wspace=0.25)
+    fig.text(0.5, 0.03,
+             "饱和 = 曲线被压平 = 导数趋 0；反向传播每层都乘 h'，多层连乘就梯度消失。",
+             ha="center", fontsize=10.5, color=GRAY)
+    save(fig, "fig_activation.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -1010,4 +1210,6 @@ if __name__ == "__main__":
     fig_gradient_contour()
     fig_taylor_parabola()
     fig_prob_rules()
+    fig_overfit_M()
+    fig_activation()
     print("全部完成 ->", os.path.relpath(OUT, ROOT))

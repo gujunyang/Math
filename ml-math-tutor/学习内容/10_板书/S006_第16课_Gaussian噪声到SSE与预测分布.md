@@ -1,0 +1,105 @@
+# 板书 · S006 · 第 16 课：Gaussian 噪声 → 似然 → SSE → $\sigma^2_{ML}$ → 预测分布
+
+- 覆盖：原 L17+L19｜公告依据：L3 §2.3.4；"Questions will focus on conceptual understanding of the topics covered in these sections."
+- 会话批次：批 A（第 14–18 课）｜日期：2026-10-28｜修订记录：（初版）2026-10-28；v2 2026-10-28：审核修正 + 公式卡例细化（三段式，数字与 §4/§5 去重）
+- 主线：一条链——假设噪声是 Gaussian，最大化似然就等价于最小化 SSE。
+
+## 0. 生活化引入
+一袋糖标 500 g，实际称出 498、502、500、504、496 g。
+读数围着 500 上下抖，误差像钟形——这就是"Gaussian 噪声"。
+
+## 1. 直觉
+每个数据点是一次"高斯投票"：真值附近概率大，远处概率小。
+所有点同时发生的概率（似然）是它们的乘积；取对数，乘积变加法，最大化就好算了。
+
+## 2. 几何
+![Gaussian：均值定中心，方差定胖瘦](图片/fig_gaussian.png)
+
+**看图**：固定一个 $x$，目标 $t$ 不是死数，而是一条以 $y(x,\mathbf w)$ 为峰的小钟形。
+残差越大，$t_n$ 落在钟形尾巴上，概率越小——所以"让所有点都落在高处"就是"让残差小"。
+
+## 3. 计算（公式卡片）
+### 16.1 条件 Gaussian（conditional Gaussian）
+$$
+p(t\mid x,\mathbf w,\sigma^2)=\mathcal N\big(t\mid y(x,\mathbf w),\sigma^2\big)
+$$
+- **符号**：$y(x,\mathbf w)$ 是预测均值；$\sigma^2$ 是噪声方差；$t$ 是观测目标。
+- **意义与场景**：把"预测"升级成"预测 + 不确定性"：不光说 500 g，还说"大约 $\pm2$ g"。回归、传感器读数都用它。
+- **例（生活版）**：
+  - **背景与题干**：零件长度预测 $10$ mm、噪声 $\sigma=0.4$ mm；求 $t=10.4$ mm 处的概率密度（probability density）。
+  - **解**：Step 1 $z=(10.4-10)/0.4=1$；Step 2 系数 $\frac{1}{\sqrt{2\pi}\times0.4}\approx0.9974$；Step 3 $e^{-1/2}=0.6065$；Step 4 $p\approx0.9974\times0.6065\approx0.605$ /mm。
+  - **解读**：密度可以大于 $1$（它是“每 mm 的浓度”）；$z=1$ 表示离均值一个标准差。
+### 16.2 似然与对数似然（likelihood / log-likelihood）
+$$
+L(\mathbf w,\sigma^2)=\prod_{n=1}^{N}\mathcal N\big(t_n\mid y(x_n,\mathbf w),\sigma^2\big),
+\qquad
+\ln L=-\frac{1}{2\sigma^2}\sum_n\{y_n-t_n\}^2-\frac N2\ln\sigma^2-\frac N2\ln(2\pi)
+$$
+- **符号**：$y_n=y(x_n,\mathbf w)$；连乘来自 i.i.d.；后两项与 $\mathbf w$ 无关。
+- **意义与场景**：似然是"这组参数有多像能生出眼前这批数据"。$L$ 是 $10^{-30}$ 级别的小数，取对数才不会下溢。
+- **例（生活版）**：
+  - **背景与题干**：2 个点的残差是 $1,-1$，噪声方差 $\sigma^2=2$；求对数似然。
+  - **解**：Step 1 平方和 $1+1=2$；Step 2 第一项 $-\frac{2}{2\times2}=-0.5$；Step 3 常数项 $-\ln2-\ln(2\pi)\approx-0.6931-1.8379=-2.531$；Step 4 $\ell\approx-3.031$。
+  - **解读**：对数似然为负很正常；常数项不影响最大值位置，但会影响数值。
+### 16.3 噪声方差的 MLE（$\sigma^2_{ML}$）
+$$
+\sigma^2_{ML}=\frac1N\sum_{n=1}^{N}\big\{y(x_n,\mathbf w_{ML})-t_n\big\}^2
+$$
+- **符号**：$N$ 是样本数；分子是拟合后的残差平方和；除 $N$ 而不是 $N-1$。
+- **意义与场景**：训练完模型后，回头量"平均每个点错多少"，把它当成噪声的"音量旋钮"。
+- **例（生活版）**：
+  - **背景与题干**：4 袋糖的预测值是 $y=(500,500,500,500)$ g，实际称得 $t=(501,499,502,498)$ g；求噪声方差的 MLE。
+  - **解**：Step 1 残差 $y_n-t_n=(-1,1,-2,2)$；Step 2 平方 $1,1,4,4$，平方和 $S=10$；Step 3 除以 $N=4$：$\hat\sigma^2_{ML}=10/4=2.5\ \mathrm{g}^2$；Step 4 开方 $\hat\sigma_{ML}=\sqrt{2.5}\approx1.58$ g。
+  - **解读**：$1.58$ g 表示“平均每袋偏离预测约 $1.6$ g”；它除的是 $N$ 不是 $N-1$，所以比无偏方差 $10/3\approx3.33$ 略小，不是算错。
+### 16.4 预测分布（predictive distribution）
+$$
+p(t\mid x,\mathbf w_{ML},\sigma^2_{ML})=\mathcal N\big(t\mid y(x,\mathbf w_{ML}),\sigma^2_{ML}\big)
+$$
+- **符号**：中心换成训练好的 $y(x,\mathbf w_{ML})$；宽度用 16.3 的 $\sigma^2_{ML}$。
+- **意义与场景**：新输入来了，不只报一个数，而是报"最可能多少、上下浮动多大"；做区间估计、异常检测都靠它。
+- **例（生活版）**：
+  - **背景与题干**：新糖袋预测 $20$ g、$\sigma_{ML}=2$ g；求 $P(18<t<22)$。
+  - **解**：Step 1 下限 $z=(18-20)/2=-1$；Step 2 上限 $z=(22-20)/2=1$；Step 3 $\Phi(1)=0.8413$、$\Phi(-1)=0.1587$；Step 4 概率 $=0.8413-0.1587=0.6827\approx68.3\%$。
+  - **解读**：$\pm1\sigma$ 约覆盖 $68\%$；这是区间概率，不是某点的密度。
+
+## 4. 完整手算
+**Example.** Three predictions $y=(2,3,4)$ and targets $t=(2.5,3.0,3.5)$. Find SSE, $\sigma^2_{ML}$, and $p(t=3\mid x)$.
+1. **Residuals** $y_n-t_n$: $-0.5,\ 0,\ 0.5$.
+2. **Squares.** $0.25,\ 0,\ 0.25$; sum $=0.50$.
+3. **SSE.** $E=\frac12(0.50)=0.25$.
+4. **Derive $\sigma^2$.** $\dfrac{d}{d\sigma^2}\ln L=-\dfrac{N}{2\sigma^2}+\dfrac{\sum r_n^2}{2\sigma^4}=0\Rightarrow\sigma^2_{ML}=\dfrac{0.50}{3}=\dfrac16$.
+5. **Predictive.** $p(3\mid x)=\mathcal N(3\mid3,\tfrac16)=\dfrac{1}{\sqrt{2\pi/6}}\approx0.977$.
+
+最大化 $\ln L$ 的第一项是 $-E/\sigma^2$，所以"最大化似然"就是"最小化 SSE"；$\sigma^2$ 那一项单独求导给出 16.3。
+
+## 5. 独立复现
+**Exercise.** Two predictions $y=(1,2)$, targets $t=(1.5,2.5)$. Find SSE and $\sigma^2_{ML}$.
+
+## 6. 易错点
+1. 把 likelihood $p(t\mid x,\mathbf w)$ 当成 posterior $p(\mathbf w\mid t)$。
+2. 求 $\sigma^2$ 时漏掉 $-\frac N2\ln\sigma^2$ 这一项，只对残差项求导。
+3. $\sigma^2_{ML}$ 除以 $N-1$（那是无偏估计 $s^2$，不是 ML）。
+
+## 7. 与已学关系
+L12 的 Gaussian MLE 是"只有 $\mu$"的版本；L15 的 SSE 到这里才拿到概率解释；第 17 课把 $y=\mathbf X\mathbf w$ 代进来，得到正规方程。
+
+**P2 一句（4.2）**：平方损失下最优预测是条件均值 $\mathbb E[t\mid x]$；Gaussian 对称，所以就是 $y(x,\mathbf w)$。
+**考场第一步**：先写 $t=y(x,\mathbf w)+\epsilon,\ \epsilon\sim\mathcal N(0,\sigma^2)$，再写 $p(t\mid x)=\mathcal N(y,\sigma^2)$。
+
+## 8. 作业（答案在第 9 节，先做完再看）
+**Q1 (concept).** True or false? One line why.
+(a) Maximizing the Gaussian likelihood is the same as minimizing SSE. (b) $\sigma^2_{ML}$ divides by $N-1$. (c) The likelihood is a distribution over $\mathbf w$. (d) The predictive distribution gives an interval, not just a point.
+
+**Q2 (exam-style, HW1 Q4(a) style).** Let $\mathbf X=[1,0;1,2;1,3]$, $\mathbf y=[2,3,7]$, and $\mathbf w=(0.5,1.5)$. Write the SSE and compute $\sigma^2_{ML}$.
+
+**Q3 (self-test).** Why take the logarithm of the likelihood?
+
+**Q4 (self-test).** Why is $\sigma^2_{ML}$ slightly too small on average?
+
+## 9. 答案（先做完再看）
+**A1.** (a) True. The log-likelihood is $-\text{SSE}/\sigma^2$ plus constants. (b) False. ML uses $N$. (c) False. It is a function of $\mathbf w$ for fixed data, not a distribution over $\mathbf w$. (d) True. It is a full Gaussian.
+**A2.** Predictions $0.5,3.5,5.0$; residuals $-1.5,0.5,-2.0$; squares sum $=6.5$; $E=3.25$; $\sigma^2_{ML}=6.5/3\approx2.167$.
+**A3.** Products of many small probabilities underflow; logs turn products into sums and preserve the maximizer.
+**A4.** It measures residuals around the fitted mean, which already used the data, so it loses one degree of freedom; $s^2$ divides by $N-1$.
+
+**A5（第 5 节）.** Residuals $-0.5,-0.5$; squares sum $=0.5$; $E=0.25$; $\sigma^2_{ML}=0.5/2=0.25$.
