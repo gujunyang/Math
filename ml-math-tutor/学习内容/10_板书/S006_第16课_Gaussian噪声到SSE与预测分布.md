@@ -1,7 +1,7 @@
 # 板书 · S006 · 第 16 课：Gaussian 噪声 → 似然 → SSE → $\sigma^2_{ML}$ → 预测分布
 
 - 覆盖：原 L17+L19｜公告依据：L3 §2.3.4；"Questions will focus on conceptual understanding of the topics covered in these sections."
-- 会话批次：批 A（第 14–18 课）｜日期：2026-10-28｜修订记录：（初版）2026-10-28；v2 2026-10-28：审核修正 + 公式卡例细化（三段式，数字与 §4/§5 去重）；v3 2026-10-29：16.1 例展开——公式拆成「峰值高度 × 衰减因子」、$z$ 与系数的具体值、三档 $t$ 对照表、密度与概率的区分（S007 答疑）；v4 2026-10-29：16.2/16.3/16.4 例按同一结构展开（Step 0 拆公式 + 逐项算 + 检查/对照表 + 常见误读）；v5 2026-10-29：文末新增「附：答疑记录」——CDF 只需 $z$、密度必须带 $1/\sigma$ 的推导与数值验证；v6 2026-10-29：答疑追加第二问——高斯 MLE 的四步流程、在 ML 中的六类用途、与 MSE/BCE/CE 的统一关系（含配对表解读）；v7 2026-10-29：第二问末补「每一步知道什么、求出什么」小表（$\mathbf w$ 与 $\sigma^2$ 的已知/未知）；v8 2026-10-29：将该小表移到 Step 5 之后、用途表之前（不再放在文末）；v9 2026-10-29：改为**逐步内嵌**——每个 Step 公式后直接写「符号 / 已知 / 未知 / 本步求」，删去单独的小表
+- 会话批次：批 A（第 14–18 课）｜日期：2026-10-28｜修订记录：（初版）2026-10-28；v2 2026-10-28：审核修正 + 公式卡例细化（三段式，数字与 §4/§5 去重）；v3 2026-10-29：16.1 例展开——公式拆成「峰值高度 × 衰减因子」、$z$ 与系数的具体值、三档 $t$ 对照表、密度与概率的区分（S007 答疑）；v4 2026-10-29：16.2/16.3/16.4 例按同一结构展开（Step 0 拆公式 + 逐项算 + 检查/对照表 + 常见误读）；v5 2026-10-29：文末新增「附：答疑记录」——CDF 只需 $z$、密度必须带 $1/\sigma$ 的推导与数值验证；v6 2026-10-29：答疑追加第二问——高斯 MLE 的四步流程、在 ML 中的六类用途、与 MSE/BCE/CE 的统一关系（含配对表解读）；v7 2026-10-29：第二问末补「每一步知道什么、求出什么」小表（$\mathbf w$ 与 $\sigma^2$ 的已知/未知）；v8 2026-10-29：将该小表移到 Step 5 之后、用途表之前（不再放在文末）；v9 2026-10-29：改为**逐步内嵌**——每个 Step 公式后直接写「符号 / 已知 / 未知 / 本步求」，删去单独的小表；v10 2026-10-29：流程后补一个五步贯通的数值例（3 点拟合直线：$\mathbf w=(5/6,3/2)$、$\hat\sigma^2=1/18$、预测 $\mathcal N(16/3,1/18)$）
 - 主线：一条链——假设噪声是 Gaussian，最大化似然就等价于最小化 SSE。
 
 ## 0. 生活化引入
@@ -397,6 +397,55 @@ p(t\mid x,\mathbf w_{ML},\sigma^2_{ML})=\mathcal N\big(t\mid y(x,\mathbf w_{ML})
 $$
 
 **已知**：$\mathbf w_{ML}$、$\hat\sigma^2_{ML}$、新的 $x$；**未知**：$t$ 具体取值；**本步求**：$t$ 的**分布**（不是单个预测值）。
+
+**例（把五步走一遍）**：3 个点 $(0,1),(1,2),(2,4)$，模型 $y=w_0+w_1x$，噪声为 Gaussian。
+
+**Step 1｜建模**：$t=w_0+w_1x+\epsilon,\ \epsilon\sim\mathcal N(0,\sigma^2)$。
+已知：3 组 $(x_n,t_n)$；未知：$w_0,w_1,\sigma^2$（此步不代数值）。
+
+**Step 2｜写似然**：
+
+$$
+L(w_0,w_1,\sigma^2)=\prod_{n=1}^{3}\mathcal N\big(t_n\mid w_0+w_1x_n,\ \sigma^2\big)
+$$
+
+还没有具体数字，只得到一个待优化的函数。
+
+**Step 3｜对 $\mathbf w$ 最大化**（= 最小化 SSE）：
+
+$$
+\mathbf X^\top\mathbf X=\begin{bmatrix}3&3\\3&5\end{bmatrix},\quad
+\mathbf X^\top\mathbf y=\begin{bmatrix}7\\10\end{bmatrix}
+\;\Longrightarrow\;
+3w_0+3w_1=7,\ 3w_0+5w_1=10
+\;\Longrightarrow\;
+w_1=\tfrac32,\ w_0=\tfrac56
+$$
+
+预测：$\hat{\mathbf y}=(\tfrac56,\ \tfrac73,\ \tfrac{23}{6})\approx(0.833,\ 2.333,\ 3.833)$。
+
+**Step 4｜对 $\sigma^2$ 最大化**：
+
+$$
+\mathbf r=\hat{\mathbf y}-\mathbf t=\Big(-\tfrac16,\ \tfrac13,\ -\tfrac16\Big),\quad
+\sum r_n^2=\tfrac1{36}+\tfrac19+\tfrac1{36}=\tfrac16
+$$
+
+$$
+\hat\sigma^2_{ML}=\frac{1/6}{3}=\frac1{18}\approx0.0556,
+\qquad
+\hat\sigma_{ML}\approx0.236
+$$
+
+**Step 5｜写预测分布**：新输入 $x=3$ ⇒ 均值 $y=\tfrac56+\tfrac32\times3=\tfrac{16}{3}\approx5.33$：
+
+$$
+p(t\mid x=3)=\mathcal N\Big(t\ \Big|\ \tfrac{16}{3},\ \tfrac1{18}\Big)
+$$
+
+峰值密度 $=\dfrac{1}{\sqrt{2\pi\times\frac1{18}}}=\dfrac{3}{\sqrt\pi}\approx1.69$；约 $68\%$ 落在 $5.33\pm0.24$。
+
+> 这条链的意义：**最大似然不是“估个 $\sigma$”**，而是从“假设分布”一路推到“损失（SSE）→ 参数 $\mathbf w$ → 噪声 $\sigma^2$ → 预测区间”。
 
 **这套东西在 ML 里干什么**
 
