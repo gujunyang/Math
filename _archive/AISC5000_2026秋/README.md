@@ -13,7 +13,7 @@
 | 迁移前 commit | `4d07aa8e218434004402325d134a045d67a47a4a` |
 | 迁移前 tag | `pre-course-migration-20261030` |
 | 旧课进度快照 | `系统/05_学习进度/progress_AISC5000_2026秋.json` |
-| 文件总数 | 104（65 md、29 png、9 pdf、1 json） |
+| 文件总数 | 旧课文件 104（65 md、29 png、9 pdf、1 json）+ 本说明 1 = 105 |
 
 ### 归档前收尾
 
