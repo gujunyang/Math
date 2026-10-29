@@ -3,12 +3,12 @@
 > 按顺序执行，不得跳步，不得直接开始讲课。
 
 ## 步骤 1：读取 skill 要求
-- `ml-math-tutor/系统/04_辅导老师/SKILL.md`
-- `ml-math-tutor/系统/04_辅导老师/startup_protocol.md`（本文件）
-- `ml-math-tutor/系统/04_辅导老师/rules.md`
+- `math-tutor-os/系统/04_辅导老师/SKILL.md`
+- `math-tutor-os/系统/04_辅导老师/startup_protocol.md`（本文件）
+- `math-tutor-os/系统/04_辅导老师/rules.md`
 
 若文件不存在：先创建，再把固定要求写入，然后重新读取。
-读完后必须声明：**"我已读取 ml-math-tutor 的 skill 要求。"**
+读完后必须声明：**"我已读取 math-tutor-os 的 skill 要求。"**
 
 ## 步骤 2：读取历史会话，保证无缝衔接
 - 优先读 `系统/01_学习进度/对话记录.md`（最近若干条流水，防丢进度）。

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""生成 ml-math-tutor 板书用的几何示意图（matplotlib，输出 PNG）。
+"""生成 math-tutor-os 板书用的几何示意图（matplotlib，输出 PNG）。
 
-用法（在 ml-math-tutor 目录内）：
+用法（在 math-tutor-os 目录内）：
     python3 系统/05_工具/生成几何图.py
 
 输出目录：学习内容/04_板书/图片/

@@ -1,0 +1,18 @@
+# Private course archive: keep it locally, never publish it.
+_archive/
+
+# Raw course materials (copyright / personal data).
+课程资料/
+*.pdf
+*.ppt
+*.pptx
+*.doc
+*.docx
+
+# Local secrets and environment files.
+.env
+.env.*
+
+# OS / editor noise.
+.DS_Store
+Thumbs.db

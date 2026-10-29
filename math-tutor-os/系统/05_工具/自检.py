@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""ml-math-tutor 自检脚本（R22，结构精简版）。
+"""math-tutor-os 自检脚本（R22，结构精简版）。
 
-用法（在 Math 仓库根或 ml-math-tutor 内均可）：
+用法（在 Math 仓库根或 math-tutor-os 内均可）：
     python -X utf8 系统/05_工具/自检.py
 
 校验项（课程无关）：
@@ -32,7 +32,7 @@ import sys
 from datetime import datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# ROOT = .../ml-math-tutor
+# ROOT = .../math-tutor-os
 REPO_ROOT = os.path.dirname(ROOT)
 
 errors = []
@@ -349,7 +349,7 @@ try:
         if not line.startswith("?? "):
             continue
         path = line[3:].strip().strip('"')
-        if path.startswith(("ml-math-tutor/学习内容/", "ml-math-tutor/系统/04_辅导老师/")):
+        if path.startswith(("math-tutor-os/学习内容/", "math-tutor-os/系统/04_辅导老师/")):
             warn("关键文件尚未纳入 git: " + path)
 except Exception:
     pass
@@ -448,8 +448,8 @@ OLD_PATH_PATTERNS = [
 ]
 SCAN_SKIP = {
     "换课执行Prompt.md",
-    "ml-math-tutor/系统/01_学习进度/系统变更记录.md",
-    "ml-math-tutor/系统/05_工具/自检.py",
+    "math-tutor-os/系统/01_学习进度/系统变更记录.md",
+    "math-tutor-os/系统/05_工具/自检.py",
 }
 SCAN_EXT = (".md", ".py", ".yaml", ".yml", ".json", ".txt")
 for base, dirs, files in os.walk(REPO_ROOT):
@@ -478,7 +478,7 @@ for base, dirs, files in os.walk(REPO_ROOT):
 
 
 # ---- 输出 -----------------------------------------------------------------
-print("=== ml-math-tutor 自检（结构精简版）===")
+print("=== math-tutor-os 自检（结构精简版）===")
 if progress is not None:
     status = (progress.get("course") or {}).get("status", "未声明")
     print(f"课程状态: {status}")
