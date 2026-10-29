@@ -3,9 +3,9 @@ display_name: 机器学习数理基础辅导老师
 version: 2.0
 layout:
   top_level:
-    - 系统/        # 管理与系统类：09_辅导老师, 05_学习进度, 06_学习习惯, 08_模板
-    - 学习内容/    # 学习内容类：01_学习计划, 02_知识图谱, 03_概念笔记, 04_习题, 07_学校作业, 10_板书, 11_笔记本
-  note: 子目录保留原编号（历史沿用），可后续统一重编号
+    - 系统/        # 管理与系统类：01_学习进度, 02_学习习惯, 03_模板, 04_辅导老师, 05_工具
+    - 学习内容/    # 学习内容类：01_学习计划, 02_知识图谱, 03_习题, 04_板书, 05_笔记本
+  note: 系统/ 与 学习内容/ 各自独立编号，均从 01 开始（2026-10-30 结构精简后）
 description: >-
   辅导学生的机器学习所需数学（自评基础薄弱，实际以诊断为准）。课程可替换，
   按新课材料排课；覆盖线代、微积分、概率与优化等主题，并映射到机器学习应用。
@@ -13,39 +13,39 @@ trigger_conditions:
   - 用户消息包含 "ml-math-tutor" 或要求执行其启动协议
   - 用户请求讲解机器学习相关的数学概念
   - 用户请求出题、批改、诊断数学基础、规划学习路线、构建知识图谱
-  - 用户提交学校作业并请求数学辅导
+  - 用户提交课程作业并请求数学辅导
   - 用户说 "开始新课" / "换课"
-entrypoint: ml-math-tutor/系统/09_辅导老师/SKILL.md
+entrypoint: ml-math-tutor/系统/04_辅导老师/SKILL.md
 course_config: ml-math-tutor/学习内容/01_学习计划/课程信息.md
 startup_reads:
-  - ml-math-tutor/系统/09_辅导老师/SKILL.md
-  - ml-math-tutor/系统/09_辅导老师/startup_protocol.md
-  - ml-math-tutor/系统/09_辅导老师/rules.md
+  - ml-math-tutor/系统/04_辅导老师/SKILL.md
+  - ml-math-tutor/系统/04_辅导老师/startup_protocol.md
+  - ml-math-tutor/系统/04_辅导老师/rules.md
 state_files:
-  - ml-math-tutor/系统/05_学习进度/对话记录.md
-  - ml-math-tutor/系统/05_学习进度/progress.json
-  - ml-math-tutor/系统/05_学习进度/系统变更记录.md
-  - ml-math-tutor/系统/05_学习进度/错题本.md
-  - ml-math-tutor/系统/05_学习进度/复习队列.md
-  - ml-math-tutor/系统/05_学习进度/会话日志.md
-  - ml-math-tutor/系统/06_学习习惯/habits.jsonl
-  - ml-math-tutor/系统/06_学习习惯/学习偏好.md
-  - ml-math-tutor/学习内容/11_笔记本/待问清单.md
-  - ml-math-tutor/学习内容/11_笔记本/随手记.md
+  - ml-math-tutor/系统/01_学习进度/对话记录.md
+  - ml-math-tutor/系统/01_学习进度/progress.json
+  - ml-math-tutor/系统/01_学习进度/系统变更记录.md
+  - ml-math-tutor/系统/01_学习进度/错题本.md
+  - ml-math-tutor/系统/01_学习进度/复习队列.md
+  - ml-math-tutor/系统/01_学习进度/会话日志.md
+  - ml-math-tutor/系统/02_学习习惯/habits.jsonl
+  - ml-math-tutor/系统/02_学习习惯/学习偏好.md
+  - ml-math-tutor/学习内容/05_笔记本/待问清单.md
+  - ml-math-tutor/学习内容/05_笔记本/随手记.md
 notebook:
-  dir: ml-math-tutor/学习内容/11_笔记本/
+  dir: ml-math-tutor/学习内容/05_笔记本/
   files: [00_索引.md, 随手记.md, 待问清单.md]
   rule: R21（学生实时记录；老师不改写原文）
 session_output:
-  - ml-math-tutor/系统/05_学习进度/会话摘要/S{id}_主题.md
+  - ml-math-tutor/系统/01_学习进度/会话摘要/S{id}_主题.md
 board_output:
-  - ml-math-tutor/学习内容/10_板书/S{id}_第NN课_{主题}.md
-  - ml-math-tutor/学习内容/10_板书/00_索引.md
-  - ml-math-tutor/学习内容/10_板书/图片/       # R23 几何示意图（PNG）
+  - ml-math-tutor/学习内容/04_板书/S{id}_第NN课_{主题}.md
+  - ml-math-tutor/学习内容/04_板书/00_索引.md
+  - ml-math-tutor/学习内容/04_板书/图片/       # R23 几何示意图（PNG）
   rule: R19（每节课产出板书，持续归档）
 figures:
-  dir: ml-math-tutor/学习内容/10_板书/图片/
-  generator: ml-math-tutor/系统/工具/生成几何图.py
+  dir: ml-math-tutor/学习内容/04_板书/图片/
+  generator: ml-math-tutor/系统/05_工具/生成几何图.py
   rule: R23（几何优先，几何部分必配图）
 session_id_rule: "S + 三位递增，如 S001；计数器见 progress.json 的 session_counter"
 naming:
@@ -57,11 +57,11 @@ naming:
   teaching_order: 直觉 → 几何(配图) → 计算/公式（几何优先，见 R2/R23）
 priority_levels: [必学, 掌握, 了解]
 checks:
-  self_check: python3 系统/工具/自检.py   # R22：系统类改动后必须跑，全绿才算完成
+  self_check: python3 系统/05_工具/自检.py   # R22：系统类改动后必须跑，全绿才算完成
   protected_files:
-    - 系统/09_辅导老师/*
-    - 系统/05_学习进度/progress.json
-    - 系统/05_学习进度/系统变更记录.md
+    - 系统/04_辅导老师/*
+    - 系统/01_学习进度/progress.json
+    - 系统/01_学习进度/系统变更记录.md
     - 学习内容/01_学习计划/概念登记表.md
   rollback: 用 git；大改动前先 commit，可 git restore / git revert
 registration:
@@ -71,5 +71,5 @@ registration:
   note: 重启 opencode 后生效；本文件仅为元数据，真正入口在 .opencode/skills/
 notes: >-
   本 skill 已通过 .opencode/skills/ml-math-tutor/SKILL.md 做项目级注册（自动加载）。
-  该入口只是指针，真正规则在 系统/09_辅导老师/ 下。若 opencode 不支持自动加载，
+  该入口只是指针，真正规则在 系统/04_辅导老师/ 下。若 opencode 不支持自动加载，
   则每次运行前手动读取 startup_reads，并声明 "我已读取 ml-math-tutor 的 skill 要求。"

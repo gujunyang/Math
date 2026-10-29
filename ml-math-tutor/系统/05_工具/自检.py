@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""ml-math-tutor 自检脚本（R22，通用版）。
+"""ml-math-tutor 自检脚本（R22，结构精简版）。
 
 用法（在 Math 仓库根或 ml-math-tutor 内均可）：
-    python -X utf8 系统/工具/自检.py
+    python -X utf8 系统/05_工具/自检.py
 
 校验项（课程无关）：
   1. progress.json / habits.jsonl 合法性
   2. 概念登记表 ↔ progress.json 一致（id / 优先级 / 状态 / 顺序）
-  3. 板书索引 / 概念笔记索引 指向的文件存在
+  3. 板书索引指向的文件存在
   4. 会话 ID 合法、唯一、不超过计数器；current_session_id 允许为 null
   5. SKILL.md 与 skill_metadata.yaml 版本号一致
   6. 受保护文件存在
-  7. 作业索引里的 PDF 路径存在
-  8. 复习队列里的 concept id 在登记表中；日期可解析
-  9. 活跃 学习内容/** 不出现旧课关键词
- 10. 新课配置文件存在
- 11. 课表课号不重复；若课程信息声明总课数，则行数一致
- 12. git 未跟踪关键文件提醒（通用版）
- 13. 冷存储：活跃 学习内容/** 不链接 _archive/；progress 只在 legacy 中保留归档路径
- 14. 归档隔离：_archive/ 不进入板书索引、概念笔记索引、复习队列、作业索引
+  7. 复习队列里的 concept id 在登记表中；日期可解析
+  8. 活跃 学习内容/** 不出现旧课关键词
+  9. 新课配置文件存在
+ 10. 课表课号不重复；若课程信息声明总课数，则行数一致
+ 11. git 未跟踪关键文件提醒（通用版）
+ 12. 冷存储：活跃 学习内容/** 不链接 _archive/；progress 只在 legacy 中保留归档路径
+ 13. 归档隔离：_archive/ 不进入板书索引、复习队列
+ 14. 结构精简：旧编号目录不存在；新编号目录存在
+ 15. 活跃文件不出现旧编号路径（排除归档、历史变更记录、历史迁移 Prompt、本脚本）
 
 退出码：0 = 全绿；1 = 有错。
 """
@@ -60,9 +61,9 @@ def read_text(path):
 
 
 # ---- 1. JSON / JSONL -------------------------------------------------------
-progress_path = p("系统", "05_学习进度", "progress.json")
+progress_path = p("系统", "01_学习进度", "progress.json")
 reg_path = p("学习内容", "01_学习计划", "概念登记表.md")
-habits_path = p("系统", "06_学习习惯", "habits.jsonl")
+habits_path = p("系统", "02_学习习惯", "habits.jsonl")
 
 progress = None
 try:
@@ -137,38 +138,21 @@ if progress is not None and os.path.exists(reg_path):
             )
 
 
-# ---- 3. 索引指向存在 ------------------------------------------------------
+# ---- 3. 板书索引指向存在 --------------------------------------------------
 def check_board_index():
-    idx = p("学习内容", "10_板书", "00_索引.md")
+    idx = p("学习内容", "04_板书", "00_索引.md")
     if not os.path.exists(idx):
         warn("板书索引不存在")
         return
     for line in read_text(idx).splitlines():
         m = re.search(r"`([^`]+\.md)`", line)
         if m and re.match(r"^S\d+_", m.group(1)):
-            target = p("学习内容", "10_板书", m.group(1))
+            target = p("学习内容", "04_板书", m.group(1))
             if not os.path.exists(target):
                 err(f"板书索引指向的文件不存在: {m.group(1)}")
 
 
-def check_concept_index():
-    idx = p("学习内容", "03_概念笔记", "00_索引.md")
-    if not os.path.exists(idx):
-        warn("概念笔记索引不存在")
-        return
-    txt = read_text(idx)
-    for m in re.finditer(r"已创建：([^\n]+)", txt):
-        for cid in re.findall(r"[a-z][a-z_]+", m.group(1)):
-            found = any(
-                os.path.exists(p("学习内容", "03_概念笔记", lvl, cid + ".md"))
-                for lvl in ("必学", "掌握", "了解")
-            )
-            if not found:
-                err(f"概念笔记索引声称已创建但文件不存在: {cid}")
-
-
 check_board_index()
-check_concept_index()
 
 
 # ---- 4. 会话 ID -----------------------------------------------------------
@@ -209,8 +193,8 @@ if progress is not None:
 
 
 # ---- 5. 版本号一致 --------------------------------------------------------
-skill_md = p("系统", "09_辅导老师", "SKILL.md")
-meta = p("系统", "09_辅导老师", "skill_metadata.yaml")
+skill_md = p("系统", "04_辅导老师", "SKILL.md")
+meta = p("系统", "04_辅导老师", "skill_metadata.yaml")
 
 
 def read_version(path):
@@ -227,29 +211,20 @@ if os.path.exists(skill_md) and os.path.exists(meta):
 
 # ---- 6. 受保护文件存在 ----------------------------------------------------
 PROTECTED = [
-    ("系统", "09_辅导老师", "SKILL.md"),
-    ("系统", "09_辅导老师", "startup_protocol.md"),
-    ("系统", "09_辅导老师", "rules.md"),
-    ("系统", "09_辅导老师", "skill_metadata.yaml"),
-    ("系统", "05_学习进度", "progress.json"),
+    ("系统", "04_辅导老师", "SKILL.md"),
+    ("系统", "04_辅导老师", "startup_protocol.md"),
+    ("系统", "04_辅导老师", "rules.md"),
+    ("系统", "04_辅导老师", "skill_metadata.yaml"),
+    ("系统", "01_学习进度", "progress.json"),
     ("学习内容", "01_学习计划", "概念登记表.md"),
-    ("系统", "05_学习进度", "系统变更记录.md"),
+    ("系统", "01_学习进度", "系统变更记录.md"),
 ]
 for parts in PROTECTED:
     if not os.path.exists(p(*parts)):
         err("受保护文件缺失: " + "/".join(parts))
 
 
-# ---- 7. 作业索引 PDF 路径存在 ---------------------------------------------
-hw_idx = p("学习内容", "07_学校作业", "学校作业索引.md")
-if os.path.exists(hw_idx):
-    for m in re.finditer(r"`([^`]+\.pdf)`", read_text(hw_idx)):
-        relp = m.group(1)
-        if not os.path.exists(os.path.join(REPO_ROOT, relp)):
-            err(f"作业索引 PDF 路径不存在: {relp}")
-
-
-# ---- 8. 复习队列 concept id / 日期 ----------------------------------------
+# ---- 7. 复习队列 concept id / 日期 ----------------------------------------
 def check_date(s, where):
     try:
         datetime.strptime(s, "%Y-%m-%d")
@@ -275,8 +250,7 @@ if progress is not None:
         if item.get("date"):
             check_date(item["date"], "review_queue(date)")
 
-# 人读复习队列表：| concept | ... | next |
-rq_md = p("系统", "05_学习进度", "复习队列.md")
+rq_md = p("系统", "01_学习进度", "复习队列.md")
 if os.path.exists(rq_md):
     for line in read_text(rq_md).splitlines():
         if not line.startswith("|"):
@@ -289,7 +263,7 @@ if os.path.exists(rq_md):
                 check_date(cells[2], f"复习队列.md({cells[0]})")
 
 
-# ---- 9. 活跃学习内容不出现旧课关键词 --------------------------------------
+# ---- 8. 活跃学习内容不出现旧课关键词 --------------------------------------
 OLD_KEYWORDS = [
     "AISC5000",
     "2026-10-29",
@@ -316,7 +290,7 @@ if os.path.isdir(content_root):
                     err(f"活跃学习内容出现旧课关键词「{kw}」: {rel(fp)}")
 
 
-# ---- 10. 新课配置文件存在 -------------------------------------------------
+# ---- 9. 新课配置文件存在 -------------------------------------------------
 CONFIG_FILES = [
     ("学习内容", "01_学习计划", "课程信息.md"),
     ("学习内容", "01_学习计划", "学习路线.md"),
@@ -324,15 +298,14 @@ CONFIG_FILES = [
     ("学习内容", "01_学习计划", "概念优先级.md"),
     ("学习内容", "01_学习计划", "第01–NN课_课表.md"),
     ("学习内容", "02_知识图谱", "知识图谱.md"),
-    ("学习内容", "07_学校作业", "学校作业索引.md"),
-    ("学习内容", "10_板书", "00_索引.md"),
+    ("学习内容", "04_板书", "00_索引.md"),
 ]
 for parts in CONFIG_FILES:
     if not os.path.exists(p(*parts)):
         err("新课配置文件缺失: " + "/".join(parts))
 
 
-# ---- 11. 课表行数 / 课号 --------------------------------------------------
+# ---- 10. 课表行数 / 课号 --------------------------------------------------
 course_info = p("学习内容", "01_学习计划", "课程信息.md")
 course_tbl = p("学习内容", "01_学习计划", "第01–NN课_课表.md")
 declared_total = None
@@ -363,7 +336,7 @@ if os.path.exists(course_tbl):
         err(f"课表行数({len(lesson_ids)}) 与课程信息声明总课数({declared_total}) 不一致")
 
 
-# ---- 12. git 未跟踪关键文件提醒（通用） -----------------------------------
+# ---- 11. git 未跟踪关键文件提醒（通用） -----------------------------------
 try:
     out = subprocess.run(
         ["git", "-c", "core.quotepath=false", "-C", REPO_ROOT, "status", "--porcelain"],
@@ -376,13 +349,13 @@ try:
         if not line.startswith("?? "):
             continue
         path = line[3:].strip().strip('"')
-        if path.startswith(("ml-math-tutor/学习内容/", "ml-math-tutor/系统/09_辅导老师/")):
+        if path.startswith(("ml-math-tutor/学习内容/", "ml-math-tutor/系统/04_辅导老师/")):
             warn("关键文件尚未纳入 git: " + path)
 except Exception:
     pass
 
 
-# ---- 13. 冷存储：活跃内容不链接归档 --------------------------------------
+# ---- 12. 冷存储：活跃内容不链接归档 --------------------------------------
 if os.path.isdir(content_root):
     for base, dirs, files in os.walk(content_root):
         dirs[:] = [d for d in dirs if d not in ("_archive", ".git", "__pycache__")]
@@ -412,7 +385,6 @@ if progress is not None:
         if not path or path[0] != "legacy":
             err("progress.json 在 legacy 之外出现归档路径: " + "/".join(map(str, path)))
 
-# .ignore 必须排除 _archive/
 ignore_path = os.path.join(REPO_ROOT, ".ignore")
 if os.path.exists(ignore_path):
     if "_archive/" not in read_text(ignore_path):
@@ -421,19 +393,92 @@ else:
     warn(".ignore 不存在（建议加入 _archive/）")
 
 
-# ---- 14. 归档隔离：索引/复习/作业不出现 _archive --------------------------
+# ---- 13. 归档隔离：索引/复习不出现 _archive ------------------------------
 for label, path in [
-    ("板书索引", p("学习内容", "10_板书", "00_索引.md")),
-    ("概念笔记索引", p("学习内容", "03_概念笔记", "00_索引.md")),
-    ("复习队列", p("系统", "05_学习进度", "复习队列.md")),
-    ("作业索引", p("学习内容", "07_学校作业", "学校作业索引.md")),
+    ("板书索引", p("学习内容", "04_板书", "00_索引.md")),
+    ("复习队列", p("系统", "01_学习进度", "复习队列.md")),
 ]:
     if os.path.exists(path) and "_archive/" in read_text(path):
         err(f"{label} 出现了归档路径（归档必须隔离）: {rel(path)}")
 
 
+# ---- 14. 结构精简：旧目录不存在、新目录存在 ------------------------------
+NEW_SYS = ["01_学习进度", "02_学习习惯", "03_模板", "04_辅导老师", "05_工具"]
+NEW_CONTENT = ["01_学习计划", "02_知识图谱", "03_习题", "04_板书", "05_笔记本"]
+OLD_SYS = ["05_学习进度", "06_学习习惯", "08_模板", "09_辅导老师", "工具"]
+OLD_CONTENT = ["03_概念笔记", "07_学校作业", "04_习题", "10_板书", "11_笔记本"]
+
+for name in NEW_SYS:
+    if not os.path.isdir(p("系统", name)):
+        err(f"新编号目录缺失: 系统/{name}")
+for name in NEW_CONTENT:
+    if not os.path.isdir(p("学习内容", name)):
+        err(f"新编号目录缺失: 学习内容/{name}")
+for name in OLD_SYS:
+    if os.path.exists(p("系统", name)):
+        err(f"旧编号目录仍存在: 系统/{name}")
+for name in OLD_CONTENT:
+    if os.path.exists(p("学习内容", name)):
+        err(f"旧编号目录仍存在: 学习内容/{name}")
+
+
+# ---- 15. 活跃文件不出现旧编号路径 ----------------------------------------
+OLD_PATH_PATTERNS = [
+    "系统/05_学习进度",
+    "系统/06_学习习惯",
+    "系统/08_模板",
+    "系统/09_辅导老师",
+    "系统/工具",
+    "学习内容/04_习题",
+    "学习内容/10_板书",
+    "学习内容/11_笔记本",
+    "学习内容/03_概念笔记",
+    "学习内容/07_学校作业",
+    "03_概念笔记",
+    "07_学校作业",
+    "概念笔记模板",
+    "学校作业索引",
+    "05_学习进度",
+    "06_学习习惯",
+    "08_模板",
+    "09_辅导老师",
+    "04_习题",
+    "10_板书",
+    "11_笔记本",
+]
+SCAN_SKIP = {
+    "换课执行Prompt.md",
+    "ml-math-tutor/系统/01_学习进度/系统变更记录.md",
+    "ml-math-tutor/系统/05_工具/自检.py",
+}
+SCAN_EXT = (".md", ".py", ".yaml", ".yml", ".json", ".txt")
+for base, dirs, files in os.walk(REPO_ROOT):
+    dirs[:] = [
+        d for d in dirs
+        if d not in (".git", "_archive", "node_modules", "__pycache__")
+    ]
+    for fn in files:
+        if not fn.endswith(SCAN_EXT):
+            continue
+        fp = os.path.join(base, fn)
+        relp = os.path.relpath(fp, REPO_ROOT).replace("\\", "/")
+        if relp in SCAN_SKIP:
+            continue
+        try:
+            lines = read_text(fp).splitlines()
+        except (UnicodeDecodeError, OSError):
+            continue
+        for i, line in enumerate(lines, 1):
+            if "_archive/" in line:
+                continue  # 归档内部保持旧结构，允许出现
+            for pat in OLD_PATH_PATTERNS:
+                if pat in line:
+                    err(f"活跃文件出现旧编号路径「{pat}」: {relp}:{i}")
+                    break
+
+
 # ---- 输出 -----------------------------------------------------------------
-print("=== ml-math-tutor 自检（通用版）===")
+print("=== ml-math-tutor 自检（结构精简版）===")
 if progress is not None:
     status = (progress.get("course") or {}).get("status", "未声明")
     print(f"课程状态: {status}")

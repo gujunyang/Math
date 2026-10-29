@@ -3,9 +3,9 @@
 """生成 ml-math-tutor 板书用的几何示意图（matplotlib，输出 PNG）。
 
 用法（在 ml-math-tutor 目录内）：
-    python3 系统/工具/生成几何图.py
+    python3 系统/05_工具/生成几何图.py
 
-输出目录：学习内容/10_板书/图片/
+输出目录：学习内容/04_板书/图片/
 说明：几何示意优先，配色统一（蓝=主向量，红=次向量，灰=辅助线）。
 """
 import os
@@ -21,7 +21,7 @@ plt.rcParams["font.sans-serif"] = ["Arial Unicode MS", "Microsoft YaHei", "SimHe
 plt.rcParams["axes.unicode_minus"] = False
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-OUT = os.path.join(ROOT, "学习内容", "10_板书", "图片")
+OUT = os.path.join(ROOT, "学习内容", "04_板书", "图片")
 os.makedirs(OUT, exist_ok=True)
 
 BLUE = "#1f77b4"
