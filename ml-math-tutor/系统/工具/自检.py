@@ -1,25 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""ml-math-tutor 自检脚本（R22）。
+"""ml-math-tutor 自检脚本（R22，通用版）。
 
 用法（在 Math 仓库根或 ml-math-tutor 内均可）：
-    python3 系统/工具/自检.py
+    python -X utf8 系统/工具/自检.py
 
-校验项：
+校验项（课程无关）：
   1. progress.json / habits.jsonl 合法性
   2. 概念登记表 ↔ progress.json 一致（id / 优先级 / 状态 / 顺序）
-  3. 无残留旧路径（重构前的 0X_ / 1X_ 顶层路径）
-  4. 板书索引 / 概念笔记索引 指向的文件确实存在
-  5. 会话ID 单调、唯一，current_session_id 合法
-  6. 版本号一致（SKILL.md ↔ skill_metadata.yaml）
-  7. 受保护文件存在
+  3. 板书索引 / 概念笔记索引 指向的文件存在
+  4. 会话 ID 合法、唯一、不超过计数器；current_session_id 允许为 null
+  5. SKILL.md 与 skill_metadata.yaml 版本号一致
+  6. 受保护文件存在
+  7. 作业索引里的 PDF 路径存在
+  8. 复习队列里的 concept id 在登记表中；日期可解析
+  9. 活跃 学习内容/** 不出现旧课关键词
+ 10. 新课配置文件存在
+ 11. 课表课号不重复；若课程信息声明总课数，则行数一致
+ 12. git 未跟踪关键文件提醒（通用版）
+ 13. 冷存储：活跃 学习内容/** 不链接 _archive/；progress 只在 legacy 中保留归档路径
+ 14. 归档隔离：_archive/ 不进入板书索引、概念笔记索引、复习队列、作业索引
 
 退出码：0 = 全绿；1 = 有错。
 """
 import json
 import os
 import re
+import subprocess
 import sys
+from datetime import datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # ROOT = .../ml-math-tutor
@@ -43,6 +52,11 @@ def warn(msg):
 
 def rel(path):
     return os.path.relpath(path, ROOT)
+
+
+def read_text(path):
+    with open(path, encoding="utf-8") as f:
+        return f.read()
 
 
 # ---- 1. JSON / JSONL -------------------------------------------------------
@@ -90,9 +104,14 @@ def parse_registry(path):
     return rows
 
 
+reg = []
 if progress is not None and os.path.exists(reg_path):
     reg = parse_registry(reg_path)
-    pid = [c["id"] for c in progress.get("concepts", [])]
+    concepts = progress.get("concepts", [])
+    if not isinstance(concepts, list):
+        err("progress.json 的 concepts 不是列表")
+        concepts = []
+    pid = [c.get("id") for c in concepts if isinstance(c, dict)]
     rid = [r["id"] for r in reg]
     if set(pid) != set(rid):
         err(
@@ -101,7 +120,7 @@ if progress is not None and os.path.exists(reg_path):
         )
     if pid != rid:
         warn("概念顺序不一致（登记表 vs progress）")
-    pcmap = {c["id"]: c for c in progress.get("concepts", [])}
+    pcmap = {c.get("id"): c for c in concepts if isinstance(c, dict)}
     for r in reg:
         c = pcmap.get(r["id"])
         if not c:
@@ -111,7 +130,6 @@ if progress is not None and os.path.exists(reg_path):
                 "优先级不一致 %s: 登记表=%s progress=%s"
                 % (r["id"], r["priority"], c.get("priority"))
             )
-        # 状态：progress 允许更细（学习中），登记表须与 progress 相同
         if c.get("status") != r["status"]:
             err(
                 "状态不一致 %s: 登记表=%s progress=%s"
@@ -119,42 +137,18 @@ if progress is not None and os.path.exists(reg_path):
             )
 
 
-# ---- 3. 残留旧路径 --------------------------------------------------------
-FORBIDDEN = [
-    re.compile(r"ml-math-tutor/0[0-9]_"),
-    re.compile(r"ml-math-tutor/1[01]_"),
-]
-SCAN_EXT = (".md", ".yaml", ".yml", ".json")
-for base, dirs, files in os.walk(ROOT):
-    if ".git" in dirs:
-        dirs.remove(".git")
-    for fn in files:
-        if not fn.endswith(SCAN_EXT):
-            continue
-        fp = os.path.join(base, fn)
-        try:
-            with open(fp, encoding="utf-8") as f:
-                for i, line in enumerate(f, 1):
-                    for pat in FORBIDDEN:
-                        if pat.search(line):
-                            err(f"残留旧路径 {rel(fp)}:{i}: {line.strip()[:80]}")
-        except (UnicodeDecodeError, OSError):
-            pass
-
-
-# ---- 4. 索引指向存在 ------------------------------------------------------
+# ---- 3. 索引指向存在 ------------------------------------------------------
 def check_board_index():
     idx = p("学习内容", "10_板书", "00_索引.md")
     if not os.path.exists(idx):
         warn("板书索引不存在")
         return
-    with open(idx, encoding="utf-8") as f:
-        for line in f:
-            m = re.search(r"`([^`]+\.md)`", line)
-            if m and re.match(r"^S\d+_", m.group(1)):
-                target = p("学习内容", "10_板书", m.group(1))
-                if not os.path.exists(target):
-                    err(f"板书索引指向的文件不存在: {m.group(1)}")
+    for line in read_text(idx).splitlines():
+        m = re.search(r"`([^`]+\.md)`", line)
+        if m and re.match(r"^S\d+_", m.group(1)):
+            target = p("学习内容", "10_板书", m.group(1))
+            if not os.path.exists(target):
+                err(f"板书索引指向的文件不存在: {m.group(1)}")
 
 
 def check_concept_index():
@@ -162,9 +156,7 @@ def check_concept_index():
     if not os.path.exists(idx):
         warn("概念笔记索引不存在")
         return
-    with open(idx, encoding="utf-8") as f:
-        txt = f.read()
-    # 只校验"已创建："那一行里列出的 id
+    txt = read_text(idx)
     for m in re.finditer(r"已创建：([^\n]+)", txt):
         for cid in re.findall(r"[a-z][a-z_]+", m.group(1)):
             found = any(
@@ -179,52 +171,61 @@ check_board_index()
 check_concept_index()
 
 
-# ---- 5. 会话ID ------------------------------------------------------------
+# ---- 4. 会话 ID -----------------------------------------------------------
 if progress is not None:
     counter = progress.get("session_counter")
     cur = progress.get("current_session_id")
     idx = progress.get("session_index", [])
-    ids = [s.get("id") for s in idx]
+    if not isinstance(idx, list):
+        err("session_index 不是列表")
+        idx = []
+    ids = [s.get("id") for s in idx if isinstance(s, dict)]
+    if not isinstance(counter, int):
+        err("session_counter 缺失或不是整数")
+        counter = -1
     if len(ids) != len(set(ids)):
         err("session_index 存在重复会话ID")
-    if cur not in ids:
-        err(f"current_session_id={cur} 不在 session_index 中")
-    else:
-        item = next(s for s in idx if s.get("id") == cur)
-        if item.get("status") != "进行中":
-            warn(f"当前会话 {cur} 状态非'进行中': {item.get('status')}")
     for sid in ids:
-        m = re.match(r"S(\d+)$", sid or "")
+        m = re.match(r"S(\d{3})$", sid or "")
         if not m:
             err(f"会话ID 格式非法: {sid}")
         elif int(m.group(1)) > counter:
             err(f"会话ID {sid} 超过 session_counter={counter}")
-    if cur and cur not in ("", None):
-        m = re.match(r"S(\d+)$", cur)
-        if m and int(m.group(1)) != counter:
-            warn(f"current_session_id={cur} 与 session_counter={counter} 不一致")
+    if cur in (None, ""):
+        if any(s.get("status") == "进行中" for s in idx if isinstance(s, dict)):
+            err("current_session_id 为空，但 session_index 中存在“进行中”会话")
+    else:
+        m = re.match(r"S(\d{3})$", cur)
+        if not m:
+            err(f"current_session_id 格式非法: {cur}")
+        elif cur not in ids:
+            err(f"current_session_id={cur} 不在 session_index 中")
+        else:
+            item = next(s for s in idx if s.get("id") == cur)
+            if item.get("status") != "进行中":
+                err(f"current_session_id={cur} 状态不是“进行中”: {item.get('status')}")
+            if int(m.group(1)) != counter:
+                warn(f"current_session_id={cur} 与 session_counter={counter} 不一致")
 
 
-# ---- 6. 版本号一致 --------------------------------------------------------
+# ---- 5. 版本号一致 --------------------------------------------------------
 skill_md = p("系统", "09_辅导老师", "SKILL.md")
 meta = p("系统", "09_辅导老师", "skill_metadata.yaml")
 
 
-def read_frontmatter_version(path):
-    with open(path, encoding="utf-8") as f:
-        txt = f.read()
-    m = re.search(r"^version:\s*(\S+)", txt, re.MULTILINE)
+def read_version(path):
+    m = re.search(r"^version:\s*(\S+)", read_text(path), re.MULTILINE)
     return m.group(1) if m else None
 
 
 if os.path.exists(skill_md) and os.path.exists(meta):
-    v1 = read_frontmatter_version(skill_md)
-    v2 = read_frontmatter_version(meta)
+    v1 = read_version(skill_md)
+    v2 = read_version(meta)
     if v1 and v2 and v1 != v2:
         err(f"版本号不一致: SKILL.md={v1} skill_metadata.yaml={v2}")
 
 
-# ---- 7. 受保护文件存在 ----------------------------------------------------
+# ---- 6. 受保护文件存在 ----------------------------------------------------
 PROTECTED = [
     ("系统", "09_辅导老师", "SKILL.md"),
     ("系统", "09_辅导老师", "startup_protocol.md"),
@@ -239,112 +240,131 @@ for parts in PROTECTED:
         err("受保护文件缺失: " + "/".join(parts))
 
 
-# ---- 8. 期中计划关键文件存在 ----------------------------------------------
-PLAN_FILES = [
-    ("学习内容", "01_学习计划", "AISC5000期中复习大纲.md"),
-    ("学习内容", "01_学习计划", "AISC5000期中30课冲刺课表.md"),
-    ("学习内容", "01_学习计划", "AISC5000期中公式速查.md"),
-    ("学习内容", "01_学习计划", "AISC5000期中微课执行协议.md"),
-    ("系统", "05_学习进度", "AISC5000期中诊断.md"),
-    ("学习内容", "01_学习计划", "学习路线.md"),
-]
-for parts in PLAN_FILES:
-    if not os.path.exists(p(*parts)):
-        err("期中计划文件缺失: " + "/".join(parts))
-
-# 仓库根下的课程资料（公告/HW；讲义可本地保留，但公告与 HW 必须在）
-AISC_ROOT = os.path.join(REPO_ROOT, "AISC5000")
-for relp in [
-    "AISC5000/midterm-announcement.md",
-    "AISC5000/HW/Homework 1.pdf",
-    "AISC5000/HW/Homework 2.pdf",
-    "AISC5000/HW/Homework 3.pdf",
-]:
-    if not os.path.exists(os.path.join(REPO_ROOT, relp)):
-        err("课程资料缺失: " + relp)
-
-
-# ---- 9. 作业索引里的 PDF 路径必须存在 -------------------------------------
+# ---- 7. 作业索引 PDF 路径存在 ---------------------------------------------
 hw_idx = p("学习内容", "07_学校作业", "学校作业索引.md")
 if os.path.exists(hw_idx):
-    with open(hw_idx, encoding="utf-8") as f:
-        hw_txt = f.read()
-    for m in re.finditer(r"`([^`]+\.pdf)`", hw_txt):
+    for m in re.finditer(r"`([^`]+\.pdf)`", read_text(hw_idx)):
         relp = m.group(1)
         if not os.path.exists(os.path.join(REPO_ROOT, relp)):
             err(f"作业索引 PDF 路径不存在: {relp}")
 
 
-# ---- 10. 大纲 P 级 / 30 课表 / §6 一致性 ----------------------------------
-outline_path = p("学习内容", "01_学习计划", "AISC5000期中复习大纲.md")
-if os.path.exists(outline_path):
-    with open(outline_path, encoding="utf-8") as f:
-        outline_txt = f.read()
-    if "目标深度" not in outline_txt:
-        err("大纲考点总表缺少「目标深度」列")
-    if "P 级唯一来源" not in outline_txt:
-        err("大纲未声明「P 级唯一来源」")
-    for line in outline_txt.splitlines():
+# ---- 8. 复习队列 concept id / 日期 ----------------------------------------
+def check_date(s, where):
+    try:
+        datetime.strptime(s, "%Y-%m-%d")
+    except Exception:
+        err(f"{where} 日期无法解析: {s}")
+
+
+if progress is not None:
+    rq = progress.get("review_queue", [])
+    if not isinstance(rq, list):
+        err("progress.json 的 review_queue 不是列表")
+        rq = []
+    rid_set = {r["id"] for r in reg}
+    for item in rq:
+        if not isinstance(item, dict):
+            continue
+        if "concept" in item:
+            cid = item.get("concept")
+            if cid not in rid_set:
+                err(f"review_queue 的 concept id 不在登记表: {cid}")
+            if item.get("next_review"):
+                check_date(item["next_review"], f"review_queue({cid})")
+        if item.get("date"):
+            check_date(item["date"], "review_queue(date)")
+
+# 人读复习队列表：| concept | ... | next |
+rq_md = p("系统", "05_学习进度", "复习队列.md")
+if os.path.exists(rq_md):
+    for line in read_text(rq_md).splitlines():
         if not line.startswith("|"):
             continue
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if len(cells) < 6:
+        if len(cells) >= 3 and re.match(r"^[a-z][a-z_]+$", cells[0]):
+            if cells[0] not in {r["id"] for r in reg}:
+                err(f"复习队列.md 的 concept id 不在登记表: {cells[0]}")
+            if re.match(r"^\d{4}-\d{2}-\d{2}$", cells[2]):
+                check_date(cells[2], f"复习队列.md({cells[0]})")
+
+
+# ---- 9. 活跃学习内容不出现旧课关键词 --------------------------------------
+OLD_KEYWORDS = [
+    "AISC5000",
+    "2026-10-29",
+    "30 课冲刺",
+    "30课冲刺",
+    "压缩10课",
+    "压缩 10 课",
+    "期中冲刺",
+]
+content_root = p("学习内容")
+if os.path.isdir(content_root):
+    for base, dirs, files in os.walk(content_root):
+        dirs[:] = [d for d in dirs if d not in ("_archive", ".git", "__pycache__")]
+        for fn in files:
+            if not fn.endswith((".md", ".json", ".yaml", ".yml", ".txt")):
+                continue
+            fp = os.path.join(base, fn)
+            try:
+                txt = read_text(fp)
+            except (UnicodeDecodeError, OSError):
+                continue
+            for kw in OLD_KEYWORDS:
+                if kw in txt:
+                    err(f"活跃学习内容出现旧课关键词「{kw}」: {rel(fp)}")
+
+
+# ---- 10. 新课配置文件存在 -------------------------------------------------
+CONFIG_FILES = [
+    ("学习内容", "01_学习计划", "课程信息.md"),
+    ("学习内容", "01_学习计划", "学习路线.md"),
+    ("学习内容", "01_学习计划", "概念登记表.md"),
+    ("学习内容", "01_学习计划", "概念优先级.md"),
+    ("学习内容", "01_学习计划", "第01–NN课_课表.md"),
+    ("学习内容", "02_知识图谱", "知识图谱.md"),
+    ("学习内容", "07_学校作业", "学校作业索引.md"),
+    ("学习内容", "10_板书", "00_索引.md"),
+]
+for parts in CONFIG_FILES:
+    if not os.path.exists(p(*parts)):
+        err("新课配置文件缺失: " + "/".join(parts))
+
+
+# ---- 11. 课表行数 / 课号 --------------------------------------------------
+course_info = p("学习内容", "01_学习计划", "课程信息.md")
+course_tbl = p("学习内容", "01_学习计划", "第01–NN课_课表.md")
+declared_total = None
+if os.path.exists(course_info):
+    for line in read_text(course_info).splitlines():
+        m = re.match(r"\|\s*总课数\s*\|\s*(\d+)\s*\|", line)
+        if m:
+            declared_total = int(m.group(1))
+            break
+        m = re.search(r"总课数\s*[：:]\s*(\d+)", line)
+        if m:
+            declared_total = int(m.group(1))
+            break
+if os.path.exists(course_tbl):
+    lesson_ids = []
+    for line in read_text(course_tbl).splitlines():
+        if not line.startswith("|"):
             continue
-        plev = cells[4]  # 模块 | 考点 | 教材 | 作业 | P级 | ...
-        if plev == "P2" and "本轮不看" in line:
-            err("P2 行不应同时写「本轮不看」: " + line[:80])
-        if plev == "—" and not any(
-            k in line for k in ("本轮不看", "不考", "不占 P 级", "不复习")
-        ):
-            warn("`—` 行未说明本轮不看: " + line[:80])
-    if "### Day 1 = L01–L10" not in outline_txt:
-        err("大纲 §6 缺少 Day 1 = L01–L10")
-    if "### Day 2 = L11–L20" not in outline_txt:
-        err("大纲 §6 缺少 Day 2 = L11–L20")
-    m = re.search(r"### Day 3 = L21–L30.*?(?=\n## |\Z)", outline_txt, re.S)
-    if not m:
-        err("大纲 §6 缺少 Day 3 = L21–L30")
-    else:
-        seg = m.group(0)
-        if "P1 补漏" in seg or "只做 P1" in seg:
-            err("大纲 Day 3 仍写「P1 补漏/只做 P1」")
-
-course_path = p("学习内容", "01_学习计划", "AISC5000期中30课冲刺课表.md")
-if os.path.exists(course_path):
-    with open(course_path, encoding="utf-8") as f:
-        course_txt = f.read()
-    for token in ("P0 子项", "P1 子项", "P0 覆盖对照", "P1 补充"):
-        if token not in course_txt:
-            err("30 课表缺少: " + token)
-    ids = re.findall(r"^\| (L\d{2}) \|", course_txt, re.MULTILINE)
-    if len(ids) != 30 or set(ids) != {f"L{i:02d}" for i in range(1, 31)}:
-        err(f"30 课表 L01–L30 行数/编号异常: {len(ids)} 行")
-
-route_path = p("学习内容", "01_学习计划", "学习路线.md")
-if os.path.exists(route_path):
-    with open(route_path, encoding="utf-8") as f:
-        route_txt = f.read()
-    for token in ("| Day 1 | L01–L10 |", "| Day 2 | L11–L20 |", "| Day 3 | L21–L30 |"):
-        if token not in route_txt:
-            err("学习路线 30 课 Day 映射缺失: " + token)
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if not cells:
+            continue
+        m = re.match(r"^(?:第\s*)?(\d{1,3})(?:\s*课)?$", cells[0])
+        if m:
+            lesson_ids.append(int(m.group(1)))
+    if len(lesson_ids) != len(set(lesson_ids)):
+        err("课表存在重复课号")
+    if declared_total is not None and len(lesson_ids) != declared_total:
+        err(f"课表行数({len(lesson_ids)}) 与课程信息声明总课数({declared_total}) 不一致")
 
 
-# ---- 11. review_queue / next_review 同步 ----------------------------------
-if progress is not None:
-    rq = progress.get("review_queue", [])
-    if not any(x.get("concept") == "orthogonal_projection" for x in rq if isinstance(x, dict)):
-        err("progress.json review_queue 缺少 orthogonal_projection")
-    if not any(x.get("date") == "2026-10-28" for x in rq if isinstance(x, dict)):
-        err("progress.json review_queue 缺少 2026-10-28 期中总复习")
-    for c in progress.get("concepts", []):
-        if c.get("id") == "orthogonal_projection" and c.get("next_review") != "2026-10-27":
-            err("orthogonal_projection.next_review 未同步为 2026-10-27")
-
-
-# ---- 12. 关键文件未跟踪提醒（git 可用时） ---------------------------------
+# ---- 12. git 未跟踪关键文件提醒（通用） -----------------------------------
 try:
-    import subprocess
-
     out = subprocess.run(
         ["git", "-c", "core.quotepath=false", "-C", REPO_ROOT, "status", "--porcelain"],
         capture_output=True,
@@ -353,16 +373,70 @@ try:
         timeout=10,
     )
     for line in out.stdout.splitlines():
-        if line.startswith("??") and any(
-            k in line for k in ("AISC5000期中", "AISC5000/", "S004_第06课", "S003_阶段A")
-        ):
-            warn("关键文件尚未纳入 git: " + line[3:])
+        if not line.startswith("?? "):
+            continue
+        path = line[3:].strip().strip('"')
+        if path.startswith(("ml-math-tutor/学习内容/", "ml-math-tutor/系统/09_辅导老师/")):
+            warn("关键文件尚未纳入 git: " + path)
 except Exception:
     pass
 
 
+# ---- 13. 冷存储：活跃内容不链接归档 --------------------------------------
+if os.path.isdir(content_root):
+    for base, dirs, files in os.walk(content_root):
+        dirs[:] = [d for d in dirs if d not in ("_archive", ".git", "__pycache__")]
+        for fn in files:
+            if not fn.endswith((".md", ".json", ".yaml", ".yml", ".txt")):
+                continue
+            fp = os.path.join(base, fn)
+            try:
+                txt = read_text(fp)
+            except (UnicodeDecodeError, OSError):
+                continue
+            if "_archive/" in txt:
+                err(f"活跃学习内容链接了归档目录: {rel(fp)}")
+
+if progress is not None:
+    def walk_archive_paths(obj, path=()):
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                yield from walk_archive_paths(v, path + (k,))
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                yield from walk_archive_paths(v, path + (i,))
+        elif isinstance(obj, str) and "_archive/" in obj:
+            yield path
+
+    for path in walk_archive_paths(progress):
+        if not path or path[0] != "legacy":
+            err("progress.json 在 legacy 之外出现归档路径: " + "/".join(map(str, path)))
+
+# .ignore 必须排除 _archive/
+ignore_path = os.path.join(REPO_ROOT, ".ignore")
+if os.path.exists(ignore_path):
+    if "_archive/" not in read_text(ignore_path):
+        err(".ignore 未包含 _archive/（日常检索会命中归档）")
+else:
+    warn(".ignore 不存在（建议加入 _archive/）")
+
+
+# ---- 14. 归档隔离：索引/复习/作业不出现 _archive --------------------------
+for label, path in [
+    ("板书索引", p("学习内容", "10_板书", "00_索引.md")),
+    ("概念笔记索引", p("学习内容", "03_概念笔记", "00_索引.md")),
+    ("复习队列", p("系统", "05_学习进度", "复习队列.md")),
+    ("作业索引", p("学习内容", "07_学校作业", "学校作业索引.md")),
+]:
+    if os.path.exists(path) and "_archive/" in read_text(path):
+        err(f"{label} 出现了归档路径（归档必须隔离）: {rel(path)}")
+
+
 # ---- 输出 -----------------------------------------------------------------
-print("=== ml-math-tutor 自检 ===")
+print("=== ml-math-tutor 自检（通用版）===")
+if progress is not None:
+    status = (progress.get("course") or {}).get("status", "未声明")
+    print(f"课程状态: {status}")
 if warns:
     print("\n[警告]")
     for w in warns:
