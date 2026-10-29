@@ -1,0 +1,3 @@
+# 冷存储：归档目录不参与日常检索，避免 Agent 误读、浪费 token。
+# ripgrep / 支持 .ignore 的工具默认跳过。
+_archive/
