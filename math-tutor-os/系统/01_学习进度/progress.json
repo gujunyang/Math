@@ -1,31 +1,315 @@
 {
   "course": {
-    "id": "",
-    "name": "",
-    "term": "",
-    "status": "待配置",
-    "materials": []
+    "id": "AISC5020",
+    "name": "Mathematics & Statistics for AI",
+    "term": "2026-27 Term 1",
+    "status": "已配置",
+    "materials": [
+      "AISCI5020/2627T1_AISC5020_Lecture01.pdf",
+      "AISCI5020/2627T1_AISC5020_Lecture02.pdf",
+      "AISCI5020/2627T1_AISC5020_Lecture03.pdf",
+      "AISCI5020/2627T1_AISC5020_Lecture04.pdf",
+      "AISCI5020/AISC5020 2026 Week 5.pdf",
+      "AISCI5020/AISC5020 2026 Week 6.pdf",
+      "AISCI5020/AISC5020 2026 Week 7.pdf",
+      "AISCI5020/AISC5020 2026 Week 8.pdf",
+      "AISCI5020/Assignment 1.pdf",
+      "AISCI5020/Assignment 2.pdf"
+    ]
   },
   "student": {
     "name": "JackGu",
     "math_background": "自评薄弱；诊断实测基础较好（10 题 9 对）：线代直觉扎实、单变量求导会、Python 有基础、ML 零基础",
-    "goal": "掌握课程所需数学，能独立做题并映射到应用",
+    "goal": "通过 AISC5020 期中（L1–L8），掌握五个 Hint 与 A1/A2 同型题",
     "preferences_pending": false
   },
-  "current_stage": "新课程待配置",
-  "concepts": [],
+  "current_stage": "L01 已讲，待诊断答案；下一步 L02",
+  "concepts": [
+    {
+      "id": "vector_geometry",
+      "name": "向量几何（内积/范数/距离/正交/投影）",
+      "priority": "必学",
+      "prereq": "—",
+      "status": "未学"
+    },
+    {
+      "id": "tensor_shape",
+      "name": "张量、shape 与 reshape",
+      "priority": "掌握",
+      "prereq": "vector_geometry",
+      "status": "未学"
+    },
+    {
+      "id": "linear_independence",
+      "name": "线性无关、span、基、维数",
+      "priority": "必学",
+      "prereq": "vector_geometry",
+      "status": "未学"
+    },
+    {
+      "id": "rank_nullspace",
+      "name": "秩、零空间、秩-零化度",
+      "priority": "必学",
+      "prereq": "linear_independence",
+      "status": "未学"
+    },
+    {
+      "id": "linear_system",
+      "name": "线性系统、LU/QR、最小二乘",
+      "priority": "掌握",
+      "prereq": "rank_nullspace",
+      "status": "未学"
+    },
+    {
+      "id": "eigen",
+      "name": "特征值、特征向量、对角化",
+      "priority": "必学",
+      "prereq": "linear_system",
+      "status": "未学"
+    },
+    {
+      "id": "svd",
+      "name": "SVD、低秩近似、伪逆、条件数",
+      "priority": "必学",
+      "prereq": "eigen",
+      "status": "未学"
+    },
+    {
+      "id": "graph_laplacian",
+      "name": "图 Laplacian 与谱",
+      "priority": "掌握",
+      "prereq": "eigen",
+      "status": "未学"
+    },
+    {
+      "id": "normalized_laplacian",
+      "name": "归一化 Laplacian 与 Cheeger（了解）",
+      "priority": "了解",
+      "prereq": "graph_laplacian",
+      "status": "未学"
+    },
+    {
+      "id": "pseudoinverse_condition",
+      "name": "伪逆与条件数（了解）",
+      "priority": "了解",
+      "prereq": "svd",
+      "status": "未学"
+    },
+    {
+      "id": "gradient_hessian",
+      "name": "梯度、方向导数、Hessian",
+      "priority": "必学",
+      "prereq": "vector_geometry",
+      "status": "未学"
+    },
+    {
+      "id": "jacobian_taylor",
+      "name": "Jacobian、链式法则、Taylor",
+      "priority": "必学",
+      "prereq": "gradient_hessian",
+      "status": "未学"
+    },
+    {
+      "id": "autodiff",
+      "name": "计算图与反向传播",
+      "priority": "必学",
+      "prereq": "jacobian_taylor",
+      "status": "未学"
+    },
+    {
+      "id": "prob_axioms",
+      "name": "概率公理、条件概率、独立性",
+      "priority": "必学",
+      "prereq": "—",
+      "status": "未学"
+    },
+    {
+      "id": "bayes_rule",
+      "name": "全概率公式与 Bayes",
+      "priority": "必学",
+      "prereq": "prob_axioms",
+      "status": "未学"
+    },
+    {
+      "id": "random_variable",
+      "name": "随机变量、CDF/PMF/PDF、变换",
+      "priority": "必学",
+      "prereq": "prob_axioms",
+      "status": "未学"
+    },
+    {
+      "id": "common_distributions",
+      "name": "常见离散/连续分布",
+      "priority": "必学",
+      "prereq": "random_variable",
+      "status": "未学"
+    },
+    {
+      "id": "expectation_variance",
+      "name": "期望、方差、协方差",
+      "priority": "必学",
+      "prereq": "common_distributions",
+      "status": "未学"
+    },
+    {
+      "id": "joint_conditional",
+      "name": "联合/边缘/条件分布、条件独立",
+      "priority": "必学",
+      "prereq": "random_variable",
+      "status": "未学"
+    },
+    {
+      "id": "multivariate_normal",
+      "name": "多元正态、边缘与条件",
+      "priority": "掌握",
+      "prereq": "joint_conditional",
+      "status": "未学"
+    },
+    {
+      "id": "order_statistics",
+      "name": "次序统计量（A2 补充）",
+      "priority": "掌握",
+      "prereq": "joint_conditional",
+      "status": "未学"
+    },
+    {
+      "id": "total_expectation",
+      "name": "全期望公式（Hint）",
+      "priority": "必学",
+      "prereq": "joint_conditional",
+      "status": "未学"
+    },
+    {
+      "id": "total_variance",
+      "name": "全方差公式（Hint）",
+      "priority": "必学",
+      "prereq": "expectation_variance",
+      "status": "未学"
+    },
+    {
+      "id": "entropy",
+      "name": "熵、联合熵、条件熵",
+      "priority": "必学",
+      "prereq": "common_distributions",
+      "status": "未学"
+    },
+    {
+      "id": "mutual_information",
+      "name": "互信息与 Gaussian MI",
+      "priority": "必学",
+      "prereq": "entropy",
+      "status": "未学"
+    },
+    {
+      "id": "cross_entropy_kl",
+      "name": "交叉熵与 KL 散度",
+      "priority": "必学",
+      "prereq": "entropy",
+      "status": "未学"
+    },
+    {
+      "id": "fano",
+      "name": "Fano 不等式（Hint）",
+      "priority": "必学",
+      "prereq": "mutual_information",
+      "status": "未学"
+    },
+    {
+      "id": "mle",
+      "name": "似然、MLE、MLE=KL",
+      "priority": "必学",
+      "prereq": "cross_entropy_kl",
+      "status": "未学"
+    },
+    {
+      "id": "map",
+      "name": "MAP 估计",
+      "priority": "掌握",
+      "prereq": "mle",
+      "status": "未学"
+    },
+    {
+      "id": "loss_regularization",
+      "name": "损失函数、偏差-方差、L1/L2",
+      "priority": "掌握",
+      "prereq": "mle",
+      "status": "未学"
+    },
+    {
+      "id": "model_selection",
+      "name": "交叉验证与 BIC（A2 补充）",
+      "priority": "掌握",
+      "prereq": "loss_regularization",
+      "status": "未学"
+    },
+    {
+      "id": "conjugate_prior",
+      "name": "共轭先验（Hint）",
+      "priority": "必学",
+      "prereq": "bayes_rule",
+      "status": "未学"
+    },
+    {
+      "id": "fisher_information",
+      "name": "Fisher 信息与 Jeffreys 先验（Hint）",
+      "priority": "必学",
+      "prereq": "mle",
+      "status": "未学"
+    },
+    {
+      "id": "asymptotic_mle",
+      "name": "MLE 渐近方差（了解）",
+      "priority": "了解",
+      "prereq": "fisher_information",
+      "status": "未学"
+    },
+    {
+      "id": "bayesian_network",
+      "name": "贝叶斯网络、因子分解、局部 Markov",
+      "priority": "必学",
+      "prereq": "prob_axioms",
+      "status": "未学"
+    },
+    {
+      "id": "d_separation",
+      "name": "d-separation 与条件独立",
+      "priority": "必学",
+      "prereq": "bayesian_network",
+      "status": "未学"
+    },
+    {
+      "id": "bn_inference",
+      "name": "贝叶斯网络推断与 MLE",
+      "priority": "掌握",
+      "prereq": "d_separation",
+      "status": "未学"
+    }
+  ],
   "wrong_questions": [],
   "review_queue": [],
-  "sessions_count": 0,
-  "session_counter": 7,
+  "sessions_count": 2,
+  "session_counter": 9,
   "current_session_id": null,
-  "session_index": [],
-  "last_session": null,
+  "session_index": [
+    {
+      "id": "S008",
+      "date": "2026-11-01",
+      "topic": "AISC5020 期中20课复习规划与课表",
+      "status": "已结束"
+    },
+    {
+      "id": "S009",
+      "date": "2026-11-01",
+      "topic": "L01 诊断·考试地图·L1 串讲",
+      "status": "已结束"
+    }
+  ],
+  "last_session": "S009",
   "legacy": {
     "course": "AISC5000_2026秋",
     "archive": "_archive/AISC5000_2026秋/",
     "session_snapshot": "_archive/AISC5000_2026秋/系统/05_学习进度/progress_AISC5000_2026秋.json",
     "read_policy": "cold-storage: do not read unless the student explicitly asks"
   },
-  "notes": "2026-10-30 换课迁移：AISC5000 已归档（冷存储，默认不读）；新课待配置。旧课概念/错题/复习队列不进入新课；下一个会话 ID 为 S008。"
+  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交；下一步 L02。"
 }
