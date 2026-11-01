@@ -1188,6 +1188,292 @@ def fig_activation():
     save(fig, "fig_activation.png")
 
 
+# --- 图 30：SVD —— 单位圆 → 椭圆，右/左奇异向量两组正交方向 ----------------
+def fig_svd():
+    A = np.array([[2.0, 1.0], [0.0, 1.5]])
+    U, S, Vt = np.linalg.svd(A)
+    th = np.linspace(0, 2 * np.pi, 400)
+    circle = np.vstack([np.cos(th), np.sin(th)])
+    ellipse = A @ circle
+
+    fig, axes = plt.subplots(1, 2, figsize=(10.6, 4.8))
+
+    # 左：定义域的单位圆 + 右奇异向量 v1, v2
+    axes[0].plot(circle[0], circle[1], color=GRAY, lw=1.6, ls="--",
+                 label=r"单位圆 $\|\mathbf{x}\|=1$")
+    for k, color, lab in [(0, RED, r"$\mathbf{v}_1$"),
+                          (1, GREEN, r"$\mathbf{v}_2$")]:
+        v = Vt.T[:, k]
+        arrow(axes[0], *v, color, lw=2.4, label=lab)
+    axes[0].set_title("定义域：$\\mathbf{v}_1\\perp\\mathbf{v}_2$", fontsize=11.5)
+
+    # 右：像椭圆 + 左奇异向量 u1, u2（长度 = 奇异值）
+    axes[1].plot(ellipse[0], ellipse[1], color=BLUE, lw=2.2,
+                 label=r"像 $\mathbf{A}\mathbf{x}$")
+    for k, color in [(0, RED), (1, GREEN)]:
+        vec = U[:, k] * S[k]
+        arrow(axes[1], *vec, color, lw=2.4)
+        axes[1].text(vec[0] * 1.05 + 0.06, vec[1] * 1.05 + 0.06,
+                     rf"$\sigma_{k + 1}\mathbf{{u}}_{k + 1}$",
+                     color=color, fontsize=12)
+        axes[1].plot([vec[0], vec[0]], [0, vec[1]], ls=":", color=GRAY, lw=0.9)
+        axes[1].plot([0, vec[0]], [vec[1], vec[1]], ls=":", color=GRAY, lw=0.9)
+
+    for ax in axes:
+        ax.axhline(0, color=GRAY, lw=0.8)
+        ax.axvline(0, color=GRAY, lw=0.8)
+        ax.grid(True, alpha=0.2)
+        ax.set_aspect("equal")
+        ax.legend(loc="lower right", fontsize=9, frameon=False)
+    axes[0].set_xlim(-1.5, 1.5)
+    axes[0].set_ylim(-1.5, 1.5)
+    axes[1].set_xlim(-2.8, 2.8)
+    axes[1].set_ylim(-2.4, 2.4)
+    fig.suptitle(r"SVD：$\mathbf{A}=\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^\top$，"
+                 "先把正交方向转好，再沿两个正交方向分别拉伸", y=1.03, fontsize=12.5)
+    save(fig, "fig_svd.png")
+
+
+# --- 图 31：图 Laplacian —— 星形图、L 矩阵、特征值 --------------------------
+def fig_graph_laplacian():
+    pos = {0: (0.0, 0.0), 1: (-1.15, 1.15), 2: (1.15, 1.15), 3: (0.0, -1.5)}
+    edges = [(0, 1), (0, 2), (0, 3)]
+    L = np.array([[3, -1, -1, -1],
+                  [-1, 1, 0, 0],
+                  [-1, 0, 1, 0],
+                  [-1, 0, 0, 1]])
+
+    fig, axes = plt.subplots(1, 3, figsize=(13.6, 4.3))
+
+    ax = axes[0]
+    for i, j in edges:
+        ax.plot([pos[i][0], pos[j][0]], [pos[i][1], pos[j][1]],
+                color=GRAY, lw=2.2, zorder=1)
+    for k, (x, y) in pos.items():
+        ax.scatter([x], [y], s=520, color=BLUE if k == 0 else "#dbeafe",
+                   edgecolor=BLUE, linewidth=2, zorder=2)
+        ax.text(x, y, rf"$v_{k + 1}$", ha="center", va="center",
+                fontsize=12, color="white" if k == 0 else BLUE, zorder=3)
+    ax.set_title(r"星形图 $K_{1,3}$：中心 $v_1$ 连三个叶子", fontsize=11.5)
+    ax.set_xlim(-1.8, 1.8)
+    ax.set_ylim(-1.9, 1.7)
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+    ax = axes[1]
+    im = ax.imshow(L, cmap="RdBu_r", vmin=-3, vmax=3)
+    for i in range(4):
+        for j in range(4):
+            ax.text(j, i, str(L[i, j]), ha="center", va="center", fontsize=12,
+                    color="white" if abs(L[i, j]) >= 2 else "black")
+    ax.set_xticks(range(4))
+    ax.set_yticks(range(4))
+    ax.set_xticklabels([rf"$v_{k + 1}$" for k in range(4)])
+    ax.set_yticklabels([rf"$v_{k + 1}$" for k in range(4)])
+    ax.set_title(r"$\mathbf{L}=\mathbf{D}-\mathbf{A}$：对角线是度数，边上是 $-1$", fontsize=11)
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+
+    ax = axes[2]
+    vals = [0, 1, 1, 4]
+    colors = [GRAY, BLUE, BLUE, GREEN]
+    ax.bar(range(4), vals, color=colors, width=0.62)
+    for k, v in enumerate(vals):
+        ax.text(k, v + 0.08, str(v), ha="center", fontsize=12)
+    ax.annotate(r"$\lambda_2=1$（代数连通度）", xy=(1, 1), xytext=(1.2, 2.6),
+                fontsize=10, color=BLUE,
+                arrowprops=dict(arrowstyle="->", color=BLUE, lw=1.1))
+    ax.annotate(r"$\lambda_{\max}=4$", xy=(3, 4), xytext=(2.2, 4.5),
+                fontsize=10, color=GREEN,
+                arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.1))
+    ax.set_xticks(range(4))
+    ax.set_xticklabels([r"$\lambda_1$", r"$\lambda_2$", r"$\lambda_3$", r"$\lambda_4$"])
+    ax.set_ylim(0, 5.2)
+    ax.set_ylabel("特征值")
+    ax.set_title("谱：一个 0（连通）+ 两个 1 + 一个 4", fontsize=11.5)
+    ax.grid(True, axis="y", alpha=0.2)
+
+    fig.suptitle("图 Laplacian：把“节点上的数”变成“邻居之间的差异”", y=1.03, fontsize=12.5)
+    fig.subplots_adjust(wspace=0.35)
+    save(fig, "fig_graph_laplacian.png")
+
+
+# --- 图 32：计算图前向 / 反向（z=wx+b, L=(z-t)^2） ------------------------
+def fig_computation_graph():
+    fig, axes = plt.subplots(1, 2, figsize=(12.8, 4.6))
+    nodes = {
+        "w": (0.0, 3.2, "w=2"),
+        "x": (0.0, 2.1, "x=3"),
+        "b": (0.0, 1.0, "b=1"),
+        "z": (2.3, 2.1, "z=wx+b=7"),
+        "t": (2.3, 0.55, "t=5"),
+        "L": (4.7, 1.5, "L=(z-t)^2=4"),
+    }
+    edges = [("w", "z"), ("x", "z"), ("b", "z"), ("z", "L"), ("t", "L")]
+
+    def draw(ax, backward=False):
+        for a, c in edges:
+            x1, y1, _ = nodes[a]
+            x2, y2, _ = nodes[c]
+            ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
+                        arrowprops=dict(arrowstyle="-|>", lw=2.0,
+                                        color=(RED if backward else GRAY),
+                                        linestyle=("-" if not backward else "--"),
+                                        shrinkA=32, shrinkB=32))
+        for key, (x, y, lab) in nodes.items():
+            ax.text(x, y, lab, ha="center", va="center", fontsize=11,
+                    bbox=dict(boxstyle="round,pad=0.45",
+                              fc=("#fde8e8" if backward else "#e8f0fe"),
+                              ec=(RED if backward else BLUE), lw=1.8))
+
+    draw(axes[0], backward=False)
+    axes[0].set_title("① 前向：从输入算到损失", fontsize=12)
+    axes[0].text(0.5, 0.02, "z = 2×3 + 1 = 7\nL = (7 − 5)² = 4",
+                 transform=axes[0].transAxes, ha="center", fontsize=10.5, color=GRAY)
+
+    draw(axes[1], backward=True)
+    axes[1].text(1.25, 1.85, r"$\partial L/\partial z=4$", color=RED, fontsize=10.5)
+    axes[1].text(0.62, 2.85, r"$\partial L/\partial w=12$", color=RED, fontsize=10.5)
+    axes[1].text(0.62, 2.15, r"$\partial L/\partial x=8$", color=RED, fontsize=10.5)
+    axes[1].text(0.62, 1.25, r"$\partial L/\partial b=4$", color=RED, fontsize=10.5)
+    axes[1].text(3.65, 1.78, r"$\partial L/\partial L=1$", color=RED, fontsize=10.5)
+    axes[1].set_title("② 反向：从损失把梯度传回去", fontsize=12)
+    axes[1].text(0.5, 0.02,
+                 r"$\partial L/\partial z=2(z-t)=4$；再乘 $\partial z/\partial w=x$ 得 12",
+                 transform=axes[1].transAxes, ha="center", fontsize=10.5, color=GRAY)
+
+    for ax in axes:
+        ax.set_xlim(-1.0, 5.9)
+        ax.set_ylim(-0.1, 4.0)
+        ax.axis("off")
+    fig.suptitle("计算图：前向存中间值，反向用链式法则逐个乘回来", y=1.02, fontsize=12.5)
+    save(fig, "fig_computation_graph.png")
+
+
+# --- 图 33：联合密度 → 切片 → 条件密度 ------------------------------------
+def fig_joint_conditional():
+    rho = 0.7
+    x = np.linspace(-3.2, 3.2, 400)
+    y = np.linspace(-3.2, 3.2, 400)
+    X, Y = np.meshgrid(x, y)
+    Z = np.exp(-(X ** 2 - 2 * rho * X * Y + Y ** 2) / (2 * (1 - rho ** 2)))
+    Z /= (2 * np.pi * np.sqrt(1 - rho ** 2))
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 4.6))
+    cs = ax1.contour(X, Y, Z, levels=8, colors=[BLUE], linewidths=1.3)
+    ax1.clabel(cs, inline=True, fontsize=7)
+    ax1.axvline(1.0, color=RED, lw=2.2, ls="--")
+    ax1.text(1.08, 2.65, r"切片 $x=1$", color=RED, fontsize=11)
+    ax1.set_xlabel(r"$x$")
+    ax1.set_ylabel(r"$y$")
+    ax1.set_title("联合密度 $p(x,y)$：椭圆等高线", fontsize=11.5)
+    ax1.set_aspect("equal")
+    ax1.grid(True, alpha=0.2)
+
+    mu = rho * 1.0
+    sd = np.sqrt(1 - rho ** 2)
+    cond = np.exp(-(y - mu) ** 2 / (2 * sd ** 2)) / (sd * np.sqrt(2 * np.pi))
+    marg = np.exp(-y ** 2 / 2) / np.sqrt(2 * np.pi)
+    ax2.plot(y, marg, color=GRAY, lw=2.0, ls="--", label=r"边缘 $p(y)$")
+    ax2.plot(y, cond, color=RED, lw=2.6, label=r"条件 $p(y\mid x=1)$")
+    ax2.axvline(mu, color=RED, lw=0.9, ls=":")
+    ax2.text(mu + 0.08, cond.max() * 0.9, r"均值 $\rho x=0.7$", color=RED, fontsize=10.5)
+    ax2.set_xlabel(r"$y$")
+    ax2.set_ylabel("密度")
+    ax2.set_title("条件密度：切片后再归一化", fontsize=11.5)
+    ax2.legend(fontsize=9.5, frameon=False)
+    ax2.grid(True, alpha=0.2)
+
+    fig.suptitle("联合 → 固定 $x$ 切一刀 → 条件分布；把所有 $x$ 平均掉 → 边缘分布",
+                 y=1.03, fontsize=11.5)
+    save(fig, "fig_joint_conditional.png")
+
+
+# --- 图 34：全期望 / 全方差 -------------------------------------------------
+def fig_total_expectation_variance():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.6, 4.4))
+
+    # 左：两个条件分布 + 混合分布
+    yy = np.linspace(-4, 7, 500)
+    f0 = np.exp(-(yy - 0) ** 2 / 2) / np.sqrt(2 * np.pi)
+    f1 = np.exp(-(yy - 3) ** 2 / 2) / np.sqrt(2 * np.pi)
+    mix = 0.5 * f0 + 0.5 * f1
+    ax1.plot(yy, f0, color=BLUE, lw=1.8, ls="--", label=r"$p(y\mid x=0)$")
+    ax1.plot(yy, f1, color=GREEN, lw=1.8, ls="--", label=r"$p(y\mid x=1)$")
+    ax1.plot(yy, mix, color=RED, lw=2.4, label=r"混合 $p(y)$")
+    ax1.axvline(0, color=BLUE, lw=1.0, ls=":")
+    ax1.axvline(3, color=GREEN, lw=1.0, ls=":")
+    ax1.axvline(1.5, color=RED, lw=1.4, ls=":")
+    ax1.text(0.05, 0.40, r"$E[Y\mid X{=}0]=0$", color=BLUE, fontsize=9.5)
+    ax1.text(2.0, 0.40, r"$E[Y\mid X{=}1]=3$", color=GREEN, fontsize=9.5)
+    ax1.text(1.55, 0.22, r"$E[Y]=1.5$", color=RED, fontsize=9.5)
+    ax1.set_title("全期望：组内均值按权重平均", fontsize=11.5)
+    ax1.set_xlabel(r"$y$")
+    ax1.set_ylabel("密度")
+    ax1.legend(fontsize=8.5, frameon=False, loc="upper right")
+    ax1.grid(True, alpha=0.2)
+
+    # 右：方差分解堆叠柱
+    within = 1.0
+    between = 2.25
+    total = within + between
+    ax2.bar([0], [within], width=0.45, color=BLUE, label=r"$E[\mathrm{Var}(Y\mid X)]=1$")
+    ax2.bar([0], [between], bottom=[within], width=0.45, color=GREEN,
+            label=r"$\mathrm{Var}(E[Y\mid X])=2.25$")
+    ax2.text(0, within / 2, "组内\n1.00", ha="center", va="center", color="white", fontsize=10.5)
+    ax2.text(0, within + between / 2, "组间\n2.25", ha="center", va="center", color="white", fontsize=10.5)
+    ax2.text(0, total + 0.12, r"总方差 $=3.25$", ha="center", fontsize=11)
+    ax2.set_xticks([0])
+    ax2.set_xticklabels(["$\\mathrm{Var}(Y)$"])
+    ax2.set_ylim(0, 3.9)
+    ax2.set_ylabel("方差")
+    ax2.set_title(r"全方差：$\mathrm{Var}(Y)=E[\mathrm{Var}(Y\mid X)]+\mathrm{Var}(E[Y\mid X])$",
+                  fontsize=10.5)
+    ax2.legend(fontsize=8.5, frameon=False, loc="upper right")
+    ax2.grid(True, axis="y", alpha=0.2)
+
+    fig.suptitle("全期望/全方差：先把组内算清楚，再按组间权重汇总", y=1.03, fontsize=12)
+    save(fig, "fig_total_expectation_variance.png")
+
+
+# --- 图 35：熵、交叉熵、KL --------------------------------------------------
+def fig_entropy_kl():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.2, 4.4))
+
+    p = np.linspace(0.001, 0.999, 400)
+    H = -p * np.log2(p) - (1 - p) * np.log2(1 - p)
+    ax1.plot(p, H, color=BLUE, lw=2.4)
+    ax1.scatter([0.5], [1.0], color=RED, s=40, zorder=5)
+    ax1.annotate(r"$p=0.5$：$H=1$ bit（最不确定）", xy=(0.5, 1.0), xytext=(0.56, 0.82),
+                 fontsize=10, color=RED,
+                 arrowprops=dict(arrowstyle="->", color=RED, lw=1.1))
+    ax1.set_xlabel(r"$p=P(X=1)$")
+    ax1.set_ylabel(r"$H(p)$（bit）")
+    ax1.set_title("伯努利熵：越接近 0.5 越不确定", fontsize=11.5)
+    ax1.set_xlim(0, 1)
+    ax1.set_ylim(0, 1.08)
+    ax1.grid(True, alpha=0.25)
+
+    Hp = -(0.9 * np.log2(0.9) + 0.1 * np.log2(0.1))
+    CE = -(0.9 * np.log2(0.5) + 0.1 * np.log2(0.5))
+    KL = CE - Hp
+    ax2.bar([0], [Hp], width=0.42, color=BLUE, label=r"$H(p)=0.469$")
+    ax2.bar([0], [KL], bottom=[Hp], width=0.42, color=RED, label=r"$D(p\|q)=0.531$")
+    ax2.text(0, Hp / 2, "H(p)", ha="center", va="center", color="white", fontsize=11)
+    ax2.text(0, Hp + KL / 2, "KL", ha="center", va="center", color="white", fontsize=11)
+    ax2.text(0, CE + 0.05, r"$H(p,q)=1$ bit", ha="center", fontsize=11)
+    ax2.set_xticks([0])
+    ax2.set_xticklabels([r"$p=(0.9,0.1)$, $q=(0.5,0.5)$"])
+    ax2.set_ylim(0, 1.25)
+    ax2.set_ylabel("bit")
+    ax2.set_title(r"交叉熵 $=H(p)+D(p\|q)$", fontsize=11.5)
+    ax2.legend(fontsize=9, frameon=False, loc="upper right")
+    ax2.grid(True, axis="y", alpha=0.2)
+
+    fig.suptitle("熵 = 自己的不确定；KL = 用错分布多付的代价；交叉熵 = 两者之和",
+                 y=1.03, fontsize=11.5)
+    save(fig, "fig_entropy_kl.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -1206,6 +1492,12 @@ if __name__ == "__main__":
     fig_projection_subspace()
     fig_eigen()
     fig_spectral_steps()
+    fig_svd()
+    fig_graph_laplacian()
+    fig_computation_graph()
+    fig_joint_conditional()
+    fig_total_expectation_variance()
+    fig_entropy_kl()
     fig_quadratic_contours()
     fig_gradient_contour()
     fig_taylor_parabola()

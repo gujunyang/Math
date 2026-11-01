@@ -19,193 +19,193 @@
   },
   "student": {
     "name": "JackGu",
-    "math_background": "自评薄弱；诊断实测基础较好（10 题 9 对）：线代直觉扎实、单变量求导会、Python 有基础、ML 零基础",
+    "math_background": "自评薄弱；诊断实测基础较好：线代向量/span 直觉扎实，梯度/Hessian 熟练，单变量求导会；Q3 系看错题（实际会求特征值）；概率分布与五个 Hint 未学；Python 有基础，ML 零基础",
     "goal": "通过 AISC5020 期中（L1–L8），掌握五个 Hint 与 A1/A2 同型题",
     "preferences_pending": false
   },
-  "current_stage": "S010 冲刺版 v2 已排定（14 课 + 考前回顾）；下一步 L02",
+  "current_stage": "S010 第05–10课已连讲（梯度/反向传播/概率/联合条件/全期望全方差/熵与KL）；待作业",
   "concepts": [
     {
       "id": "vector_geometry",
       "name": "向量几何（内积/范数/距离/正交/投影）",
       "priority": "必学",
       "prereq": "—",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "tensor_shape",
       "name": "张量、shape 与 reshape",
       "priority": "掌握",
       "prereq": "vector_geometry",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "linear_independence",
       "name": "线性无关、span、基、维数",
       "priority": "必学",
       "prereq": "vector_geometry",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "rank_nullspace",
       "name": "秩、零空间、秩-零化度",
       "priority": "必学",
       "prereq": "linear_independence",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "linear_system",
       "name": "线性系统、LU/QR、最小二乘",
       "priority": "掌握",
       "prereq": "rank_nullspace",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "eigen",
       "name": "特征值、特征向量、对角化",
       "priority": "必学",
       "prereq": "linear_system",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "svd",
       "name": "SVD、低秩近似、伪逆、条件数",
       "priority": "必学",
       "prereq": "eigen",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "graph_laplacian",
       "name": "图 Laplacian 与谱",
       "priority": "掌握",
       "prereq": "eigen",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "normalized_laplacian",
       "name": "归一化 Laplacian 与 Cheeger（了解）",
       "priority": "了解",
       "prereq": "graph_laplacian",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "pseudoinverse_condition",
       "name": "伪逆与条件数（了解）",
       "priority": "了解",
       "prereq": "svd",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "gradient_hessian",
       "name": "梯度、方向导数、Hessian",
       "priority": "必学",
       "prereq": "vector_geometry",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "jacobian_taylor",
       "name": "Jacobian、链式法则、Taylor",
       "priority": "必学",
       "prereq": "gradient_hessian",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "autodiff",
       "name": "计算图与反向传播",
       "priority": "必学",
       "prereq": "jacobian_taylor",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "prob_axioms",
       "name": "概率公理、条件概率、独立性",
       "priority": "必学",
       "prereq": "—",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "bayes_rule",
       "name": "全概率公式与 Bayes",
       "priority": "必学",
       "prereq": "prob_axioms",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "random_variable",
       "name": "随机变量、CDF/PMF/PDF、变换",
       "priority": "必学",
       "prereq": "prob_axioms",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "common_distributions",
       "name": "常见离散/连续分布",
       "priority": "必学",
       "prereq": "random_variable",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "expectation_variance",
       "name": "期望、方差、协方差",
       "priority": "必学",
       "prereq": "common_distributions",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "joint_conditional",
       "name": "联合/边缘/条件分布、条件独立",
       "priority": "必学",
       "prereq": "random_variable",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "multivariate_normal",
       "name": "多元正态、边缘与条件",
       "priority": "掌握",
       "prereq": "joint_conditional",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "order_statistics",
       "name": "次序统计量（A2 补充）",
       "priority": "掌握",
       "prereq": "joint_conditional",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "total_expectation",
       "name": "全期望公式（Hint）",
       "priority": "必学",
       "prereq": "joint_conditional",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "total_variance",
       "name": "全方差公式（Hint）",
       "priority": "必学",
       "prereq": "expectation_variance",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "entropy",
       "name": "熵、联合熵、条件熵",
       "priority": "必学",
       "prereq": "common_distributions",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "mutual_information",
       "name": "互信息与 Gaussian MI",
       "priority": "必学",
       "prereq": "entropy",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "cross_entropy_kl",
       "name": "交叉熵与 KL 散度",
       "priority": "必学",
       "prereq": "entropy",
-      "status": "未学"
+      "status": "学习中"
     },
     {
       "id": "fano",
@@ -286,7 +286,190 @@
     }
   ],
   "wrong_questions": [],
-  "review_queue": [],
+  "review_queue": [
+    {
+      "concept": "vector_geometry",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "tensor_shape",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "linear_independence",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "rank_nullspace",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "linear_system",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "eigen",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "svd",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "pseudoinverse_condition",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "graph_laplacian",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "normalized_laplacian",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "gradient_hessian",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "jacobian_taylor",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "autodiff",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "prob_axioms",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "bayes_rule",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "random_variable",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "common_distributions",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "expectation_variance",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "joint_conditional",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "multivariate_normal",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "order_statistics",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "total_expectation",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "total_variance",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "entropy",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "mutual_information",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    },
+    {
+      "concept": "cross_entropy_kl",
+      "date": "2026-11-02",
+      "next_review": "2026-11-03",
+      "reviews": 0,
+      "level": "学习中"
+    }
+  ],
   "sessions_count": 3,
   "session_counter": 10,
   "current_session_id": "S010",
@@ -306,7 +489,7 @@
     {
       "id": "S010",
       "date": "2026-11-02",
-      "topic": "期中复习 v2 排课（Hint 页码修订）",
+      "topic": "第02课 向量·子空间·秩与线性系统",
       "status": "进行中"
     }
   ],
@@ -317,5 +500,5 @@
     "session_snapshot": "_archive/AISC5000_2026秋/系统/05_学习进度/progress_AISC5000_2026秋.json",
     "read_policy": "cold-storage: do not read unless the student explicitly asks"
   },
-  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交。2026-11-02 S010 按教师 Hint 精确页码重排为冲刺版 v2：14 课 + 考前回顾（D1 8h / D2 7.75h / D3 90min Hint 专项二次复习）；下一步 L02。"
+  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交。2026-11-02 S010 按教师 Hint 精确页码重排为冲刺版 v2：14 课 + 考前回顾（D1 8h / D2 7.75h / D3 90min Hint 专项二次复习）。2026-11-02 诊断回收：Q1 正交✓、Q2 线性相关/span✓、Q4 梯度/Hessian✓、Q5 只写通用定义（Binomial 公式缺）、Q6–Q10 未学；Q3 为看错题、已澄清（实际会求特征值），不计知识缺口；已记入错题本。2026-11-02 S010 第02课已讲（向量/shape、span、无关、秩-零化度、Ax=b、最小二乘），板书 `S010_第02课_向量·子空间·秩与线性系统.md`；5 个概念置「学习中」，复习队列 11-03。2026-11-02 S010 第03课已讲（特征方程、正交对角化、SVD、低秩近似），板书 `S010_第03课_特征分解与SVD.md`，新增 `fig_svd.png`；3 个概念置「学习中」，复习 11-03。2026-11-02 S010 第04课已讲（图 Laplacian、二次型、谱与连通性），板书 `S010_第04课_图Laplacian与谱.md`，新增 `fig_graph_laplacian.png`；2 个概念置「学习中」。2026-11-02 S010 第05–10课已连讲：第05课梯度/Hessian/Taylor/Jacobian（75min）、第06课计算图/反向传播（45min）、第07课概率/随机变量/常见分布（90min）、第08课联合条件/次序统计量/Poisson thinning（75min）、第09课全期望+全方差 Hint 1/2（90min）、第10课熵/互信息/CE/KL（90min）；板书 6 份，新增 `fig_computation_graph.png`、`fig_joint_conditional.png`、`fig_total_expectation_variance.png`、`fig_entropy_kl.png`；16 个概念置「学习中」，复习 11-03。下一步第 11 课 Fano。"
 }
