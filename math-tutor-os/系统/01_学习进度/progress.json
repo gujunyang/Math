@@ -23,7 +23,7 @@
     "goal": "通过 AISC5020 期中（L1–L8），掌握五个 Hint 与 A1/A2 同型题",
     "preferences_pending": false
   },
-  "current_stage": "L01 已讲，待诊断答案；下一步 L02",
+  "current_stage": "S010 冲刺版 v2 已排定（14 课 + 考前回顾）；下一步 L02",
   "concepts": [
     {
       "id": "vector_geometry",
@@ -287,9 +287,9 @@
   ],
   "wrong_questions": [],
   "review_queue": [],
-  "sessions_count": 2,
-  "session_counter": 9,
-  "current_session_id": null,
+  "sessions_count": 3,
+  "session_counter": 10,
+  "current_session_id": "S010",
   "session_index": [
     {
       "id": "S008",
@@ -302,6 +302,12 @@
       "date": "2026-11-01",
       "topic": "L01 诊断·考试地图·L1 串讲",
       "status": "已结束"
+    },
+    {
+      "id": "S010",
+      "date": "2026-11-02",
+      "topic": "期中复习 v2 排课（Hint 页码修订）",
+      "status": "进行中"
     }
   ],
   "last_session": "S009",
@@ -311,5 +317,5 @@
     "session_snapshot": "_archive/AISC5000_2026秋/系统/05_学习进度/progress_AISC5000_2026秋.json",
     "read_policy": "cold-storage: do not read unless the student explicitly asks"
   },
-  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交；下一步 L02。"
+  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交。2026-11-02 S010 按教师 Hint 精确页码重排为冲刺版 v2：14 课 + 考前回顾（D1 8h / D2 7.75h / D3 90min Hint 专项二次复习）；下一步 L02。"
 }
