@@ -184,6 +184,155 @@ $$
   - 检查：最小值应偏向 $0$，$1/3<1/2$。
 - **解读**：两个随机点里，左边那个平均在 $1/3$ 处。
 
+### 3.6 随机变量变换：单调情形（change of variables）
+
+$$
+Y=g(X),
+\qquad
+f_Y(y)=f_X\bigl(g^{-1}(y)\bigr)\left|\frac{d}{dy}g^{-1}(y)\right|.
+$$
+
+- **符号**：$g$ 是严格单调、可导的函数；$g^{-1}$ 是反函数；绝对值保证密度非负。
+- **意义与场景**：已知 $X$ 的密度，求 $Y=g(X)$ 的密度。线性变换 $Y=aX+b$ 时简化为 $f_Y(y)=\frac{1}{|a|}f_X\left(\frac{y-b}{a}\right)$；概率积分变换、归一化流、变量替换都靠它。
+- **例**：
+  - **背景**：$X\sim\mathrm{Uniform}(0,1)$，$Y=2X+1$，求 $f_Y(y)$。
+  - **解**：
+    - Step 1：$g^{-1}(y)=(y-1)/2$，导数 $1/2$。
+    - Step 2：$f_X(x)=1$（$0<x<1$），所以 $f_Y(y)=1\cdot\frac12=\frac12$。
+    - Step 3：$y$ 的范围是 $1<y<3$。
+    - 检查：$\int_1^3\frac12dy=1$，归一化正确。
+  - **解读**：均匀分布经过线性拉伸仍是均匀分布，但区间变长、高度变矮。
+
+### 3.7 和的分布与卷积（convolution）
+
+$$
+Z=X+Y,
+\qquad
+f_Z(z)=\int_{-\infty}^{\infty}f_{X,Y}(x,z-x)\,dx
+\overset{X\perp Y}{=}\int_{-\infty}^{\infty}f_X(x)f_Y(z-x)\,dx.
+$$
+
+- **符号**：$f_{X,Y}$ 是联合密度；独立时联合密度等于边缘乘积，积分变成卷积。
+- **意义与场景**：两个随机变量相加的分布；噪声叠加、批量求和、卷积神经网络的名字都来自这里。离散情形把积分换成求和。
+- **例**：
+  - **背景**：$X,Y$ 独立同分布 $\mathrm{Uniform}(0,1)$，求 $Z=X+Y$ 的密度。
+  - **解**：
+    - Step 1：$f_Z(z)=\int_0^1 f_X(x)f_Y(z-x)\,dx$，被积函数为 $1$ 当 $0<z-x<1$。
+    - Step 2：$0<z<1$ 时 $x\in(0,z)$，积分长度 $z$，所以 $f_Z(z)=z$。
+    - Step 3：$1\le z<2$ 时 $x\in(z-1,1)$，积分长度 $2-z$，所以 $f_Z(z)=2-z$。
+    - 检查：$\int_0^1 z\,dz+\int_1^2(2-z)\,dz=1/2+1/2=1$。
+  - **解读**：两个均匀分布相加得到三角形密度；不是“均匀 + 均匀 = 均匀”。
+
+### 3.8 多元正态的分块：边缘与条件（partitioned multivariate normal）
+
+$$
+\mathbf X=\begin{bmatrix}\mathbf X_a\\\mathbf X_b\end{bmatrix}
+\sim N\left(\begin{bmatrix}\boldsymbol\mu_a\\\boldsymbol\mu_b\end{bmatrix},
+\begin{bmatrix}\boldsymbol\Sigma_{aa}&\boldsymbol\Sigma_{ab}\\
+\boldsymbol\Sigma_{ba}&\boldsymbol\Sigma_{bb}\end{bmatrix}\right).
+$$
+
+$$
+\mathbf X_a\sim N(\boldsymbol\mu_a,\boldsymbol\Sigma_{aa}),
+\qquad
+\mathbf X_a\mid\mathbf X_b=\mathbf x_b
+\sim N\left(\boldsymbol\mu_a+\boldsymbol\Sigma_{ab}\boldsymbol\Sigma_{bb}^{-1}(\mathbf x_b-\boldsymbol\mu_b),
+\ \boldsymbol\Sigma_{aa}-\boldsymbol\Sigma_{ab}\boldsymbol\Sigma_{bb}^{-1}\boldsymbol\Sigma_{ba}\right).
+$$
+
+- **符号**：$\mathbf X_a$ 是前 $p$ 维，$\mathbf X_b$ 是后 $q$ 维；$\boldsymbol\Sigma_{bb}$ 必须可逆；条件协方差叫 Schur complement。
+- **意义与场景**：这是二元正态公式的矩阵版；高斯过程、卡尔曼滤波、线性回归的后验、条件生成模型都用它。边缘只看对角块，条件要减掉“被解释掉”的部分。
+- **例**：
+  - **背景**：二元标准正态，相关系数 $\rho=0.7$，即 $\boldsymbol\Sigma=\begin{bmatrix}1&0.7\\0.7&1\end{bmatrix}$，求 $Y\mid X=1$ 的分布。
+  - **解**：
+    - Step 1：$\mu_{Y\mid X}=0+0.7\cdot1^{-1}(1-0)=0.7$。
+    - Step 2：$\sigma^2_{Y\mid X}=1-0.7\cdot1^{-1}\cdot0.7=1-0.49=0.51$。
+    - Step 3：所以 $Y\mid X=1\sim N(0.7,0.51)$。
+    - 检查：$0.51<1$，知道 $X$ 后方差变小。
+  - **解读**：条件均值是 $x$ 的线性函数；条件协方差不依赖 $x$，这是高斯的特殊性质。
+
+### 3.9 次序统计量通式（order statistics, general $k$）
+
+$$
+f_{(k)}(t)=\frac{n!}{(k-1)!(n-k)!}f(t)[F(t)]^{k-1}[1-F(t)]^{n-k}.
+$$
+
+- **符号**：$X_{(1)}\le\cdots\le X_{(n)}$ 是排序后的样本；$f_{(k)}$ 是第 $k$ 小的密度；$f,F$ 是单个样本的密度和 CDF。
+- **意义与场景**：最小值取 $k=1$，最大值取 $k=n$，中位数取 $k\approx n/2$。极值、Top-k、可靠性、拍卖都用它。
+- **例**：
+  - **背景**：三个独立 $\mathrm{Uniform}(0,1)$ 样本，求最小值的密度。
+  - **解**：
+    - Step 1：$n=3,k=1$，系数 $\frac{3!}{0!2!}=3$。
+    - Step 2：$f(t)=1,F(t)=t$，所以 $f_{(1)}(t)=3(1-t)^2$。
+    - Step 3：$E[X_{(1)}]=\int_0^1 3t(1-t)^2dt=1/4$。
+    - 检查：$n$ 个均匀点的最小值期望是 $1/(n+1)=1/4$，一致。
+  - **解读**：样本越多，最小值越靠近 $0$；通式里的 $[1-F]^{n-k}$ 就是“右边还有 $n-k$ 个更大”的概率。
+
+### 3.10 离散 min 与 range：几何分布（A2 Q1 同型）
+
+设 $X,Y$ 独立同分布，$P(K=k)=(1-\pi)\pi^k$（$k=0,1,\dots$，成功前失败次数）。令
+
+$$
+U=\min(X,Y),
+\qquad
+W=\max(X,Y)-\min(X,Y).
+$$
+
+则对 $u,w\ge0$：
+
+$$
+P(U=u,W=w)=
+\begin{cases}
+2(1-\pi)^2\pi^{2u+w}, & w>0,\\
+(1-\pi)^2\pi^{2u}, & w=0.
+\end{cases}
+$$
+
+边缘为
+
+$$
+P(U=u)=(1-\pi^2)\pi^{2u},
+\qquad
+P(W=0)=\frac{1-\pi}{1+\pi},
+\qquad
+P(W=w)=\frac{2(1-\pi)}{1+\pi}\pi^w\ (w\ge1).
+$$
+
+并且 $U\perp W$：联合等于两个边缘的乘积。
+
+- **符号**：$U$ 是较小值；$W$ 是两个值的差（range）；$\pi$ 是“继续失败”的概率。
+- **意义与场景**：这是 A2 Q1 的核心。几何分布有**无记忆性**：已知已经失败了 $u$ 次，再等多久与前面无关；所以 $W$ 的分布和 $U$ 无关，才能独立。
+- **例**：
+  - **背景**：$\pi=0.5$，求 $P(U=0,W=0)$ 并验证独立。
+  - **解**：
+    - Step 1：$P(U=0,W=0)=(1-0.5)^2=0.25$。
+    - Step 2：$P(U=0)=1-0.5^2=0.75$；$P(W=0)=0.5/1.5=1/3$。
+    - Step 3：$0.75\times1/3=0.25$，等于联合概率。
+    - 检查：$w=1$ 时，$P(U=0,W=1)=2(0.5)^2(0.5)=0.25$；$P(W=1)=2(0.5)/1.5\cdot0.5=1/3$，乘积 $0.75\times1/3=0.25$，也相等。
+  - **解读**：联合表每一格都等于行边缘乘列边缘，所以 $U$ 与 $W$ 独立；不要把它和“$X,Y$ 独立”混为一谈。
+
+### 3.11 条件独立的性质（properties，了解）
+
+$$
+X\perp Y\mid Z
+\iff
+f_{X,Y\mid Z}(x,y\mid z)=f_{X\mid Z}(x\mid z)f_{Y\mid Z}(y\mid z).
+$$
+
+- **符号**：$\perp$ 表示独立；竖线后的 $Z$ 是“给定”的条件。
+- **意义与场景**：条件独立是贝叶斯网络的核心。常见性质：
+  - 对称性：$X\perp Y\mid Z\Rightarrow Y\perp X\mid Z$；
+  - 分解：$X\perp(Y,W)\mid Z\Rightarrow X\perp Y\mid Z$ 且 $X\perp W\mid Z$；
+  - 收缩：$X\perp Y\mid Z$ 且 $X\perp W\mid(Y,Z)\Rightarrow X\perp(Y,W)\mid Z$。
+  注意：**独立不推出条件独立，条件独立也不推出独立**。
+- **例**：
+  - **背景**：$X=Z+\epsilon_1$，$Y=Z+\epsilon_2$，$Z,\epsilon_1,\epsilon_2$ 独立。
+  - **解**：
+    - Step 1：给定 $Z$ 后，$X,Y$ 只剩独立的噪声 $\epsilon_1,\epsilon_2$，所以 $X\perp Y\mid Z$。
+    - Step 2：不看 $Z$ 时，$X,Y$ 都受同一个 $Z$ 影响，通常相关，所以不独立。
+    - Step 3：这就是“共同原因”造成的伪相关。
+  - **解读**：条件独立描述的是“控制某个变量后”的关系；不能把“给定 $Z$”去掉。
+
 ---
 
 ## 4. 完整手算
@@ -402,3 +551,4 @@ $$
 ## 修订记录
 
 - 2026-11-02：创建（S010 第 08 课）；新增 `fig_joint_conditional.png`。
+- 2026-11-02：补充随机变量变换、卷积、分块多元正态、次序统计量通式、离散 min/range（A2 Q1 同型）、条件独立性质。

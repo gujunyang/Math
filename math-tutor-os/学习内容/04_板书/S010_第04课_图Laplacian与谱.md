@@ -71,7 +71,7 @@ $$
 - $\mathbf L\mathbf 1=\mathbf 0$：常数向量永远是特征值 $0$ 的特征向量（每个人“一样”时没有差异）；
 - **零特征值的个数 = 连通分量数**；
 - $\lambda_2$（第二个最小特征值）= **代数连通度**：越小越容易切成两半；$\lambda_2=0$ 当且仅当图不连通；
-- $\lambda_n$ = 最大特征值，衡量图的“二分性/振动幅度”，有上界 $\lambda_n\le2\max_i\deg(i)$。
+- $\lambda_n$ = 最大特征值，衡量图的“振动幅度/边密度”，有上界 $\lambda_n\le2\max_i\deg(i)$。注意：**普通 Laplacian 的 $\lambda_n$ 不能单独用来判断二分图**；归一化 Laplacian 才有“$\lambda_n=2$ 当且仅当图二分”的结论（了解）。
 
 ![星形图、Laplacian 矩阵与特征值](图片/fig_graph_laplacian.png)
 
@@ -167,6 +167,72 @@ $$
     - Step 3：特征值 $0,1,2$。
     - 检查：全部落在 $[0,2]$，符合归一化 Laplacian 的谱范围。
   - **解读**：归一化把谱“压”回 $[0,2]$，不同图之间更好比较。
+
+### 3.5 邻接矩阵、度矩阵与关联矩阵（adjacency, degree, incidence）
+
+$$
+A_{ij}=
+\begin{cases}
+1, & (i,j)\in E,\\
+0, & \text{否则},
+\end{cases}
+\qquad
+D_{ii}=\deg(i)=\sum_{j=1}^{n}A_{ij},
+\qquad
+\mathbf L=\mathbf B\mathbf B^\top.
+$$
+
+- **符号**：$\mathbf A$ 是无向图的邻接矩阵（对称）；$\mathbf D$ 是对角度矩阵；$\mathbf B$ 是定向关联矩阵（每条边一列，起点 $-1$、终点 $+1$，无向图可任选方向）。
+- **意义与场景**：$\mathbf L=\mathbf B\mathbf B^\top$ 直接说明 $\mathbf L$ 半正定：对任意 $\mathbf x$，$\mathbf x^\top\mathbf L\mathbf x=\|\mathbf B^\top\mathbf x\|^2\ge0$。握手引理 $\sum_i\deg(i)=2|E|$ 可用来检查度数有没有算漏。
+- **例**：
+  - **背景**：路径图 $1-2-3$，写 $\mathbf B$ 并验证 $\mathbf L=\mathbf B\mathbf B^\top$。
+  - **解**：
+    - Step 1：两条边 $e_1=(1,2)$、$e_2=(2,3)$，取方向 $1\to2$、$2\to3$：
+      $$
+      \mathbf B=\begin{bmatrix}-1&0\\1&-1\\0&1\end{bmatrix}.
+      $$
+    - Step 2：$\mathbf B\mathbf B^\top=\begin{bmatrix}1&-1&0\\-1&2&-1\\0&-1&1\end{bmatrix}=\mathbf L$。
+    - 检查：$\sum_i\deg(i)=1+2+1=4=2|E|=2\times2$。
+  - **解读**：Laplacian 不是凭空定义的；它是“边差异”矩阵 $\mathbf B$ 乘自己的转置，所以天然半正定。
+
+### 3.6 星形图的谱：不用猜（spectrum of $K_{1,n-1}$）
+
+$$
+\lambda(\mathbf L_{K_{1,n-1}})=\{0,\ \underbrace{1,\dots,1}_{n-2\text{ 个}},\ n\}.
+$$
+
+- **符号**：$n$ 是总节点数；星形图有 $1$ 个中心、$n-1$ 个叶子；$n=4$ 就是 $0,1,1,4$。
+- **意义与场景**：考试给一个 $4\times4$ 或 $5\times5$ 的星形图，不需要硬算四次特征多项式；用三条特征向量就能推全。也解释了为什么 $\lambda_2=1$：只要 $n\ge3$，代数连通度总是 $1$。
+- **推导（三条向量）**：
+  - 常数向量 $\mathbf 1=(1,\dots,1)^\top$：$\mathbf L\mathbf 1=\mathbf 0$，所以 $\lambda=0$。
+  - 形如 $(0,\mathbf v)^\top$ 且 $\sum_i v_i=0$ 的向量：中心分量为 $0$，叶子内部差值不变，所以 $\mathbf L(0,\mathbf v)^\top=(0,\mathbf v)^\top$，即 $\lambda=1$。这样的 $\mathbf v$ 有 $n-2$ 个独立方向，所以 $1$ 的重数是 $n-2$。
+  - 向量 $\mathbf z=(n-1,-1,\dots,-1)^\top$：中心行给 $(n-1)^2+(n-1)=n(n-1)$，叶子行给 $-(n-1)+(-1)=-n$，所以 $\mathbf L\mathbf z=n\mathbf z$，即 $\lambda=n$。
+- **例**：
+  - **背景**：$K_{1,3}$（$n=4$），用通式写谱。
+  - **解**：
+    - Step 1：$n-2=2$ 个 $1$。
+    - Step 2：再加 $0$ 和 $n=4$。
+    - Step 3：谱为 $0,1,1,4$。
+  - **解读**：$\lambda_2=1$ 不是巧合；星形图的连通度只由“中心连几个叶子”决定，与叶子编号无关。
+
+### 3.7 Cheeger 不等式（了解）
+
+$$
+\frac{\lambda_2}{2}\le \phi(G)\le\sqrt{2\lambda_2},
+\qquad
+\phi(G)=\min_{S:\ \operatorname{vol}(S)\le\operatorname{vol}(V)/2}
+\frac{\operatorname{cut}(S,V\setminus S)}{\operatorname{vol}(S)}.
+$$
+
+- **符号**：$\lambda_2$ 是**归一化** Laplacian 的第二小特征值；$\operatorname{vol}(S)$ 是 $S$ 中节点的度之和；$\operatorname{cut}(S,V\setminus S)$ 是跨两边的边数；$\phi(G)$ 是图的 conductance（最稀疏的割）。
+- **意义与场景**：它把“图好不好切”（组合量 $\phi$）和“特征值小不小”（代数量 $\lambda_2$）绑在一起：$\lambda_2$ 小 ⇒ 存在一个边很少的割；$\lambda_2$ 大 ⇒ 图很紧密。谱聚类、社区发现的理论依据。
+- **例**：
+  - **背景**：两个 $K_4$ 团之间只连一条边。
+  - **解**：
+    - Step 1：切成两个团，割只有 $1$ 条边。
+    - Step 2：$\operatorname{vol}(S)$ 约为一个团的度数和，$\phi$ 很小。
+    - Step 3：由 Cheeger 不等式，$\lambda_2$ 也必须很小（接近 $0$）。
+  - **解读**：$\lambda_2$ 小不一定“图不连通”，也可能是“只差一条桥就断开”；这正是谱聚类能抓到的东西。
 
 ---
 
@@ -264,6 +330,22 @@ $$
 $$
 0,\ 1,\ 1,\ 4.
 $$
+
+### 4.3.1 不用猜：这个谱是怎么推出来的
+
+上面的 $\mathbf u,\mathbf w,\mathbf z$ 不是“看出来”的，而是按星形图的结构分三类找：
+
+1. **常数方向**：$\mathbf 1=(1,1,1,1)^\top$。每行和为 $0$，所以 $\mathbf L\mathbf 1=\mathbf 0$，$\lambda_1=0$。
+2. **叶子之间“内部抵消”的方向**：中心取 $0$，叶子取和为零的向量。例如 $(0,1,-1,0)^\top$、$(0,1,0,-1)^\top$。中心行给 $-(1-1+0)=0$，叶子行只留下自己的分量，所以特征值都是 $1$。叶子有 $3$ 个自由度、减去“和为 $0$”的 $1$ 个约束，剩下 $2$ 维，所以 $\lambda=1$ 的重数是 $2$。
+3. **中心与所有叶子反向**：$\mathbf z=(3,-1,-1,-1)^\top$。中心行给 $3\cdot3+(-1)(-1-1-1)=9+3=12=4\cdot3$；叶子行给 $-3+(-1)=-4=4\cdot(-1)$，所以 $\lambda_4=4$。
+
+一般地，$n$ 个节点的星形图 $K_{1,n-1}$ 的谱是
+
+$$
+0,\ \underbrace{1,\dots,1}_{n-2\text{ 个}},\ n.
+$$
+
+所以 $n=4$ 时是 $0,1,1,4$；$n=5$ 时是 $0,1,1,1,5$。记住这个通式，比硬算 $4\times4$ 行列式稳。
 
 ### 4.4 回答题目
 
@@ -455,3 +537,4 @@ $$
 ## 修订记录
 
 - 2026-11-02：创建（S010 第 04 课）；新增 `fig_graph_laplacian.png`。
+- 2026-11-02：补充邻接/度/关联矩阵、星形图谱通式与推导、Cheeger 不等式（了解）；修正“$\lambda_n$ 判断二分性”的表述。

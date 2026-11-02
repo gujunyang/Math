@@ -166,6 +166,122 @@ $$
   - 检查：形状 $2\times2$，行数是输出个数。
 - **解读**：输入动一点点，两个输出分别怎么变，全在这张表里。
 
+### 3.5 一阶 Taylor 近似（first-order Taylor approximation）
+
+$$
+f(\mathbf x+\mathbf h)\approx f(\mathbf x)+\nabla f(\mathbf x)^\top\mathbf h
+=f(\mathbf x)+\sum_{i=1}^{n}\frac{\partial f}{\partial x_i}(\mathbf x)h_i.
+$$
+
+- **符号**：$\mathbf h$ 是离展开点的小位移；$\nabla f(\mathbf x)^\top\mathbf h$ 是内积，结果是一个数。
+- **意义与场景**：用“当前值 + 斜率 × 位移”近似函数；梯度下降、误差传播、灵敏度分析都用它。二维时就是
+  $$
+  f(x_0+\Delta x,y_0+\Delta y)\approx f(x_0,y_0)+f_x\Delta x+f_y\Delta y.
+  $$
+- **例**：
+  - **背景**：$f(x,y)=x^2+3xy+y^2$，在 $(1,2)$ 处，$\Delta\mathbf x=(0.01,-0.02)^\top$，估计 $f$ 的变化。
+  - **解**：
+    - Step 1：$\nabla f=(2x+3y,3x+2y)$，在 $(1,2)$ 得 $(8,7)$。
+    - Step 2：$\Delta f\approx\nabla f^\top\Delta\mathbf x=8(0.01)+7(-0.02)$。
+    - Step 3：$=0.08-0.14=-0.06$。
+    - 检查：实际值 $f(1.01,1.98)-f(1,2)$ 与 $-0.06$ 很接近（差是二阶小量）。
+  - **解读**：一阶近似只看斜率，不看弯曲；位移越小时越准。
+
+### 3.6 二次型求导与最小二乘的梯度/Hessian（quadratic form）
+
+$$
+f(\mathbf x)=\mathbf x^\top\mathbf A\mathbf x
+\ \Rightarrow\
+\nabla f=(\mathbf A+\mathbf A^\top)\mathbf x,
+\qquad
+\mathbf A=\mathbf A^\top\ \Rightarrow\ \nabla f=2\mathbf A\mathbf x,\quad H_f=2\mathbf A.
+$$
+
+$$
+J(\mathbf w)=\|\mathbf X\mathbf w-\mathbf y\|_2^2
+\ \Rightarrow\
+\nabla J=2\mathbf X^\top(\mathbf X\mathbf w-\mathbf y),
+\qquad
+H_J=2\mathbf X^\top\mathbf X.
+$$
+
+- **符号**：$\mathbf A$ 是 $n\times n$；$\mathbf X$ 是 $N\times d$；$\mathbf w\in\mathbb R^d$；$\mathbf y\in\mathbb R^N$；$H_J$ 是 $J$ 对 $\mathbf w$ 的 Hessian。
+- **意义与场景**：这是线性回归、岭回归、PCA 里最常见的求导。令 $\nabla J=0$ 就得到正规方程 $\mathbf X^\top\mathbf X\mathbf w=\mathbf X^\top\mathbf y$；$H_J$ 正定 ⇒ 目标函数是碗形、解唯一。
+- **例**：
+  - **背景**：$\mathbf X=\begin{bmatrix}1&0\\1&1\\1&2\end{bmatrix}$，$\mathbf y=(1,2,2)^\top$，求 $J(\mathbf w)=\|\mathbf X\mathbf w-\mathbf y\|^2$ 的梯度和 Hessian。
+  - **解**：
+    - Step 1：$\mathbf X^\top\mathbf X=\begin{bmatrix}3&3\\3&5\end{bmatrix}$，$\mathbf X^\top\mathbf y=(5,6)^\top$。
+    - Step 2：$\nabla J=2\mathbf X^\top\mathbf X\mathbf w-2\mathbf X^\top\mathbf y=2\begin{bmatrix}3&3\\3&5\end{bmatrix}\mathbf w-2\begin{bmatrix}5\\6\end{bmatrix}$。
+    - Step 3：$H_J=2\begin{bmatrix}3&3\\3&5\end{bmatrix}$，行列式 $2^2(15-9)=24>0$，正定。
+    - 检查：令 $\nabla J=0$ 得 $3w_1+3w_2=5$、$3w_1+5w_2=6$，与 §2 的正规方程一致。
+  - **解读**：最小二乘的 Hessian 只由 $\mathbf X$ 决定，与 $\mathbf y$ 无关；数据矩阵列满秩时它正定，解唯一。
+
+### 3.7 二阶偏导判定：极小、极大、鞍点（second derivative test）
+
+$$
+D=\det H_f=f_{xx}f_{yy}-(f_{xy})^2.
+$$
+
+- **符号**：$D$ 是二维 Hessian 的行列式；$f_{xx}$ 是对 $x$ 的二阶偏导。
+- **意义与场景**：在**驻点**（$\nabla f=0$）处，用 $D$ 和 $f_{xx}$ 判断地形：
+  - $D>0$ 且 $f_{xx}>0$ ⇒ 局部极小（碗口向上）；
+  - $D>0$ 且 $f_{xx}<0$ ⇒ 局部极大（碗口向下）；
+  - $D<0$ ⇒ 鞍点（一个方向向上、一个方向向下）；
+  - $D=0$ ⇒ 判定失效，需要更高阶信息。
+  对 $n$ 维函数，改成看 $H_f$ 的特征值：全正 ⇒ 极小；全负 ⇒ 极大；有正有负 ⇒ 鞍点；有零 ⇒ 不确定。
+- **例**：
+  - **背景**：$f(x,y)=x^2+3xy+y^2$，判断原点类型。
+  - **解**：
+    - Step 1：$\nabla f=(2x+3y,3x+2y)$，原点处为 $(0,0)$，是驻点。
+    - Step 2：$H_f=\begin{bmatrix}2&3\\3&2\end{bmatrix}$，$D=4-9=-5<0$。
+    - Step 3：$D<0$ ⇒ 鞍点。
+    - 检查：沿 $y=x$ 方向 $f=5x^2>0$，沿 $y=-x$ 方向 $f=-x^2<0$，确实有上有下。
+  - **解读**：$D<0$ 时不用再看 $f_{xx}$，直接判鞍点；$D=0$ 才需要换方法。
+
+### 3.8 多变量链式法则（multivariable chain rule）
+
+$$
+J_{\mathbf g\circ\mathbf f}(\mathbf x)=J_{\mathbf g}(\mathbf f(\mathbf x))J_{\mathbf f}(\mathbf x),
+\qquad
+\frac{d}{dt}f(\mathbf x(t))=\nabla f(\mathbf x(t))^\top\mathbf x'(t).
+$$
+
+- **符号**：$J$ 是 Jacobian；$\mathbf x(t)$ 是沿曲线的位置；$\mathbf x'(t)$ 是速度向量。
+- **意义与场景**：复合函数的导数 = 各层 Jacobian 相乘；反向传播就是它的系统化实现。第二式是“沿轨迹的变化率 = 梯度 · 速度”。
+- **例**：
+  - **背景**：$f(x,y)=x^2y$，$\mathbf x(t)=(t,t^2)$，求 $\dfrac{d}{dt}f(\mathbf x(t))$。
+  - **解**：
+    - Step 1：$\nabla f=(2xy,x^2)$。
+    - Step 2：$\mathbf x'(t)=(1,2t)$。
+    - Step 3：$\dfrac{df}{dt}=2xy\cdot1+x^2\cdot2t=2t(t^2)+t^2(2t)=4t^3$。
+    - 检查：直接代入 $f(t,t^2)=t^4$，导数 $4t^3$，一致。
+  - **解读**：链式法则不是“背公式”，而是“每层贡献相乘、多条路径相加”。
+
+### 3.9 Jacobian 行列式（Jacobian determinant）
+
+$$
+J_{\mathbf F}=
+\begin{bmatrix}
+\dfrac{\partial F_1}{\partial x_1}&\cdots&\dfrac{\partial F_1}{\partial x_n}\\
+\vdots&&\vdots\\
+\dfrac{\partial F_n}{\partial x_1}&\cdots&\dfrac{\partial F_n}{\partial x_n}
+\end{bmatrix},
+\qquad
+\det J_{\mathbf F}
+\ \text{衡量局部体积缩放}.
+$$
+
+- **符号**：$\mathbf F:\mathbb R^n\to\mathbb R^n$（输入输出同维）才有方阵 Jacobian 和行列式；$\det J$ 可为负，负号表示方向翻转。
+- **意义与场景**：变量替换公式里 $d\mathbf y=|\det J|\,d\mathbf x$；概率密度变换、积分换元、归一化流都用它。
+- **例**：
+  - **背景**：极坐标 $\mathbf F(r,\theta)=(r\cos\theta,r\sin\theta)$，求 $\det J$。
+  - **解**：
+    - Step 1：$J=\begin{bmatrix}\cos\theta&-r\sin\theta\\\sin\theta&r\cos\theta\end{bmatrix}$。
+    - Step 2：$\det J=r\cos^2\theta+r\sin^2\theta=r$。
+    - Step 3：所以面积元 $dx\,dy=r\,dr\,d\theta$。
+    - 检查：$r\ge0$，行列式非负，符合极坐标不翻转方向。
+  - **解读**：$\det J$ 是“局部放大倍数”；极坐标在原点附近把面积压缩为 $0$，所以 $r=0$ 处换元要小心。
+
 ---
 
 ## 4. 完整手算：A1 Q5 原题
@@ -237,6 +353,12 @@ $$
 f\approx 4+2x+\frac12\left(2x^2+2xy-z^2\right)
 =4+2x+x^2+xy-\frac12z^2.
 $$
+
+**检查与解读**：在 $(0,0,0)$ 处 $\nabla f=(2,0,0)\ne\mathbf 0$，所以它**不是驻点**；不能把“Hessian 不定”直接说成“原点是鞍点”。Hessian
+$$
+H_f(0,0,0)=\begin{bmatrix}2&1&0\\1&0&0\\0&0&-1\end{bmatrix}
+$$
+的左上 $2\times2$ 子式行列式为 $2\cdot0-1^2=-1<0$，所以 $H_f$ 不定，说明该点附近沿不同方向有升有降；但驻点分类必须先有 $\nabla f=0$ 的前提。
 
 ### 4.2 (b) Jacobian
 
@@ -400,3 +522,4 @@ Hessian 提供曲率信息，收敛更快，但计算/求逆代价高。
 ## 修订记录
 
 - 2026-11-02：创建（S010 第 05 课）。
+- 2026-11-02：补充一阶 Taylor、二次型/最小二乘梯度与 Hessian、二阶偏导判定、多变量链式法则、Jacobian 行列式；修正 4.1 中“非驻点不能直接判鞍点”的表述。

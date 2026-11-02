@@ -23,7 +23,7 @@
     "goal": "通过 AISC5020 期中（L1–L8），掌握五个 Hint 与 A1/A2 同型题",
     "preferences_pending": false
   },
-  "current_stage": "S010 第05–10课已连讲（梯度/反向传播/概率/联合条件/全期望全方差/熵与KL）；待作业",
+  "current_stage": "S010 第02–10课已讲并完成内容完整性审查（重点补第03课奇异值手算与公式卡）；待作业",
   "concepts": [
     {
       "id": "vector_geometry",
@@ -500,5 +500,5 @@
     "session_snapshot": "_archive/AISC5000_2026秋/系统/05_学习进度/progress_AISC5000_2026秋.json",
     "read_policy": "cold-storage: do not read unless the student explicitly asks"
   },
-  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交。2026-11-02 S010 按教师 Hint 精确页码重排为冲刺版 v2：14 课 + 考前回顾（D1 8h / D2 7.75h / D3 90min Hint 专项二次复习）。2026-11-02 诊断回收：Q1 正交✓、Q2 线性相关/span✓、Q4 梯度/Hessian✓、Q5 只写通用定义（Binomial 公式缺）、Q6–Q10 未学；Q3 为看错题、已澄清（实际会求特征值），不计知识缺口；已记入错题本。2026-11-02 S010 第02课已讲（向量/shape、span、无关、秩-零化度、Ax=b、最小二乘），板书 `S010_第02课_向量·子空间·秩与线性系统.md`；5 个概念置「学习中」，复习队列 11-03。2026-11-02 S010 第03课已讲（特征方程、正交对角化、SVD、低秩近似），板书 `S010_第03课_特征分解与SVD.md`，新增 `fig_svd.png`；3 个概念置「学习中」，复习 11-03。2026-11-02 S010 第04课已讲（图 Laplacian、二次型、谱与连通性），板书 `S010_第04课_图Laplacian与谱.md`，新增 `fig_graph_laplacian.png`；2 个概念置「学习中」。2026-11-02 S010 第05–10课已连讲：第05课梯度/Hessian/Taylor/Jacobian（75min）、第06课计算图/反向传播（45min）、第07课概率/随机变量/常见分布（90min）、第08课联合条件/次序统计量/Poisson thinning（75min）、第09课全期望+全方差 Hint 1/2（90min）、第10课熵/互信息/CE/KL（90min）；板书 6 份，新增 `fig_computation_graph.png`、`fig_joint_conditional.png`、`fig_total_expectation_variance.png`、`fig_entropy_kl.png`；16 个概念置「学习中」，复习 11-03。下一步第 11 课 Fano。"
+  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交。2026-11-02 S010 按教师 Hint 精确页码重排为冲刺版 v2：14 课 + 考前回顾（D1 8h / D2 7.75h / D3 90min Hint 专项二次复习）。2026-11-02 诊断回收：Q1 正交✓、Q2 线性相关/span✓、Q4 梯度/Hessian✓、Q5 只写通用定义（Binomial 公式缺）、Q6–Q10 未学；Q3 为看错题、已澄清（实际会求特征值），不计知识缺口；已记入错题本。2026-11-02 S010 第02课已讲（向量/shape、span、无关、秩-零化度、Ax=b、最小二乘），板书 `S010_第02课_向量·子空间·秩与线性系统.md`；5 个概念置「学习中」，复习队列 11-03。2026-11-02 S010 第03课已讲（特征方程、正交对角化、SVD、低秩近似），板书 `S010_第03课_特征分解与SVD.md`，新增 `fig_svd.png`；3 个概念置「学习中」，复习 11-03。2026-11-02 S010 第04课已讲（图 Laplacian、二次型、谱与连通性），板书 `S010_第04课_图Laplacian与谱.md`，新增 `fig_graph_laplacian.png`；2 个概念置「学习中」。2026-11-02 S010 第05–10课已连讲：第05课梯度/Hessian/Taylor/Jacobian（75min）、第06课计算图/反向传播（45min）、第07课概率/随机变量/常见分布（90min）、第08课联合条件/次序统计量/Poisson thinning（75min）、第09课全期望+全方差 Hint 1/2（90min）、第10课熵/互信息/CE/KL（90min）；板书 6 份，新增 `fig_computation_graph.png`、`fig_joint_conditional.png`、`fig_total_expectation_variance.png`、`fig_entropy_kl.png`；16 个概念置「学习中」，复习 11-03。下一步第 11 课 Fano。2026-11-02 内容完整性审查：学生指出第03课未讲清“奇异值怎么算”、公式卡未体现；已按五条标准审查第01–10课并逐课补公式卡/推导，新增 `学习内容/01_学习计划/内容完整性审查_第01–10课.md`；第03课新增 §3.4 奇异值手算（非对角例）、§3.5 完整 SVD、§3.6 σ²=λ(AᵀA) 推导、§3.8 伪逆、§3.9 条件数、§3.10 幂法。"
 }
