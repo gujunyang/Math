@@ -1474,6 +1474,258 @@ def fig_entropy_kl():
     save(fig, "fig_entropy_kl.png")
 
 
+# --- 图 36：Fano 不等式：信息 → 误差下界 / 猜错时的候选集 ----------------
+def fig_fano():
+    from matplotlib.patches import Rectangle
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12.2, 4.6))
+
+    # 左：误差下界随 H(X|Y) 变化（弱化形式）
+    for M, color, ls, lab in [(8, BLUE, "-", r"$|\mathcal{X}|=8$"),
+                              (4, RED, "--", r"$|\mathcal{X}|=4$"),
+                              (2, GREEN, ":", r"$|\mathcal{X}|=2$")]:
+        hmax = np.log2(M)
+        hh = np.linspace(0, hmax, 400)
+        pe = np.maximum(0.0, (hh - 1.0) / hmax)
+        ax1.plot(hh, pe, color=color, lw=2.2, ls=ls, label=lab)
+    ax1.scatter([3.0], [2.0 / 3.0], color=RED, s=48, zorder=6)
+    ax1.annotate(r"$H=3,\ |\mathcal{X}|=8$" + "\n" + r"$\Rightarrow P_e\geq 2/3$",
+                 xy=(2.98, 2.0 / 3.0), xytext=(1.45, 0.70), fontsize=10.5, color=RED,
+                 arrowprops=dict(arrowstyle="->", color=RED, lw=1.1))
+    ax1.axhline(0.0, color=GRAY, lw=0.9)
+    ax1.set_xlabel(r"$H(X\mid Y)$（bit）")
+    ax1.set_ylabel(r"$P_e$ 的下界")
+    ax1.set_title(r"$P_e\ \geq\ \frac{H(X\mid Y)-1}{\log_2|\mathcal{X}|}$", fontsize=12.5)
+    ax1.set_xlim(0, 3.08)
+    ax1.set_ylim(-0.03, 1.02)
+    ax1.grid(True, alpha=0.25)
+    ax1.legend(fontsize=9.5, frameon=False, loc="lower right")
+    ax1.text(0.04, 0.93, r"$H(X\mid Y)\leq 1$ 时界为负 $\Rightarrow$ 不约束",
+             transform=ax1.transAxes, fontsize=9.5, color=GRAY, va="top")
+
+    # 右：猜错时还剩哪些候选（|X|-1 个）
+    true_x, est = 3, 6
+    for i in range(1, 9):
+        col = i - 1
+        if i == true_x:
+            face, edge, lw = "#cfe3ff", BLUE, 2.4
+        elif i == est:
+            face, edge, lw = "#fde2e2", RED, 2.4
+        else:
+            face, edge, lw = "#eef2f7", GRAY, 1.6
+        ax2.add_patch(Rectangle((col * 0.98, 1.05), 0.84, 0.72, facecolor=face,
+                                edgecolor=edge, lw=lw))
+        ax2.text(col * 0.98 + 0.42, 1.41, str(i), ha="center", va="center",
+                 fontsize=13, color="#333333")
+    ax2.annotate(r"真实 $X$", xy=(true_x * 0.98 + 0.42, 1.80), xytext=(0.55, 2.10),
+                 fontsize=11, color=BLUE,
+                 arrowprops=dict(arrowstyle="->", color=BLUE, lw=1.2))
+    ax2.annotate(r"估计 $\hat{X}$", xy=(est * 0.98 + 0.42, 1.79), xytext=(5.15, 2.10),
+                 fontsize=11, color=RED,
+                 arrowprops=dict(arrowstyle="->", color=RED, lw=1.2))
+    ax2.text(3.92, 0.62,
+             r"猜错（$E=1$）：只知 $X\neq\hat{X}$ $\Rightarrow$ 还剩 $|\mathcal{X}|-1=7$ 个候选",
+             ha="center", fontsize=10.5, color="#444444")
+    ax2.text(3.92, 0.20,
+             r"最坏情况是 7 个候选等可能：$H\leq\log_2 7\leq\log_2 8=3$ bit",
+             ha="center", fontsize=10.5, color=GRAY)
+    ax2.set_xlim(-0.15, 7.9)
+    ax2.set_ylim(0.0, 2.35)
+    ax2.axis("off")
+    ax2.set_title("为什么是 $|\\mathcal{X}|-1$：错的时候排除了自己的答案", fontsize=12)
+
+    fig.suptitle("Fano 不等式：看完 $Y$ 剩下的不确定，最多是「1 bit 的错/对」+「猜错时挑哪一个」",
+                 y=1.04, fontsize=11.5)
+    save(fig, "fig_fano.png")
+
+
+# --- 图 37：MLE vs MAP：似然峰与后验峰 --------------------------------------
+def fig_mle_map():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.6, 4.4))
+
+    n, k = 10, 7
+    p = np.linspace(0.02, 0.98, 500)
+    ll = k * np.log(p) + (n - k) * np.log(1 - p)
+    ll -= ll.max()
+    # Beta(2,2) prior: log p + log(1-p)
+    lp = ll + np.log(p) + np.log(1 - p)
+    lp -= lp.max()
+
+    ax1.plot(p, ll, color=BLUE, lw=2.4, label=r"对数似然 $\ell(p)$")
+    ax1.plot(p, lp, color=RED, lw=2.2, ls="--", label=r"对数后验（Beta(2,2) 先验）")
+    ax1.axvline(k / n, color=BLUE, ls=":", lw=1.2)
+    ax1.axvline((k + 1) / (n + 2), color=RED, ls=":", lw=1.2)
+    ax1.scatter([k / n], [0], color=BLUE, s=40, zorder=6)
+    ax1.scatter([(k + 1) / (n + 2)], [lp.max()], color=RED, s=40, zorder=6)
+    ax1.annotate(r"MLE $=0.700$", xy=(k / n, 0), xytext=(0.74, -0.55),
+                 fontsize=10, color=BLUE,
+                 arrowprops=dict(arrowstyle="->", color=BLUE, lw=1.0))
+    ax1.annotate(r"MAP $=0.667$", xy=((k + 1) / (n + 2), lp.max()),
+                 xytext=(0.34, -0.35), fontsize=10, color=RED,
+                 arrowprops=dict(arrowstyle="->", color=RED, lw=1.0))
+    ax1.set_xlabel(r"$p$")
+    ax1.set_ylabel("对数密度（已平移到峰值 0）")
+    ax1.set_title("先验把峰往 0.5 拉：MAP 在 MLE 左边", fontsize=11.5)
+    ax1.set_xlim(0, 1)
+    ax1.set_ylim(-3.2, 0.35)
+    ax1.grid(True, alpha=0.25)
+    ax1.legend(fontsize=9, frameon=False, loc="lower left")
+
+    vals = [k / n, (k + 1) / (n + 2), (k + 2) / (n + 4)]
+    names = ["MLE", "MAP\n(Beta(2,2))", "后验均值\n(Beta(2,2))"]
+    colors = [BLUE, RED, GREEN]
+    bars = ax2.bar(names, vals, color=colors, width=0.55, alpha=0.85)
+    for b, v in zip(bars, vals):
+        ax2.text(b.get_x() + b.get_width() / 2, v + 0.01, f"{v:.3f}",
+                 ha="center", fontsize=11)
+    ax2.axhline(0.5, color=GRAY, ls="--", lw=1.0)
+    ax2.text(0.02, 0.52, r"先验均值 $0.5$", color=GRAY, fontsize=9.5, ha="left")
+    ax2.set_ylim(0, 0.8)
+    ax2.set_ylabel(r"对 $p$ 的估计")
+    ax2.set_title("同一批数据：三种点估计，先验越强越靠近 0.5", fontsize=11.5)
+    ax2.grid(True, axis="y", alpha=0.2)
+
+    fig.suptitle(r"数据 $7$ 正 $3$ 负：MLE 只看数据，MAP 兼顾先验", y=1.03, fontsize=12)
+    save(fig, "fig_mle_map.png")
+
+
+# --- 图 38：Fisher 信息 = 对数似然的曲率；CRLB 随 n 收缩 ---------------------
+def fig_fisher():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 4.4))
+
+    th = np.linspace(-2.5, 2.5, 500)
+    for I, color, lab in [(2, BLUE, r"$I=2$（平）"),
+                          (8, RED, r"$I=8$（中）"),
+                          (32, GREEN, r"$I=32$（尖）")]:
+        ax1.plot(th, -0.5 * I * th ** 2, color=color, lw=2.4, label=lab)
+        ax1.plot(th, -0.5 * I * th ** 2, color=color, lw=2.4)
+    ax1.axhline(0, color=GRAY, lw=0.8)
+    ax1.axvline(0, color=GRAY, lw=0.8)
+    ax1.set_xlabel(r"$\theta-\hat\theta$")
+    ax1.set_ylabel(r"$\ell(\theta)-\ell(\hat\theta)$")
+    ax1.set_title("峰越尖 = 曲率越大 = Fisher 信息越大", fontsize=11.5)
+    ax1.set_xlim(-2.5, 2.5)
+    ax1.set_ylim(-12, 0.6)
+    ax1.grid(True, alpha=0.25)
+    ax1.legend(fontsize=9.5, frameon=False, loc="lower center")
+
+    ns = np.arange(1, 101)
+    I0 = 4.0  # Bernoulli, theta=0.5
+    ax2.plot(ns, 1 / np.sqrt(ns * I0), color=BLUE, lw=2.4,
+             label=r"CRLB 标准差 $1/\sqrt{nI(\theta)}$")
+    ax2.scatter([10], [1 / np.sqrt(10 * I0)], color=RED, s=45, zorder=6)
+    ax2.annotate(r"$n=10$：$1/\sqrt{40}=0.158$", xy=(10, 1 / np.sqrt(40)),
+                 xytext=(18, 0.30), fontsize=10, color=RED,
+                 arrowprops=dict(arrowstyle="->", color=RED, lw=1.0))
+    ax2.set_xlabel(r"样本量 $n$")
+    ax2.set_ylabel("标准差下界")
+    ax2.set_title(r"数据越多，方差地板越低（$I(\theta)=4$）", fontsize=11.5)
+    ax2.set_xlim(0, 100)
+    ax2.set_ylim(0, 0.55)
+    ax2.grid(True, alpha=0.25)
+    ax2.legend(fontsize=9.5, frameon=False, loc="upper right")
+
+    fig.suptitle("Fisher 信息：不是「知道多少」，而是「数据对参数有多敏感」", y=1.03, fontsize=12)
+    save(fig, "fig_fisher.png")
+
+
+# --- 图 39：贝叶斯网络的三种三节点结构 --------------------------------------
+def fig_bayes_net():
+    from matplotlib.patches import Circle
+
+    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.3))
+
+    def node(ax, x, y, label, shaded=False):
+        ax.add_patch(Circle((x, y), 0.30, facecolor=("#d9d9d9" if shaded else "white"),
+                            edgecolor=(GRAY if shaded else BLUE), lw=2.2, zorder=3))
+        ax.text(x, y, label, ha="center", va="center", fontsize=14, zorder=4)
+
+    def edge(ax, x1, y1, x2, y2, color=BLUE):
+        ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle="-|>", color=color, lw=2.0,
+                                    shrinkA=18, shrinkB=18), zorder=2)
+
+    # 链
+    ax = axes[0]
+    node(ax, 0.0, 1.0, "A"); node(ax, 1.2, 1.0, "B"); node(ax, 2.4, 1.0, "C")
+    edge(ax, 0.0, 1.0, 1.2, 1.0); edge(ax, 1.2, 1.0, 2.4, 1.0)
+    ax.set_title("链 chain：A → B → C", fontsize=12)
+    ax.text(1.2, 0.25, "B 未观测：通路开（A、C 相关）", ha="center", fontsize=9.5, color=RED)
+    ax.text(1.2, -0.22, "B 观测：通路断（条件独立）", ha="center", fontsize=9.5, color=GREEN)
+
+    # 叉
+    ax = axes[1]
+    node(ax, 1.2, 1.5, "B"); node(ax, 0.0, 0.5, "A"); node(ax, 2.4, 0.5, "C")
+    edge(ax, 1.2, 1.5, 0.0, 0.5); edge(ax, 1.2, 1.5, 2.4, 0.5)
+    ax.set_title("叉 fork：A ← B → C", fontsize=12)
+    ax.text(1.2, -0.25, "B 未观测：通路开（A、C 相关）", ha="center", fontsize=9.5, color=RED)
+    ax.text(1.2, -0.72, "B 观测：通路断（条件独立）", ha="center", fontsize=9.5, color=GREEN)
+
+    # 碰撞
+    ax = axes[2]
+    node(ax, 0.0, 0.5, "A"); node(ax, 2.4, 0.5, "C"); node(ax, 1.2, 1.5, "B")
+    edge(ax, 0.0, 0.5, 1.2, 1.5); edge(ax, 2.4, 0.5, 1.2, 1.5)
+    ax.add_patch(Circle((1.2, 1.5), 0.30, facecolor="white", edgecolor=RED, lw=2.2, zorder=3))
+    ax.text(1.2, 1.5, "B", ha="center", va="center", fontsize=14, zorder=4)
+    ax.set_title("碰撞 collider：A → B ← C", fontsize=12)
+    ax.text(1.2, -0.25, "B 未观测：通路断（A、C 独立）", ha="center", fontsize=9.5, color=GREEN)
+    ax.text(1.2, -0.72, "B（或后代）观测：通路开（相关）", ha="center", fontsize=9.5, color=RED)
+
+    for ax in axes:
+        ax.set_xlim(-0.7, 3.1)
+        ax.set_ylim(-0.95, 2.1)
+        ax.set_aspect("equal")
+        ax.axis("off")
+    fig.suptitle("三节点结构：链/叉「观测中间就断」，碰撞「观测中间反而通」", y=1.03, fontsize=12.5)
+    save(fig, "fig_bayes_net.png")
+
+
+# --- 图 40：五个 Hint 的关系地图 --------------------------------------------
+def fig_hint_map():
+    from matplotlib.patches import FancyBboxPatch
+
+    fig, ax = plt.subplots(figsize=(9.2, 4.6))
+
+    def box(x, y, w, h, title, formula, color):
+        ax.add_patch(FancyBboxPatch((x - w / 2, y - h / 2), w, h,
+                                    boxstyle="round,pad=0.06", facecolor="white",
+                                    edgecolor=color, lw=2.0, zorder=3))
+        ax.text(x, y + 0.28, title, ha="center", va="center", fontsize=11.5,
+                color=color, zorder=4)
+        ax.text(x, y - 0.22, formula, ha="center", va="center", fontsize=9.6,
+                zorder=4)
+
+    box(1.7, 3.35, 2.6, 1.05, "全期望（TLE）",
+        r"$E[Y]=E[\,E[Y\mid X]\,]$", BLUE)
+    box(5.0, 3.35, 2.6, 1.05, "全方差（TLV）",
+        r"$\mathrm{Var}(Y)=E[\mathrm{Var}(Y\mid X)]$" + "\n" + r"$+\ \mathrm{Var}(E[Y\mid X])$", BLUE)
+    ax.annotate("", xy=(3.68, 3.35), xytext=(3.02, 3.35),
+                arrowprops=dict(arrowstyle="<|-|>", color=GREEN, lw=1.8), zorder=2)
+    ax.text(3.35, 3.62, "同源", color=GREEN, fontsize=9.5, ha="center")
+
+    box(1.55, 1.25, 2.5, 1.05, "Fisher 信息",
+        r"$I(\theta)=E[(\partial_\theta\ln p)^2]$", RED)
+    box(5.25, 1.25, 2.6, 1.05, "共轭先验",
+        r"$p(\theta\mid y)\propto p(y\mid\theta)p(\theta)$", RED)
+    ax.annotate("", xy=(3.92, 1.25), xytext=(2.83, 1.25),
+                arrowprops=dict(arrowstyle="-|>", color=RED, lw=1.8), zorder=2)
+    ax.text(3.38, 1.60, "Jeffreys\n" + r"$p(\theta)\propto\sqrt{I(\theta)}$",
+            color=RED, fontsize=8.8, ha="center")
+
+    box(7.95, 2.30, 2.5, 1.05, "Fano 不等式",
+        r"$P_e\geq\frac{H(X\mid Y)-1}{\log_2|\mathcal{X}|}$", "#7b3fa0")
+
+    ax.set_xlim(0.15, 9.35)
+    ax.set_ylim(0.45, 4.15)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    ax.set_title("五个 Hint 一张图：左边两对同源，右边 Fano 独立", fontsize=12.5)
+    fig.text(0.5, 0.02,
+             "考场串法：TLE/TLV 常同一题；Conjugate 常与 Fisher（Jeffreys）连考；Fano 用条件熵直接套。",
+             ha="center", fontsize=9.5, color=GRAY)
+    save(fig, "fig_hint_map.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -1498,6 +1750,11 @@ if __name__ == "__main__":
     fig_joint_conditional()
     fig_total_expectation_variance()
     fig_entropy_kl()
+    fig_fano()
+    fig_mle_map()
+    fig_fisher()
+    fig_bayes_net()
+    fig_hint_map()
     fig_quadratic_contours()
     fig_gradient_contour()
     fig_taylor_parabola()
