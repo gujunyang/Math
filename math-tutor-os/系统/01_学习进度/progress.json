@@ -3,7 +3,7 @@
     "id": "AISC5020",
     "name": "Mathematics & Statistics for AI",
     "term": "2026-27 Term 1",
-    "status": "已配置",
+    "status": "已重排（五 Hint 重学版）",
     "materials": [
       "AISCI5020/2627T1_AISC5020_Lecture01.pdf",
       "AISCI5020/2627T1_AISC5020_Lecture02.pdf",
@@ -23,7 +23,7 @@
     "goal": "通过 AISC5020 期中（L1–L8），掌握五个 Hint 与 A1/A2 同型题",
     "preferences_pending": false
   },
-  "current_stage": "S011 期中当日（2026-11-04）：第01–15课全部讲完（含 Fano、MLE/MAP、Fisher+共轭、BN、Hint 专项复习）；待作业/错题验证",
+  "current_stage": "S012 五 Hint 重学：第01课已讲（联合/条件/条件期望）；待作业；下一步第02课 TLE+TLV",
   "concepts": [
     {
       "id": "vector_geometry",
@@ -415,8 +415,8 @@
     },
     {
       "concept": "joint_conditional",
-      "date": "2026-11-02",
-      "next_review": "2026-11-03",
+      "date": "2026-11-04",
+      "next_review": "2026-11-05",
       "reviews": 0,
       "level": "学习中"
     },
@@ -547,9 +547,9 @@
       "level": "学习中"
     }
   ],
-  "sessions_count": 4,
-  "session_counter": 11,
-  "current_session_id": "S011",
+  "sessions_count": 5,
+  "session_counter": 12,
+  "current_session_id": "S012",
   "session_index": [
     {
       "id": "S008",
@@ -572,16 +572,22 @@
     {
       "id": "S011",
       "date": "2026-11-04",
-      "topic": "第11课 Fano 不等式（期中当日）",
+      "topic": "第11–15课 + 五 Hint 重学排课",
+      "status": "已结束"
+    },
+    {
+      "id": "S012",
+      "date": "2026-11-04",
+      "topic": "五 Hint 重学：开课自测与第01课",
       "status": "进行中"
     }
   ],
-  "last_session": "S010",
+  "last_session": "S011",
   "legacy": {
     "course": "AISC5000_2026秋",
     "archive": "_archive/AISC5000_2026秋/",
     "session_snapshot": "_archive/AISC5000_2026秋/系统/05_学习进度/progress_AISC5000_2026秋.json",
     "read_policy": "cold-storage: do not read unless the student explicitly asks"
   },
-  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交。2026-11-02 S010 按教师 Hint 精确页码重排为冲刺版 v2：14 课 + 考前回顾（D1 8h / D2 7.75h / D3 90min Hint 专项二次复习）。2026-11-02 诊断回收：Q1 正交✓、Q2 线性相关/span✓、Q4 梯度/Hessian✓、Q5 只写通用定义（Binomial 公式缺）、Q6–Q10 未学；Q3 为看错题、已澄清（实际会求特征值），不计知识缺口；已记入错题本。2026-11-02 S010 第02课已讲（向量/shape、span、无关、秩-零化度、Ax=b、最小二乘），板书 `S010_第02课_向量·子空间·秩与线性系统.md`；5 个概念置「学习中」，复习队列 11-03。2026-11-02 S010 第03课已讲（特征方程、正交对角化、SVD、低秩近似），板书 `S010_第03课_特征分解与SVD.md`，新增 `fig_svd.png`；3 个概念置「学习中」，复习 11-03。2026-11-02 S010 第04课已讲（图 Laplacian、二次型、谱与连通性），板书 `S010_第04课_图Laplacian与谱.md`，新增 `fig_graph_laplacian.png`；2 个概念置「学习中」。2026-11-02 S010 第05–10课已连讲：第05课梯度/Hessian/Taylor/Jacobian（75min）、第06课计算图/反向传播（45min）、第07课概率/随机变量/常见分布（90min）、第08课联合条件/次序统计量/Poisson thinning（75min）、第09课全期望+全方差 Hint 1/2（90min）、第10课熵/互信息/CE/KL（90min）；板书 6 份，新增 `fig_computation_graph.png`、`fig_joint_conditional.png`、`fig_total_expectation_variance.png`、`fig_entropy_kl.png`；16 个概念置「学习中」，复习 11-03。下一步第 11 课 Fano。2026-11-02 内容完整性审查：学生指出第03课未讲清“奇异值怎么算”、公式卡未体现；已按五条标准审查第01–10课并逐课补公式卡/推导，新增 `学习内容/01_学习计划/内容完整性审查_第01–10课.md`；第03课新增 §3.4 奇异值手算（非对角例）、§3.5 完整 SVD、§3.6 σ²=λ(AᵀA) 推导、§3.8 伪逆、§3.9 条件数、§3.10 幂法。2026-11-04 S011 启动：收尾 S010（补写摘要+日志），分配 S011；当天为期中考试日，第11–15课（Fano、MLE/MAP、Fisher+共轭、BN、Hint 复习）尚未讲；输出衔接摘要，待学生选择冲刺方式。2026-11-04 S011 第11课 Fano 已讲（强/弱形式、证明、无信息猜测、ML 地板/sanity check），板书 `S011_第11课_Fano不等式.md`，新增 `fig_fano.png`（误差地板曲线 + |X|-1 候选集）；fano 置「学习中」，复习 11-05；作业 5 题+答案分区，待学生提交。2026-11-04 S011 第12–15课已连讲：第12课 MLE/MAP（含 A2 Q6 噪声报告者 MLE/M4/BIC 手算）、第13课 Fisher+Jeffreys+共轭（Beta-Binomial/Normal-Normal/Gamma-Poisson/Dirichlet）、第14课 贝叶斯网络（因子分解/d-separation/推断四步）、第15课 五个 Hint 专项复习（10 道变式+错题回炉）；板书 4 份，新增 fig_mle_map.png、fig_fisher.png、fig_bayes_net.png、fig_hint_map.png；10 个概念置「学习中」，复习 11-05。"
+  "notes": "2026-11-01 S009 完成 L01 讲解（AI pipeline、三类任务、RSS/正规方程、3 点回归、10 题诊断）；诊断答案未提交。2026-11-02 S010 按教师 Hint 精确页码重排为冲刺版 v2：14 课 + 考前回顾（D1 8h / D2 7.75h / D3 90min Hint 专项二次复习）。2026-11-02 诊断回收：Q1 正交✓、Q2 线性相关/span✓、Q4 梯度/Hessian✓、Q5 只写通用定义（Binomial 公式缺）、Q6–Q10 未学；Q3 为看错题、已澄清（实际会求特征值），不计知识缺口；已记入错题本。2026-11-02 S010 第02课已讲（向量/shape、span、无关、秩-零化度、Ax=b、最小二乘），板书 `S010_第02课_向量·子空间·秩与线性系统.md`；5 个概念置「学习中」，复习队列 11-03。2026-11-02 S010 第03课已讲（特征方程、正交对角化、SVD、低秩近似），板书 `S010_第03课_特征分解与SVD.md`，新增 `fig_svd.png`；3 个概念置「学习中」，复习 11-03。2026-11-02 S010 第04课已讲（图 Laplacian、二次型、谱与连通性），板书 `S010_第04课_图Laplacian与谱.md`，新增 `fig_graph_laplacian.png`；2 个概念置「学习中」。2026-11-02 S010 第05–10课已连讲：第05课梯度/Hessian/Taylor/Jacobian（75min）、第06课计算图/反向传播（45min）、第07课概率/随机变量/常见分布（90min）、第08课联合条件/次序统计量/Poisson thinning（75min）、第09课全期望+全方差 Hint 1/2（90min）、第10课熵/互信息/CE/KL（90min）；板书 6 份，新增 `fig_computation_graph.png`、`fig_joint_conditional.png`、`fig_total_expectation_variance.png`、`fig_entropy_kl.png`；16 个概念置「学习中」，复习 11-03。下一步第 11 课 Fano。2026-11-02 内容完整性审查：学生指出第03课未讲清“奇异值怎么算”、公式卡未体现；已按五条标准审查第01–10课并逐课补公式卡/推导，新增 `学习内容/01_学习计划/内容完整性审查_第01–10课.md`；第03课新增 §3.4 奇异值手算（非对角例）、§3.5 完整 SVD、§3.6 σ²=λ(AᵀA) 推导、§3.8 伪逆、§3.9 条件数、§3.10 幂法。2026-11-04 S011 启动：收尾 S010（补写摘要+日志），分配 S011；当天为期中考试日，第11–15课（Fano、MLE/MAP、Fisher+共轭、BN、Hint 复习）尚未讲；输出衔接摘要，待学生选择冲刺方式。2026-11-04 S011 第11课 Fano 已讲（强/弱形式、证明、无信息猜测、ML 地板/sanity check），板书 `S011_第11课_Fano不等式.md`，新增 `fig_fano.png`（误差地板曲线 + |X|-1 候选集）；fano 置「学习中」，复习 11-05；作业 5 题+答案分区，待学生提交。2026-11-04 S011 第12–15课已连讲：第12课 MLE/MAP（含 A2 Q6 噪声报告者 MLE/M4/BIC 手算）、第13课 Fisher+Jeffreys+共轭（Beta-Binomial/Normal-Normal/Gamma-Poisson/Dirichlet）、第14课 贝叶斯网络（因子分解/d-separation/推断四步）、第15课 五个 Hint 专项复习（10 道变式+错题回炉）；板书 4 份，新增 fig_mle_map.png、fig_fisher.png、fig_bayes_net.png、fig_hint_map.png；10 个概念置「学习中」，复习 11-05。2026-11-04 课程重排（学生确认）：只考五个 Hint；不重讲概率语言/随机变量/期望方差；其余压缩为 6 课（L01 联合/条件/条件期望 → L02 TLE+TLV → L03 熵/Fano → L04 似然/MLE/MAP → L05 Fisher/Jeffreys → L06 共轭+五 Hint 串联）。旧 15 课表被取代，旧板书保留。课表/学习路线/知识图谱/课程偏好已更新，总课数 6；S011 收尾，分配 S012。2026-11-04 S012 第01课已讲（联合/边缘/条件、条件期望是随机变量、条件方差、条件独立与三节点 Markov 链），板书 `S012_第01课_联合·条件与条件期望.md`，新增 `fig_conditional_expectation.png`；joint_conditional 复习排 11-05；作业 5 题+答案分区。"
 }

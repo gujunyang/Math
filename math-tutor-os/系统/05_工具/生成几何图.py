@@ -1726,6 +1726,64 @@ def fig_hint_map():
     save(fig, "fig_hint_map.png")
 
 
+# --- 图 41：联合 → 条件 → 条件期望 ------------------------------------------
+def fig_conditional_expectation():
+    P = np.array([[0.30, 0.10, 0.10],
+                  [0.05, 0.15, 0.30]])  # 行：X=0 雨、X=1 晴；列：Y=1,2,3
+    cond = P / P.sum(axis=1, keepdims=True)
+    ey = cond @ np.array([1, 2, 3])
+    eY = float(P.sum(axis=0) @ np.array([1, 2, 3]))
+
+    fig, axes = plt.subplots(1, 3, figsize=(14.2, 4.4))
+
+    # 左：联合分布热图
+    ax = axes[0]
+    im = ax.imshow(P, cmap="Blues", vmin=0, vmax=0.35)
+    for i in range(2):
+        for j in range(3):
+            ax.text(j, i, f"{P[i, j]:.2f}", ha="center", va="center",
+                    fontsize=13, color=("white" if P[i, j] > 0.22 else "#1f2937"))
+    ax.set_xticks(range(3)); ax.set_xticklabels([r"$Y=1$", r"$Y=2$", r"$Y=3$"])
+    ax.set_yticks(range(2)); ax.set_yticklabels([r"$X=0$ 雨", r"$X=1$ 晴"])
+    ax.set_title("① 联合分布 $P(X,Y)$：每个格子是一个概率", fontsize=11.5)
+
+    # 中：条件分布（行归一化）
+    ax = axes[1]
+    idx = np.arange(3)
+    ax.bar(idx - 0.19, cond[0], width=0.36, color=BLUE, label=r"$P(Y\mid X=0)$")
+    ax.bar(idx + 0.19, cond[1], width=0.36, color=RED, label=r"$P(Y\mid X=1)$")
+    for i in range(3):
+        ax.text(i - 0.19, cond[0, i] + 0.02, f"{cond[0, i]:.2f}", ha="center", fontsize=8.5)
+        ax.text(i + 0.19, cond[1, i] + 0.02, f"{cond[1, i]:.2f}", ha="center", fontsize=8.5)
+    ax.set_xticks(idx); ax.set_xticklabels([r"$Y=1$", r"$Y=2$", r"$Y=3$"])
+    ax.set_ylim(0, 0.75)
+    ax.set_ylabel("条件概率")
+    ax.set_title("② 条件分布：每行除以行和（重新归一化）", fontsize=11.5)
+    ax.legend(fontsize=9, frameon=False)
+    ax.grid(True, axis="y", alpha=0.2)
+
+    # 右：条件期望是 x 的函数
+    ax = axes[2]
+    ax.plot([0, 1], ey, "-o", color=GREEN, lw=2.4, ms=8, zorder=5,
+            label=r"$E[Y\mid X=x]$")
+    ax.axhline(eY, color=GRAY, ls="--", lw=1.4,
+               label=r"$E[Y]=2.05$（加权平均）")
+    ax.scatter([0.5], [eY], color=GRAY, s=45, zorder=6)
+    ax.annotate(r"$1.6$", xy=(0, ey[0]), xytext=(0.05, 1.35), fontsize=11, color=GREEN)
+    ax.annotate(r"$2.5$", xy=(1, ey[1]), xytext=(0.78, 2.65), fontsize=11, color=GREEN)
+    ax.text(0.5, 1.78, r"$E[Y]=0.5\times1.6+0.5\times2.5$", ha="center", fontsize=10, color=GRAY)
+    ax.set_xticks([0, 1]); ax.set_xticklabels([r"$X=0$ 雨", r"$X=1$ 晴"])
+    ax.set_xlim(-0.25, 1.25)
+    ax.set_ylim(1.2, 2.8)
+    ax.set_ylabel(r"$Y$ 的条件均值")
+    ax.set_title("③ $E[Y\\mid X]$ 是随机变量：随 $X$ 变，均值回到 $E[Y]$", fontsize=11.5)
+    ax.legend(fontsize=9, frameon=False, loc="lower right")
+    ax.grid(True, alpha=0.2)
+
+    fig.suptitle("联合 → 条件 → 条件期望：先用 $X$ 切一刀，再在切片里求平均", y=1.04, fontsize=12.5)
+    save(fig, "fig_conditional_expectation.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -1755,6 +1813,7 @@ if __name__ == "__main__":
     fig_fisher()
     fig_bayes_net()
     fig_hint_map()
+    fig_conditional_expectation()
     fig_quadratic_contours()
     fig_gradient_contour()
     fig_taylor_parabola()
