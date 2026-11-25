@@ -17,7 +17,7 @@ MathTutor OS 不是一组“万能提示词”，也不是一个只会聊天的 
 > **参考实现**：仓库内的 `math-tutor-os/` 是随项目提供的参考 skill，面向机器学习数学。  
 > MathTutor OS 是系统名；复制这份 skill，即可适配线性代数、微积分、概率统计、优化或考试冲刺等不同数学课程。
 
-**本仓库的 AISC5020 课程**按数理统计、最优化两个模块推进。[当前课表](math-tutor-os/学习内容/01_学习计划/第01–NN课_课表.md) · [课程信息与开课安排](math-tutor-os/学习内容/01_学习计划/课程信息.md)
+**本仓库的 AISC5020 课程**先学数理统计，再学最优化。第 01 课从全概率到全期望，第 02 课用随机命中率和泊松计数学习全方差。[第 01 课板书](math-tutor-os/学习内容/04_板书/S014_第01课_全期望.md) · [第 02 课板书](math-tutor-os/学习内容/04_板书/S015_第02课_全方差.md) · [18 课执行课表](math-tutor-os/学习内容/01_学习计划/第01–NN课_课表.md) · [课程信息](math-tutor-os/学习内容/01_学习计划/课程信息.md)
 
 ---
 
@@ -92,6 +92,7 @@ MathTutor OS 想解决的是**教学过程**，而不是单次回答：
                     │ 项目级入口
 ┌─────────────────────────────────────────────┐
 │ .opencode/skills/<skill-name>/SKILL.md       │
+│ .agents/skills/<skill-name>/SKILL.md         │
 │ 只做指针：加载后读系统层三件套               │
 └─────────────────────────────────────────────┘
 ```
@@ -162,8 +163,8 @@ flowchart LR
 
 | # | 段落 | 内容 | 目的 |
 |---|---|---|---|
-| ① | 引入 | 1–2 句生活化场景，带具体数字 | 先知道“这玩意在干嘛” |
-| ② | 直觉 | 一句话说清核心 | 建立第一层理解 |
+| ① | 引入 | 按本课问题选一个熟悉的情境，交代发生了什么，再提出具体问题 | 能用自己的话说出要弄清什么 |
+| ② | 直觉 | 沿用这个情境，一步步观察、比较，解释为什么能得出结论 | 看到公式前能说出它描述的关系 |
 | ③ | 几何 | 尽量配图；图后写“看图”说明 | 把符号变成画面 |
 | ④ | 计算 / 公式卡 | 名称 → 公式 → 符号 → 意义与场景 → 例 | 把公式变成可查、可用的卡片 |
 | ⑤ | 完整手算 | 中文；第 1 步 / 第 2 步……不跳步 | 能独立复现 |
@@ -200,6 +201,7 @@ flowchart LR
 | `系统/04_辅导老师/rules.md` | 硬性规则 R1–R23 |
 | `系统/04_辅导老师/skill_metadata.yaml` | 机器可读元数据：入口、状态文件、输出路径、检查项 |
 | `.opencode/skills/math-tutor-os/SKILL.md` | 项目级入口指针；真正规则在 `系统/04_辅导老师/` |
+| [Codex 教学技能](.agents/skills/math-tutor-os/SKILL.md) · [AGENTS.md](AGENTS.md) | Codex 项目入口，读取相同的教学规则、学习偏好与课表 |
 | `系统/01_学习进度/` | `progress.json`、对话记录、会话日志、错题本、复习队列、会话摘要、变更记录 |
 | `系统/02_学习习惯/` | `habits.jsonl`、学习偏好 |
 | `系统/03_模板/` | 习题模板 |
@@ -228,6 +230,9 @@ flowchart LR
 │  └─ skills/
 │     └─ math-tutor-os/
 │        └─ SKILL.md                 # 项目级入口（指针）
+├─ .agents/skills/math-tutor-os/
+│  └─ SKILL.md                       # Codex 项目级教学技能
+├─ AGENTS.md                         # Codex 教学请求入口说明
 ├─ docs/
 │  └─ mathtutor-os-hero.png          # README 主题图
 ├─ math-tutor-os/
@@ -256,7 +261,7 @@ flowchart LR
 
 ### 环境
 
-- 推荐运行时：**OpenCode**（项目级 skill 自动加载）。
+- 支持 **OpenCode** 和 **Codex** 两个项目级教学入口。
 - 核心内容只是 Markdown + JSON，任何支持“读取文件 + 按指令执行”的 Agent 都能改造使用。
 - 可选：Python 3（自检、几何图生成）、matplotlib（配图）。
 
@@ -269,13 +274,10 @@ cd math-tutor-os
 
 ### 2. 打开项目
 
-用 OpenCode 打开仓库根目录。项目级入口是：
+用 Codex 或 OpenCode 打开仓库根目录。
 
-```text
-.opencode/skills/math-tutor-os/SKILL.md
-```
-
-首次启用或修改 skill 后，重启 OpenCode 让它重新加载。
+- **Codex**　直接说“继续第一课”，或输入 `$math-tutor-os 继续第一课`。技能在本仓库的 `.agents/skills/` 中发现。[项目技能发现说明](https://learn.chatgpt.com/docs/build-skills)
+- **OpenCode**　通过 `.opencode/skills/math-tutor-os/SKILL.md` 进入相同的教学流程。首次启用或修改 OpenCode 入口后重启 OpenCode。
 
 ### 3. 填课程信息
 
@@ -335,7 +337,7 @@ MathTutor OS 是系统，`math-tutor-os` 是参考实现。适配步骤：
 
 1. **复制 skill 目录**：把 `math-tutor-os/` 复制成你的数学课程目录。
 2. **改角色**：编辑 `系统/04_辅导老师/SKILL.md` 第 0–2 节，写清“教哪门数学、学生什么水平、怎么讲”。
-3. **改入口**：新建 `.opencode/skills/<your-skill>/SKILL.md`，指向你的 `系统/04_辅导老师/`。
+3. **改入口**　在使用的运行时目录（OpenCode 的 `.opencode/skills/` 或 Codex 的 `.agents/skills/`）添加项目技能，指向课程共用的 `系统/04_辅导老师/`。使用 Codex 时同步根目录 `AGENTS.md` 中的入口链接。
 4. **改课程信息**：填 `学习内容/01_学习计划/课程信息.md`。
 5. **改规则**：保留 R1–R23 的骨架，按数学课程调整公式卡、几何要求、作业规则；不要删掉“记录、复习、自检”。
 6. **建概念表**：把数学大纲拆成 `id / 概念 / 优先级 / 前置 / 状态`。

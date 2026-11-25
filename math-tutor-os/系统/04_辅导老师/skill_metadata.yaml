@@ -42,7 +42,7 @@ board_output:
   - math-tutor-os/学习内容/04_板书/S{id}_第NN课_{主题}.md
   - math-tutor-os/学习内容/04_板书/00_索引.md
   - math-tutor-os/学习内容/04_板书/图片/       # R23 几何示意图（PNG）
-  rule: R19（每节课产出板书，持续归档）
+board_rule: R19（每节课产出板书，持续归档）
 figures:
   dir: math-tutor-os/学习内容/04_板书/图片/
   generator: math-tutor-os/系统/05_工具/生成几何图.py
@@ -65,11 +65,11 @@ checks:
     - 学习内容/01_学习计划/概念登记表.md
   rollback: 用 git；大改动前先 commit，可 git restore / git revert
 registration:
-  type: 项目级自动加载
+  type: 项目级教学技能
   entry: .opencode/skills/math-tutor-os/SKILL.md
+  codex_entry: .agents/skills/math-tutor-os/SKILL.md
+  codex_project_instructions: AGENTS.md
   scope: 仅 MathTutor OS 项目生效
-  note: 重启 opencode 后生效；本文件仅为元数据，真正入口在 .opencode/skills/
+  note: OpenCode 和 Codex 各自发现项目入口，共用同一套教学规则与学习记录。
 notes: >-
-  本 skill 已通过 .opencode/skills/math-tutor-os/SKILL.md 做项目级注册（自动加载）。
-  该入口只是指针，真正规则在 系统/04_辅导老师/ 下。若 opencode 不支持自动加载，
-  则每次运行前手动读取 startup_reads，并声明 "我已读取 math-tutor-os 的 skill 要求。"
+  教学规则以 startup_reads 中的三个文件为准。授课时同时读取跨课程学习偏好与当前课程偏好。

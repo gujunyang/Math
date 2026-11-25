@@ -9,6 +9,7 @@
 说明：几何示意优先，配色统一（蓝=主向量，红=次向量，灰=辅助线）。
 """
 import os
+from math import comb
 
 import matplotlib
 
@@ -1784,6 +1785,166 @@ def fig_conditional_expectation():
     save(fig, "fig_conditional_expectation.png")
 
 
+def fig_first_shot_probability():
+    # 20 列 × 5 行，每格代表总概率的 1%。每组宽度是组权重，实色高度是组内命中率。
+    fig, ax = plt.subplots(figsize=(7.2, 3.2))
+    groups = [(0, 5, 1, BLUE, "远投"), (5, 15, 4, RED, "近投")]
+    for start, width, hit_rows, color, name in groups:
+        ax.bar(start, 5, width=width, align="edge", color=color, alpha=0.12)
+        ax.bar(start, hit_rows, width=width, align="edge", color=color)
+        ax.text(start + width / 2, 5.35, f"{name}轮占 {width / 20:.0%}",
+                ha="center", va="center", color=color, fontsize=12, weight="bold")
+    ax.vlines(range(21), 0, 5, colors="white", linewidth=1)
+    ax.hlines(range(6), 0, 20, colors="white", linewidth=1)
+    ax.vlines(5, 0, 5, colors="#394652", linewidth=1.2)
+    ax.set(xlim=(-0.05, 20.05), ylim=(-1.1, 5.8), aspect="equal")
+    ax.axis("off")
+    ax.text(10, -0.6, "每格代表总概率的 1%　·　实色表示第一球命中，浅色表示未中",
+            ha="center", va="center", fontsize=11, color="#303b46")
+    save(fig, "第01课_第一球命中的全概率.png")
+
+
+def fig_arrival_marginal_density():
+    fig, (joint, marginal) = plt.subplots(1, 2, figsize=(8.1, 3.2), layout="constrained")
+    joint.fill([0, 1, 0], [0, 1, 1], color=BLUE, alpha=0.17)
+    joint.plot([0, 1], [0, 1], color=BLUE, lw=1.5)
+    for height in [0.25, 0.75]:
+        joint.plot([0, height], [height, height], color=RED, lw=3)
+        joint.text(height / 2, height + 0.035, f"宽 {height:g}", ha="center", fontsize=9)
+    joint.set(xlim=(0, 1), ylim=(0, 1), aspect="equal", xlabel="较早到达时刻 x（小时）",
+              ylabel="较晚到达时刻 y（小时）", title="固定 y，横着收集所有可能的 x")
+    t = np.linspace(0, 1, 101)
+    marginal.plot(t, 2 * t, color=GREEN, lw=2.4)
+    left = t <= 0.5
+    marginal.fill_between(t[left], 0, 2 * t[left], color=GREEN, alpha=0.23)
+    marginal.text(0.31, 0.23, "面积\n1/4", ha="center", fontsize=10)
+    marginal.set(xlim=(0, 1), ylim=(0, 2.1), xlabel="较晚到达时刻 y（小时）",
+                 ylabel="边缘密度（每小时）", title=r"只看较晚者：$f_Y(y)=2y$")
+    joint.set_yticks([0, 0.25, 0.5, 0.75, 1])
+    for ax in (joint, marginal):
+        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
+        ax.spines[["top", "right"]].set_visible(False)
+    save(fig, "第01课_联合密度与边缘密度.png")
+
+
+def fig_shooting_expectation():
+    weights = [0.25, 0.75]
+    means = [2, 8]
+    overall = sum(w * m for w, m in zip(weights, means))
+    fig, ax = plt.subplots(figsize=(7.2, 3.0))
+    ax.bar([0, weights[0]], means, width=weights, align="edge",
+           color=[BLUE, RED], alpha=0.75)
+    for center, value in zip([weights[0] / 2, (1 + weights[0]) / 2], means):
+        ax.text(center, value / 2, f"{value} 球", ha="center", va="center",
+                color="white", fontsize=12, weight="bold")
+    ax.axhline(overall, color=GREEN, linestyle="--", linewidth=2)
+    ax.text(0.02, overall + 0.25, f"整体均值 {overall} 球", color="#176933")
+    ax.set_xticks([0.125, 0.625], ["远投轮 · 占 25%", "近投轮 · 占 75%"])
+    ax.set(xlim=(0, 1), ylim=(0, 10), ylabel="每轮平均进球数", yticks=[0, 2, 4, 6, 8, 10])
+    ax.spines[["top", "right"]].set_visible(False)
+    save(fig, "第01课_分组均值与整体均值.png")
+
+
+def fig_printer_update():
+    from matplotlib.patches import Rectangle
+
+    fig, ax = plt.subplots(figsize=(7.4, 3.0), layout="constrained")
+    for row, (printer, successes) in enumerate([("A", 9), ("B", 3), ("B", 3), ("B", 3)]):
+        y = 3 - row
+        ax.text(-0.2, y + 0.43, f"{printer} 型", ha="right", va="center")
+        for column in range(10):
+            color = BLUE if column < successes else "#dce2e8"
+            ax.add_patch(Rectangle((column, y), 0.92, 0.86, color=color, linewidth=0))
+    ax.text(4.95, -0.45, "每格占总概率的 1/40　·　蓝色为成功，灰色为失败", ha="center")
+    ax.set(xlim=(-1.1, 10.15), ylim=(-0.78, 4.05), aspect="equal",
+           title="同一批成功格，来自哪一型打印机？")
+    ax.axis("off")
+    save(fig, "第05课_一次打印成功后的概率.png")
+
+
+def fig_locker_feedback():
+    from matplotlib.patches import FancyBboxPatch
+
+    fig, ax = plt.subplots(figsize=(7.4, 2.8), layout="constrained")
+    rows = [("还没核对", set("ABCD"), BLUE), ("管理员说「猜对了」", {"B"}, GREEN),
+            ("管理员说「猜错了」", set("ACD"), BLUE)]
+    for y, (label, candidates, color) in zip([2, 1, 0], rows):
+        ax.text(-0.4, y, label, va="center", ha="right", fontsize=12)
+        for x, locker in enumerate("ABCD"):
+            possible = locker in candidates
+            box = FancyBboxPatch((x - 0.34, y - 0.28), 0.68, 0.56,
+                                 boxstyle="round,pad=0.04", facecolor=color if possible else "white",
+                                 edgecolor=color if possible else "#b6bec6")
+            ax.add_patch(box)
+            ax.text(x, y, locker, ha="center", va="center", weight="bold",
+                    color="white" if possible else "#808991", fontsize=14)
+    ax.set(xlim=(-2.7, 3.65), ylim=(-0.55, 2.65),
+           title="你猜 B 柜。核对之后，哪些柜子仍可能是答案？")
+    ax.axis("off")
+    save(fig, "第04课_猜对与猜错后的候选柜.png")
+
+
+def fig_delivery_times():
+    fig, ax = plt.subplots(figsize=(6.8, 2.65), layout="constrained")
+    rows = [("提示「上午专送」", [4, 0]), ("只提示「明天送达」", [1, 3])]
+    for y, (label, counts) in zip([1, 0], rows):
+        left = 0
+        for amount, color, time in zip(counts, [BLUE, "#a54a22"], ["上午", "下午"]):
+            if amount:
+                ax.barh(y, amount, left=left, height=0.47, color=color)
+                ax.text(left + amount / 2, y, f"{time} {amount} 件",
+                        va="center", ha="center", color="white", weight="bold")
+            left += amount
+        ax.text(-0.07, y, label, ha="right", va="center")
+    ax.set(xlim=(-1.85, 4.1), ylim=(-0.5, 1.55), yticks=[], xticks=range(5),
+           xlabel="包裹件数（每行 4 件）", title="看到同样提示的包裹，最后在什么时候送到？")
+    ax.spines[["left", "right", "top"]].set_visible(False)
+    ax.spines["bottom"].set_bounds(0, 4)
+    save(fig, "第03课_配送提示与实际到达时段.png")
+
+
+def fig_canteen_waits():
+    groups = [("提前吃饭", [2, 4], BLUE), ("正午吃饭", [8, 10], RED)]
+    overall = np.mean([wait for _, waits, _ in groups for wait in waits])
+    fig, ax = plt.subplots(figsize=(7.2, 2.9), layout="constrained")
+    ax.axvline(overall, color="#35725b", ls="--", lw=1.5)
+    ax.text(overall, 1.36, f"四次平均 {overall:g} 分钟", ha="center", color="#285440",
+            bbox=dict(facecolor="white", edgecolor="none", pad=2))
+    for y, (label, waits, color) in zip([1, 0], groups):
+        mean = np.mean(waits)
+        ax.hlines(y, waits[0], waits[1], color=color, lw=2)
+        ax.scatter(waits, [y, y], color=color, s=60, zorder=3)
+        ax.plot(mean, y, marker="|", ms=17, mew=2, color=color)
+        ax.text(mean, y - 0.18, f"本组平均 {mean:g} 分钟", ha="center", va="top", color=color)
+    ax.set(xlim=(1, 11), ylim=(-0.46, 1.52), xticks=range(2, 11),
+           yticks=[1, 0], yticklabels=[group[0] for group in groups], xlabel="等餐时间（分钟）")
+    ax.tick_params(axis="y", length=0)
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    save(fig, "第02课_两个时段的等餐时间.png")
+
+
+def fig_shooting_variance():
+    shots = 10
+    counts = np.arange(shots + 1)
+    groups = [("远投", 0.25, 0.2, BLUE), ("近投", 0.75, 0.8, RED)]
+    overall = sum(weight * shots * p for _, weight, p, _ in groups)
+    fig, axes = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(7.0, 4.0),
+                             layout="constrained")
+    for ax, (label, weight, p, color) in zip(axes, groups):
+        masses = [comb(shots, k) * p ** k * (1 - p) ** (shots - k) for k in counts]
+        mean = shots * p
+        ax.bar(counts, masses, width=0.68, color=color, alpha=0.65)
+        ax.vlines(mean, 0, 0.317, lw=1.7, ls="--", color=color)
+        ax.vlines(overall, 0, 0.362, lw=1.7, color="#19653d")
+        ax.text(mean, 0.33, f"本组均值 {mean:g}", color=color, ha="center")
+        ax.text(overall, 0.375, f"整体均值 {overall:g}", color="#19653d", ha="center")
+        ax.set_title(f"{label}轮（占全部轮次的 {weight:.0%}）", loc="left", fontsize=11)
+        ax.set(ylim=(0, 0.42), ylabel="组内概率", yticks=[0, 0.15, 0.3])
+        ax.spines[["top", "right"]].set_visible(False)
+    axes[-1].set(xlabel="每轮 10 次投篮的进球数（球）", xticks=counts)
+    save(fig, "第02课_组内波动与组间波动.png")
+
+
 if __name__ == "__main__":
     fig_vector()
     fig_inner()
@@ -1814,6 +1975,14 @@ if __name__ == "__main__":
     fig_bayes_net()
     fig_hint_map()
     fig_conditional_expectation()
+    fig_shooting_expectation()
+    fig_shooting_variance()
+    fig_canteen_waits()
+    fig_delivery_times()
+    fig_locker_feedback()
+    fig_printer_update()
+    fig_first_shot_probability()
+    fig_arrival_marginal_density()
     fig_quadratic_contours()
     fig_gradient_contour()
     fig_taylor_parabola()

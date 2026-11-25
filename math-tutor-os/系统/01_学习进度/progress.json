@@ -3,7 +3,7 @@
     "id": "AISC5020",
     "name": "Mathematics & Statistics for AI",
     "term": "2026-27 Term 1",
-    "status": "准备就绪，等待学生发出开课消息后进入第 01 课",
+    "status": "第 05 课 Bernoulli 似然与贝叶斯更新，独立练习待作答",
     "materials": [
       "AISCI5020/2627T1_AISC5020_Lecture01.pdf",
       "AISCI5020/2627T1_AISC5020_Lecture02.pdf",
@@ -25,66 +25,74 @@
   "student": {
     "name": "JackGu",
     "math_background": "旧诊断曾显示线代与求导有基础，上一轮已讲过联合、条件与条件期望。本轮在使用时用小题复核。",
-    "goal": "从全期望、全方差学到 Lecture 11，能独立完成期中卷 Q4–Q6 同型题与 HW3 六种题型，HW2 作选练",
-    "preferences_pending": false
+    "goal": "从全概率、全期望与全方差学到 Lecture 11，能在二项以外的模型中运用一般公式，独立完成期中卷 Q4–Q6 同型题与 HW3 六种题型，HW2 作选练",
+    "preferences_pending": false,
+    "teaching_preferences": "按概念选择生活例子，详细解释引入与直觉。专业词首次出现就用白话联系例子解释，关键旧词随用随提醒。"
   },
-  "current_stage": "S013 规划已收尾。等待学生发出开课消息后开始第 01 课「全期望与全方差入门：先算全期望」。",
+  "current_stage": "S018 第 05 课用打印机分组图讲解单次与样本似然、对数似然、证据和后验。第 2、3 题待独立写似然并根据失败更新概率。第 04 课独练仍待作答。",
   "concepts": [
     {
       "id": "joint_conditional",
-      "name": "条件分布与条件矩",
+      "name": "联合、边缘与条件分布及条件矩",
       "priority": "必学",
       "prereq": "—",
-      "status": "本轮待学"
+      "status": "学习中"
+    },
+    {
+      "id": "total_probability",
+      "name": "全概率公式与按组边缘化",
+      "priority": "必学",
+      "prereq": "joint_conditional",
+      "status": "学习中"
     },
     {
       "id": "binomial_moments",
       "name": "给定成功率的二项分布条件矩",
       "priority": "必学",
       "prereq": "joint_conditional",
-      "status": "本轮待学"
+      "status": "学习中"
     },
     {
       "id": "total_expectation",
       "name": "全期望公式",
       "priority": "必学",
-      "prereq": "joint_conditional",
-      "status": "本轮待学"
+      "prereq": "joint_conditional、total_probability",
+      "status": "学习中"
     },
     {
       "id": "total_variance",
       "name": "全方差与组内、组间变动",
       "priority": "必学",
       "prereq": "total_expectation",
-      "status": "本轮待学"
+      "status": "学习中"
     },
     {
       "id": "entropy",
       "name": "熵与条件熵",
       "priority": "必学",
       "prereq": "joint_conditional",
-      "status": "本轮待学"
+      "status": "学习中"
     },
     {
       "id": "fano",
       "name": "弱式 Fano 与分类错误率下界",
       "priority": "必学",
       "prereq": "entropy",
-      "status": "本轮待学"
+      "status": "学习中"
     },
     {
       "id": "mle",
       "name": "Bernoulli 单观测与样本似然",
       "priority": "必学",
       "prereq": "joint_conditional",
-      "status": "本轮待学"
+      "status": "学习中"
     },
     {
       "id": "bayes_rule",
       "name": "贝叶斯公式、证据与后验归一化",
       "priority": "必学",
-      "prereq": "joint_conditional、mle",
-      "status": "本轮待学"
+      "prereq": "total_probability、mle",
+      "status": "学习中"
     },
     {
       "id": "fisher_information",
@@ -256,19 +264,104 @@
     }
   ],
   "wrong_questions": [],
-  "review_queue": [],
-  "sessions_count": 1,
-  "session_counter": 13,
-  "current_session_id": null,
+  "review_queue": [
+    {
+      "concept": "joint_conditional",
+      "date": "2026-11-24",
+      "next_review": "2026-11-25",
+      "reviews": 0
+    },
+    {
+      "concept": "total_probability",
+      "date": "2026-11-24",
+      "next_review": "2026-11-25",
+      "reviews": 0
+    },
+    {
+      "concept": "binomial_moments",
+      "date": "2026-11-24",
+      "next_review": "2026-11-25",
+      "reviews": 0
+    },
+    {
+      "concept": "total_expectation",
+      "date": "2026-11-24",
+      "next_review": "2026-11-25",
+      "reviews": 0
+    },
+    {
+      "concept": "total_variance",
+      "date": "2026-11-25",
+      "next_review": "2026-11-26",
+      "reviews": 0
+    },
+    {
+      "concept": "entropy",
+      "date": "2026-11-25",
+      "next_review": "2026-11-26",
+      "reviews": 0
+    },
+    {
+      "concept": "fano",
+      "date": "2026-11-25",
+      "next_review": "2026-11-26",
+      "reviews": 0
+    },
+    {
+      "concept": "mle",
+      "date": "2026-11-25",
+      "next_review": "2026-11-26",
+      "reviews": 0
+    },
+    {
+      "concept": "bayes_rule",
+      "date": "2026-11-25",
+      "next_review": "2026-11-26",
+      "reviews": 0
+    }
+  ],
+  "sessions_count": 6,
+  "session_counter": 18,
+  "current_session_id": "S018",
   "session_index": [
     {
       "id": "S013",
       "date": "2026-11-24",
       "topic": "18 课课表与开课准备",
       "status": "已结束"
+    },
+    {
+      "id": "S014",
+      "date": "2026-11-24",
+      "topic": "第 01 课 从全概率到全期望",
+      "status": "已结束"
+    },
+    {
+      "id": "S015",
+      "date": "2026-11-25",
+      "topic": "第 02 课 全方差与组内、组间波动",
+      "status": "已结束"
+    },
+    {
+      "id": "S016",
+      "date": "2026-11-25",
+      "topic": "第 03 课 熵、条件熵与分类错误率",
+      "status": "已结束"
+    },
+    {
+      "id": "S017",
+      "date": "2026-11-25",
+      "topic": "第 04 课 弱式 Fano 与误差下界",
+      "status": "已结束"
+    },
+    {
+      "id": "S018",
+      "date": "2026-11-25",
+      "topic": "第 05 课 Bernoulli 似然与贝叶斯更新",
+      "status": "进行中"
     }
   ],
-  "last_session": "S013",
+  "last_session": "S017",
   "legacy": {
     "course": "AISC5000_2026秋",
     "archive": "_archive/AISC5000_2026秋/",
